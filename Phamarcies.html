@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bosa Care — Pharmacy</title>
+
+    <!-- Leaflet CSS & JS (for maps) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f7f3f0;
+            color: #3d3e33;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ----- HEADER ----- */
+        .app-header {
+            background: #5E604D;
+            color: #FFE9DA;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .app-header .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .app-header .logo span {
+            color: #DB827F;
+        }
+
+        .app-header .user-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+        }
+        .app-header .user-area .user-name {
+            color: #D5CCC5;
+        }
+
+        /* ----- MAIN CONTENT (single page) ----- */
+        .app-content {
+            flex: 1;
+            padding: 24px;
+            max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            scroll-margin-top: 80px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #5E604D;
+            margin-bottom: 16px;
+        }
+        .section-title small {
+            font-weight: 400;
+            font-size: 16px;
+            color: #A19DA4;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .badge-green {
+            background: #e6f5e6;
+            color: #2d7d2d;
+        }
+        .badge-orange {
+            background: #fef3e0;
+            color: #b7791f;
+        }
+        .badge-red {
+            background: #fde8e8;
+            color: #b33c3c;
+        }
+        .badge-blue {
+            background: #e3edfa;
+            color: #2a6bb0;
+        }
+        .badge-purple {
+            background: #f0e6f5;
+            color: #7d3d8a;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #A19DA4;
+        }
+        .empty-state .icon-big {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .empty-state h3 {
+            font-size: 20px;
+            color: #5E604D;
+            margin-bottom: 6px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #5E604D;
+            color: #FFE9DA;
+        }
+        .btn-primary:hover {
+            background: #4a4c3b;
+        }
+        .btn-secondary {
+            background: #DB827F;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background: #c96d6a;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #D5CCC5;
+            color: #5E604D;
+        }
+        .btn-outline:hover {
+            border-color: #DB827F;
+            color: #DB827F;
+        }
+        .btn-sm {
+            padding: 5px 14px;
+            font-size: 13px;
+        }
+        .btn-block {
+            width: 100%;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            color: #5E604D;
+            margin-bottom: 4px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #E8E0DA;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: border 0.2s;
+            background: #faf8f7;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #DB827F;
+            background: #fff;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ----- PHARMACY SECTION ----- */
+        .pharmacy-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .pharmacy-filters select,
+        .pharmacy-filters input {
+            padding: 8px 14px;
+            border: 2px solid #E8E0DA;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #faf8f7;
+            min-width: 160px;
+        }
+        .pharmacy-filters select:focus,
+        .pharmacy-filters input:focus {
+            outline: none;
+            border-color: #DB827F;
+        }
+
+        .map-container {
+            height: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 2px solid #EBE3DD;
+        }
+        .map-container .leaflet-container {
+            height: 100%;
+            width: 100%;
+        }
+
+        .pharmacy-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 16px;
+            border-radius: 14px;
+            background: #fcf9f7;
+            border: 1.5px solid #EBE3DD;
+            transition: all 0.2s;
+        }
+        .pharmacy-item:hover {
+            border-color: #DB827F;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .pharmacy-item .name {
+            font-weight: 700;
+            font-size: 18px;
+            color: #5E604D;
+        }
+        .pharmacy-item .district {
+            font-size: 14px;
+            color: #A19DA4;
+        }
+        .pharmacy-item .town {
+            font-size: 14px;
+            color: #5E604D;
+            font-weight: 500;
+        }
+        .pharmacy-item .address {
+            font-size: 13px;
+            color: #A19DA4;
+        }
+        .pharmacy-item .actions {
+            margin-top: 6px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* ----- MEDICINE SECTION ----- */
+        .medicine-search {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .medicine-search input,
+        .medicine-search select {
+            padding: 10px 14px;
+            border: 2px solid #E8E0DA;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #faf8f7;
+            flex: 1;
+            min-width: 160px;
+        }
+        .medicine-search input:focus,
+        .medicine-search select:focus {
+            outline: none;
+            border-color: #DB827F;
+        }
+
+        .medicine-item {
+            padding: 16px;
+            border-radius: 14px;
+            background: #fcf9f7;
+            border: 1.5px solid #EBE3DD;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .medicine-item:hover {
+            border-color: #DB827F;
+        }
+        .medicine-item .med-name {
+            font-weight: 700;
+            font-size: 17px;
+            color: #5E604D;
+        }
+        .medicine-item .med-pharmacy {
+            font-size: 13px;
+            color: #A19DA4;
+        }
+        .medicine-item .med-price {
+            font-weight: 700;
+            color: #DB827F;
+            font-size: 18px;
+        }
+        .medicine-item .med-stock {
+            font-size: 13px;
+        }
+        .medicine-item .med-condition {
+            font-size: 13px;
+            color: #5E604D;
+            font-weight: 600;
+        }
+
+        /* ----- PRESCRIPTION SECTION ----- */
+        .prescription-upload {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .prescription-upload .drop-zone {
+            border: 2.5px dashed #D5CCC5;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #A19DA4;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #faf8f7;
+        }
+        .prescription-upload .drop-zone:hover {
+            border-color: #DB827F;
+            background: #FFF5EF;
+        }
+        .prescription-upload .drop-zone .icon-big {
+            font-size: 40px;
+        }
+        .prescription-upload .drop-zone input[type="file"] {
+            display: none;
+        }
+
+        .prescription-item {
+            padding: 16px;
+            border-radius: 14px;
+            background: #fcf9f7;
+            border: 1.5px solid #EBE3DD;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+        .prescription-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #EBE3DD;
+        }
+        .prescription-item .info {
+            flex: 1;
+        }
+        .prescription-item .info .status {
+            font-weight: 600;
+        }
+
+        /* ----- CAMERA MODAL ----- */
+        .camera-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .camera-overlay.active {
+            display: flex;
+        }
+        .camera-card {
+            background: #fff;
+            border-radius: 24px;
+            max-width: 560px;
+            width: 95%;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            overflow: hidden;
+        }
+        .camera-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #5E604D;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #EBE3DD;
+        }
+        .camera-header .btn-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            line-height: 1;
+            cursor: pointer;
+            color: #A19DA4;
+        }
+        .camera-header .btn-close:hover {
+            color: #DB827F;
+        }
+        .camera-view {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; /* 4:3 aspect ratio */
+            background: #1a1a1a;
+            border-radius: 12px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+        .camera-view video,
+        .camera-view canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .camera-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .camera-actions .btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+        }
+        .camera-error {
+            margin-top: 10px;
+            text-align: center;
+            padding: 8px;
+            color: #c0392b;
+            display: none;
+        }
+        @media (max-width: 480px) {
+            .camera-card { padding: 14px; }
+            .camera-header { font-size: 16px; }
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 640px) {
+            .app-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .app-header .user-area {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .pharmacy-filters {
+                flex-direction: column;
+            }
+            .pharmacy-filters select,
+            .pharmacy-filters input {
+                width: 100%;
+                min-width: unset;
+            }
+            .medicine-search {
+                flex-direction: column;
+            }
+            .medicine-search input,
+            .medicine-search select {
+                width: 100%;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            .prescription-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .prescription-item img {
+                width: 100%;
+                height: 180px;
+            }
+            .btn-row {
+                flex-direction: column;
+            }
+            .btn-row .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0ebe7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D5CCC5;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A19DA4;
+        }
+
+        /* toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .toast {
+            padding: 14px 22px;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s ease;
+            max-width: 360px;
+        }
+        .toast-success {
+            background: #2d7d2d;
+        }
+        .toast-error {
+            background: #b33c3c;
+        }
+        .toast-info {
+            background: #2a6bb0;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="app-header">
+        <div class="logo">Bosa <span>Care</span></div>
+        <div class="user-area">
+            <span class="user-name">👤 Guest</span>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="app-content">
+
+        <!-- ===== PHARMACIES SECTION ===== -->
+        <section class="section" id="section-pharmacies">
+            <h2 class="section-title">Pharmacies <small>across Botswana</small></h2>
+
+            <div class="pharmacy-filters">
+                <select id="districtFilter">
+                    <option value="">All Districts</option>
+                </select>
+                <input type="text" id="pharmacySearch" placeholder="Search pharmacy, town, or district..." />
+                <button class="btn btn-secondary" id="refreshPharmaciesBtn">Refresh</button>
+            </div>
+
+            <div class="map-container" id="mapContainer"></div>
+
+            <div class="card-grid" id="pharmacyList"></div>
+        </section>
+
+        <!-- ===== MEDICINES SECTION ===== -->
+        <section class="section" id="section-medicines">
+            <h2 class="section-title">💊 Medicine Catalogue</h2>
+
+            <div class="medicine-search">
+                <input type="text" id="medSearch" placeholder="Search medicine or condition..." />
+                <select id="medConditionFilter">
+                    <option value="">All Conditions</option>
+                    <option value="HIV">HIV</option>
+                    <option value="Cancer">Cancer</option>
+                    <option value="Hypertension">Hypertension</option>
+                    <option value="Anaemia">Anaemia</option>
+                    <option value="Diabetes">Diabetes</option>
+                </select>
+                <select id="medPharmacyFilter">
+                    <option value="">All Pharmacies</option>
+                </select>
+                <button class="btn btn-secondary" id="refreshMedsBtn">Refresh</button>
+            </div>
+
+            <div class="card-grid" id="medicineList"></div>
+        </section>
+
+        <!-- ===== PRESCRIPTIONS SECTION ===== -->
+        <section class="section" id="section-prescriptions">
+            <h2 class="section-title">📋 Prescriptions</h2>
+
+            <div class="card" style="background:#fcf9f7;">
+                <h3 style="margin-bottom:12px; color:#5E604D;">Upload New Prescription</h3>
+                <div class="prescription-upload">
+                    <!-- Drop zone for drag & drop and click to browse -->
+                    <div class="drop-zone" id="dropZone">
+                        <div class="icon-big">🖼️</div>
+                        <p>Drop your prescription image here or click to browse</p>
+                        <input type="file" id="prescriptionFile" accept="image/*" />
+                    </div>
+
+                    <!-- Camera button -->
+                    <div class="btn-row">
+                        <button class="btn btn-secondary" id="cameraBtn" style="flex:1;">📷 Scan with Camera</button>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pharmacy</label>
+                            <select id="prescPharmacy"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes (optional)</label>
+                            <input type="text" id="prescNotes" placeholder="e.g. urgent, refill..." />
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block" id="uploadPrescBtn">📤 Upload Prescription</button>
+                </div>
+            </div>
+
+            <h3 style="margin: 20px 0 12px; color:#5E604D;">Your Prescriptions</h3>
+            <div id="prescriptionList"></div>
+        </section>
+
+    </main>
+
+    <!-- ===== CAMERA MODAL ===== -->
+    <div class="camera-overlay" id="cameraOverlay">
+        <div class="camera-card">
+            <div class="camera-header">
+                <span>📷 Scan Prescription</span>
+                <button class="btn-close" id="cameraCloseBtn">&times;</button>
+            </div>
+            <div class="camera-view">
+                <video id="cameraVideo" autoplay playsinline></video>
+                <canvas id="cameraCanvas" style="display:none;"></canvas>
+            </div>
+            <div class="camera-actions">
+                <button class="btn btn-secondary" id="cameraCaptureBtn">📸 Capture</button>
+                <button class="btn btn-outline" id="cameraSwitchBtn">Switch</button>
+            </div>
+            <div class="camera-error" id="cameraError"></div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ==========================================================
+            // STATE
+            // ==========================================================
+            let map = null;
+            let mapMarkers = [];
+            let pharmaciesCache = [];
+            let medicinesCache = [];
+            let prescriptionsCache = [];
+
+            // DOM refs
+            const $ = id => document.getElementById(id);
+            const $$ = sel => document.querySelectorAll(sel);
+
+            // ==========================================================
+            // INIT
+            // ==========================================================
+            function init() {
+                loadDemoData();
+                setupDropZone();
+                setupCamera();
+                setupEventListeners();
+            }
+
+            // ==========================================================
+            // DROP ZONE
+            // ==========================================================
+            function setupDropZone() {
+                const dz = $('dropZone');
+                const fileInput = $('prescriptionFile');
+                dz.addEventListener('click', () => fileInput.click());
+                dz.addEventListener('dragover', (e) => { e.preventDefault();
+                    dz.style.borderColor = '#DB827F';
+                    dz.style.background = '#FFF5EF'; });
+                dz.addEventListener('dragleave', () => { dz.style.borderColor = '#D5CCC5';
+                    dz.style.background = '#faf8f7'; });
+                dz.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dz.style.borderColor = '#D5CCC5';
+                    dz.style.background = '#faf8f7';
+                    if (e.dataTransfer.files.length) {
+                        fileInput.files = e.dataTransfer.files;
+                        handlePrescriptionFile(fileInput.files[0]);
+                    }
+                });
+                fileInput.addEventListener('change', () => {
+                    if (fileInput.files.length) handlePrescriptionFile(fileInput.files[0]);
+                });
+            }
+
+            let uploadedPrescFile = null;
+
+            function handlePrescriptionFile(file) {
+                if (!file.type.startsWith('image/')) {
+                    toast('Please upload an image file.', 'error');
+                    return;
+                }
+                uploadedPrescFile = file;
+                const dz = $('dropZone');
+                dz.innerHTML = `
+              <div class="icon-big">✅</div>
+              <p><strong>${file.name}</strong> (${(file.size/1024).toFixed(1)} KB)</p>
+              <p style="font-size:13px;color:#DB827F;">Click to change</p>
+              <input type="file" accept="image/*" style="display:none;" />
+            `;
+                // re-bind
+                const newInput = dz.querySelector('input[type="file"]');
+                if (newInput) {
+                    newInput.addEventListener('change', (e) => {
+                        if (e.target.files.length) handlePrescriptionFile(e.target.files[0]);
+                    });
+                    dz.addEventListener('click', () => newInput.click());
+                }
+                toast('Prescription image ready', 'success');
+            }
+
+            // ==========================================================
+            // CAMERA SCANNER (live preview + capture)
+            // ==========================================================
+            function setupCamera() {
+                const overlay = $('cameraOverlay');
+                const video = $('cameraVideo');
+                const canvas = $('cameraCanvas');
+                const captureBtn = $('cameraCaptureBtn');
+                const closeBtn = $('cameraCloseBtn');
+                const switchBtn = $('cameraSwitchBtn');
+                const errorEl = $('cameraError');
+                const cameraBtn = $('cameraBtn');
+
+                let stream = null;
+                let facingMode = 'environment';
+
+                function stopStream() {
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                        stream = null;
+                    }
+                    video.srcObject = null;
+                }
+
+                async function startCamera() {
+                    try {
+                        errorEl.style.display = 'none';
+                        errorEl.textContent = '';
+                        const constraints = {
+                            video: { facingMode: facingMode, width: { ideal: 640 }, height: { ideal: 480 } }
+                        };
+                        stream = await navigator.mediaDevices.getUserMedia(constraints);
+                        video.srcObject = stream;
+                        await video.play();
+                        overlay.classList.add('active');
+                    } catch (err) {
+                        // fallback: try front camera if back fails
+                        if (facingMode === 'environment') {
+                            facingMode = 'user';
+                            try {
+                                const constraints = { video: { facingMode: 'user', width: { ideal: 640 },
+                                        height: { ideal: 480 } } };
+                                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                                video.srcObject = stream;
+                                await video.play();
+                                overlay.classList.add('active');
+                                return;
+                            } catch (e2) {
+                                // fall through
+                            }
+                        }
+                        errorEl.style.display = 'block';
+                        errorEl.textContent = 'Cannot access camera. Please use file upload.';
+                        toast('Camera unavailable. Use file upload instead.', 'error');
+                    }
+                }
+
+                function captureImage() {
+                    if (!stream) {
+                        toast('Camera is not active.', 'error');
+                        return;
+                    }
+                    canvas.width = video.videoWidth || 640;
+                    canvas.height = video.videoHeight || 480;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            toast('Failed to capture image.', 'error');
+                            return;
+                        }
+                        const file = new File([blob], `camera-capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
+                        handlePrescriptionFile(file);
+                        closeCamera();
+                        toast('Prescription captured!', 'success');
+                    }, 'image/jpeg', 0.95);
+                }
+
+                function closeCamera() {
+                    stopStream();
+                    overlay.classList.remove('active');
+                    errorEl.style.display = 'none';
+                    errorEl.textContent = '';
+                }
+
+                function switchCamera() {
+                    facingMode = facingMode === 'environment' ? 'user' : 'environment';
+                    stopStream();
+                    startCamera();
+                }
+
+                // Event listeners
+                cameraBtn.addEventListener('click', () => {
+                    if (!('mediaDevices' in navigator) || !('getUserMedia' in navigator.mediaDevices)) {
+                        toast('Camera not supported on this device. Use file upload.', 'error');
+                        return;
+                    }
+                    startCamera();
+                });
+
+                captureBtn.addEventListener('click', captureImage);
+                closeBtn.addEventListener('click', closeCamera);
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) closeCamera();
+                });
+                switchBtn.addEventListener('click', switchCamera);
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                        closeCamera();
+                    }
+                });
+            }
+
+            // ==========================================================
+            // EVENT LISTENERS
+            // ==========================================================
+            function setupEventListeners() {
+                $('uploadPrescBtn').addEventListener('click', uploadPrescription);
+                $('refreshPharmaciesBtn').addEventListener('click', () => { loadDemoPharmacies(); });
+                $('refreshMedsBtn').addEventListener('click', () => { loadDemoMedicines(); });
+
+                $('districtFilter').addEventListener('change', filterPharmacies);
+                $('pharmacySearch').addEventListener('input', filterPharmacies);
+
+                $('medSearch').addEventListener('input', filterMedicines);
+                $('medConditionFilter').addEventListener('change', filterMedicines);
+                $('medPharmacyFilter').addEventListener('change', filterMedicines);
+            }
+
+            // ==========================================================
+            // DEMO DATA LOADERS
+            // ==========================================================
+            function loadDemoData() {
+                loadDemoPharmacies();
+                loadDemoMedicines();
+                loadDemoPrescriptions();
+                toast('📱 Running in demo mode — data is local.', 'info');
+            }
+
+            // ---- PHARMACIES ----
+            function loadDemoPharmacies() {
+                pharmaciesCache = getDemoPharmacies();
+                renderPharmacies();
+                populateDistrictFilter();
+                populatePharmacySelects();
+                initMap();
+            }
+
+            function getDemoPharmacies() {
+                // Detailed town data per district
+                const townsData = {
+                    'Central': [
+                        { town: 'Serowe', lat: -22.3875, lng: 26.7100 },
+                        { town: 'Palapye', lat: -22.5500, lng: 27.1333 },
+                        { town: 'Mahalapye', lat: -23.1042, lng: 26.8147 },
+                        { town: 'Bobonong', lat: -21.9667, lng: 28.4333 },
+                        { town: 'Selebi-Phikwe', lat: -21.9667, lng: 27.8333 }
+                    ],
+                    'Chobe': [
+                        { town: 'Kasane', lat: -17.8017, lng: 25.1603 },
+                        { town: 'Kazungula', lat: -17.7833, lng: 25.2167 },
+                        { town: 'Lesoma', lat: -17.7333, lng: 25.2333 }
+                    ],
+                    'Ghanzi': [
+                        { town: 'Ghanzi', lat: -21.7000, lng: 21.7000 },
+                        { town: 'Charles Hill', lat: -22.0000, lng: 20.5000 }
+                    ],
+                    'Kgalagadi': [
+                        { town: 'Tsabong', lat: -25.0167, lng: 22.4167 },
+                        { town: 'Hukuntsi', lat: -23.9833, lng: 21.7667 },
+                        { town: 'Werda', lat: -25.0167, lng: 21.2333 }
+                    ],
+                    'Kgatleng': [
+                        { town: 'Mochudi', lat: -24.4167, lng: 26.1500 },
+                        { town: 'Modipane', lat: -24.6333, lng: 26.1167 }
+                    ],
+                    'Kweneng': [
+                        { town: 'Molepolole', lat: -24.4167, lng: 25.4950 },
+                        { town: 'Thamaga', lat: -24.6667, lng: 25.5000 },
+                        { town: 'Gabane', lat: -24.6667, lng: 25.7833 }
+                    ],
+                    'North-East': [
+                        { town: 'Francistown', lat: -21.1700, lng: 27.5075 },
+                        { town: 'Tonota', lat: -21.4500, lng: 27.5000 }
+                    ],
+                    'North-West Ngamiland': [
+                        { town: 'Maun', lat: -19.9833, lng: 23.4167 },
+                        { town: 'Shakawe', lat: -18.3667, lng: 21.8500 },
+                        { town: 'Gumare', lat: -19.3333, lng: 22.1667 }
+                    ],
+                    'South-East': [
+                        { town: 'Gaborone', lat: -24.6282, lng: 25.9231 },
+                        { town: 'Lobatse', lat: -25.2167, lng: 25.6667 },
+                        { town: 'Ramotswa', lat: -24.8667, lng: 25.4667 }
+                    ],
+                    'Southern': [
+                        { town: 'Kanye', lat: -24.9667, lng: 25.3333 },
+                        { town: 'Jwaneng', lat: -24.6000, lng: 24.7333 },
+                        { town: 'Goodhope', lat: -25.4667, lng: 25.4500 }
+                    ]
+                };
+
+                const pharmacies = [];
+                let idCounter = 1;
+                Object.keys(townsData).forEach(district => {
+                    townsData[district].forEach(town => {
+                        const variants = ['Pharmacy', 'Medical Centre', 'Drug Store', 'Health Hub'];
+                        const variant = variants[idCounter % variants.length];
+                        const fullName = `${town.town} ${variant}`;
+                        pharmacies.push({
+                            id: 'p' + idCounter,
+                            name: fullName,
+                            district: district,
+                            town: town.town,
+                            address: `Main Street, ${town.town}`,
+                            lat: town.lat + (Math.random() - 0.5) * 0.05,
+                            lng: town.lng + (Math.random() - 0.5) * 0.05,
+                            contact: '+267 7' + Math.floor(1000000 + Math.random() * 9000000)
+                        });
+                        idCounter++;
+                    });
+                });
+                return pharmacies;
+            }
+
+            function renderPharmacies() {
+                const list = $('pharmacyList');
+                const filtered = getFilteredPharmacies();
+                if (!filtered.length) {
+                    list.innerHTML =
+                        `<div class="empty-state"><div class="icon-big">🏪</div><h3>No pharmacies found</h3><p>Try adjusting your filters.</p></div>`;
+                    return;
+                }
+                list.innerHTML = filtered.map(p => `
+              <div class="pharmacy-item">
+                <div class="name">${p.name}</div>
+                <div class="district">📍 ${p.district}</div>
+                <div class="town">${p.town}</div>
+                <div class="address">${p.address || '—'}</div>
+                <div style="font-size:13px;color:#A19DA4;">${p.contact || 'N/A'}</div>
+                <div class="actions">
+                  <button class="btn btn-secondary btn-sm" onclick="window.viewPharmacyMeds('${p.id}')">View Medicines</button>
+                  <button class="btn btn-outline btn-sm" onclick="window.locatePharmacy(${p.lat},${p.lng})">Locate</button>
+                </div>
+              </div>
+            `).join('');
+                updateMapMarkers(filtered);
+            }
+
+            function getFilteredPharmacies() {
+                const district = $('districtFilter').value;
+                const search = $('pharmacySearch').value.toLowerCase().trim();
+                return pharmaciesCache.filter(p => {
+                    if (district && p.district !== district) return false;
+                    if (search) {
+                        const match = p.name.toLowerCase().includes(search) ||
+                            (p.town && p.town.toLowerCase().includes(search)) ||
+                            (p.district && p.district.toLowerCase().includes(search));
+                        if (!match) return false;
+                    }
+                    return true;
+                });
+            }
+
+            function populateDistrictFilter() {
+                const sel = $('districtFilter');
+                const current = sel.value;
+                const districts = [...new Set(pharmaciesCache.map(p => p.district).filter(Boolean))].sort();
+                sel.innerHTML = `<option value="">All Districts</option>` +
+                    districts.map(d => `<option value="${d}" ${d===current?'selected':''}>${d}</option>`).join('');
+            }
+
+            function populatePharmacySelects() {
+                const selects = ['prescPharmacy'];
+                selects.forEach(id => {
+                    const sel = $(id);
+                    if (!sel) return;
+                    const current = sel.value;
+                    sel.innerHTML = `<option value="">Select pharmacy</option>` +
+                        pharmaciesCache.map(p =>
+                            `<option value="${p.id}" ${p.id===current?'selected':''}>${p.name} (${p.town}, ${p.district})</option>`
+                            ).join('');
+                });
+            }
+
+            // ---- MAP ----
+            function initMap() {
+                const container = $('mapContainer');
+                if (!container) return;
+                if (map) { map.remove();
+                    map = null; }
+                try {
+                    map = L.map(container).setView([-22.0, 24.0], 6);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap',
+                        maxZoom: 18,
+                    }).addTo(map);
+                    updateMapMarkers(getFilteredPharmacies());
+                    setTimeout(() => map.invalidateSize(), 300);
+                } catch (_) { /* fallback */ }
+            }
+
+            function updateMapMarkers(pharmacies) {
+                if (!map) return;
+                mapMarkers.forEach(m => map.removeLayer(m));
+                mapMarkers = [];
+                if (!pharmacies.length) return;
+                const bounds = L.latLngBounds();
+                pharmacies.forEach(p => {
+                    if (p.lat && p.lng) {
+                        const marker = L.marker([p.lat, p.lng])
+                            .bindPopup(`<strong>${p.name}</strong><br>${p.town}, ${p.district}<br>${p.address || ''}`)
+                            .addTo(map);
+                        mapMarkers.push(marker);
+                        bounds.extend([p.lat, p.lng]);
+                    }
+                });
+                if (mapMarkers.length > 1) {
+                    map.fitBounds(bounds, { padding: [40, 40] });
+                } else if (mapMarkers.length === 1) {
+                    map.setZoom(13);
+                }
+            }
+
+            function filterPharmacies() { renderPharmacies(); }
+
+            // ---- MEDICINES ----
+            function loadDemoMedicines() {
+                medicinesCache = getDemoMedicines();
+                renderMedicines();
+                populateMedPharmacyFilter();
+            }
+
+            function getDemoMedicines() {
+                const pharm = pharmaciesCache.length ? pharmaciesCache : getDemoPharmacies();
+                const meds = [];
+                const conditions = {
+                    'HIV': ['Tenofovir', 'Lamivudine', 'Dolutegravir', 'Efavirenz', 'Ritonavir', 'Atazanavir'],
+                    'Cancer': ['Methotrexate', 'Cyclophosphamide', 'Doxorubicin', 'Paclitaxel', 'Tamoxifen', 'Cisplatin'],
+                    'Hypertension': ['Lisinopril', 'Amlodipine', 'Losartan', 'Hydrochlorothiazide', 'Metoprolol',
+                        'Ramipril'
+                    ],
+                    'Anaemia': ['Ferrous sulfate', 'Folic acid', 'Vitamin B12', 'Erythropoietin', 'Iron dextran',
+                        'Cyanocobalamin'
+                    ],
+                    'Diabetes': ['Metformin', 'Insulin glargine', 'Gliclazide', 'Sitagliptin', 'Empagliflozin',
+                        'Pioglitazone'
+                    ]
+                };
+                pharm.forEach((p, idx) => {
+                    let counter = 0;
+                    Object.keys(conditions).forEach(cond => {
+                        const drugs = conditions[cond];
+                        const count = 2 + Math.floor(Math.random() * 2);
+                        for (let i = 0; i < count && counter < 30; i++) {
+                            const drug = drugs[(idx + i) % drugs.length];
+                            meds.push({
+                                id: `m${idx}${counter}`,
+                                name: drug,
+                                pharmacy_id: p.id,
+                                pharmacy: p,
+                                condition: cond,
+                                price: (10 + Math.random() * 200).toFixed(2),
+                                stock: Math.floor(Math.random() * 80) + 5,
+                                description: `${drug} — used for ${cond}.`
+                            });
+                            counter++;
+                        }
+                    });
+                });
+                return meds;
+            }
+
+            function renderMedicines() {
+                const list = $('medicineList');
+                const filtered = getFilteredMedicines();
+                if (!filtered.length) {
+                    list.innerHTML =
+                        `<div class="empty-state"><div class="icon-big">💊</div><h3>No medicines found</h3><p>Try adjusting your search.</p></div>`;
+                    return;
+                }
+                list.innerHTML = filtered.map(m => {
+                    const pharmName = m.pharmacy ? m.pharmacy.name : 'Unknown';
+                    const pharmTown = m.pharmacy ? m.pharmacy.town : '';
+                    const stockClass = m.stock > 20 ? 'badge-green' : m.stock > 5 ? 'badge-orange' : 'badge-red';
+                    const stockLabel = m.stock > 20 ? 'In Stock' : m.stock > 5 ? 'Low Stock' : 'Out of Stock';
+                    const condClass = m.condition === 'HIV' ? 'badge-purple' :
+                                     m.condition === 'Cancer' ? 'badge-red' :
+                                     m.condition === 'Hypertension' ? 'badge-blue' :
+                                     m.condition === 'Anaemia' ? 'badge-orange' :
+                                     m.condition === 'Diabetes' ? 'badge-green' : 'badge-blue';
+                    return `
+                <div class="medicine-item">
+                  <div class="med-name">${m.name}</div>
+                  <div class="med-pharmacy">🏥 ${pharmName} ${pharmTown ? '· '+pharmTown : ''}</div>
+                  <div class="med-condition"><span class="badge ${condClass}">${m.condition || 'General'}</span></div>
+                  <div class="med-price">P ${parseFloat(m.price).toFixed(2)}</div>
+                  <div class="med-stock"><span class="badge ${stockClass}">${stockLabel} (${m.stock})</span></div>
+                  <div style="font-size:13px;color:#A19DA4;">${m.description || ''}</div>
+                  <div style="margin-top:6px;">
+                    <button class="btn btn-secondary btn-sm" onclick="window.orderMedicine('${m.id}')">🛒 Order</button>
+                  </div>
+                </div>
+              `;
+                }).join('');
+            }
+
+            function getFilteredMedicines() {
+                const search = $('medSearch').value.toLowerCase().trim();
+                const condition = $('medConditionFilter').value;
+                const pharmId = $('medPharmacyFilter').value;
+                return medicinesCache.filter(m => {
+                    if (search && !m.name.toLowerCase().includes(search) && !(m.condition || '').toLowerCase().includes(
+                        search)) return false;
+                    if (condition && m.condition !== condition) return false;
+                    if (pharmId && m.pharmacy_id !== pharmId) return false;
+                    return true;
+                });
+            }
+
+            function populateMedPharmacyFilter() {
+                const sel = $('medPharmacyFilter');
+                const current = sel.value;
+                const ids = [...new Set(medicinesCache.map(m => m.pharmacy_id).filter(Boolean))];
+                const options = ids.map(id => {
+                    const p = pharmaciesCache.find(p => p.id === id);
+                    return p ? `<option value="${p.id}" ${p.id===current?'selected':''}>${p.name} (${p.town})</option>` :
+                        '';
+                }).filter(Boolean);
+                sel.innerHTML = `<option value="">All Pharmacies</option>` + options.join('');
+            }
+
+            function filterMedicines() { renderMedicines(); }
+
+            // ---- PRESCRIPTIONS ----
+            function loadDemoPrescriptions() {
+                prescriptionsCache = getDemoPrescriptions();
+                renderPrescriptions();
+            }
+
+            function getDemoPrescriptions() {
+                const pharm = pharmaciesCache.length ? pharmaciesCache : getDemoPharmacies();
+                return [
+                    { id: 'rx1', user_id: 'demo', pharmacy_id: pharm[0]?.id || 'p1', image_url: null,
+                        notes: 'HIV ARV refill', status: 'pending', created_at: new Date(Date.now() - 86400000)
+                        .toISOString() },
+                    { id: 'rx2', user_id: 'demo', pharmacy_id: pharm[3]?.id || 'p2', image_url: null,
+                        notes: 'Chemotherapy cycle', status: 'held', created_at: new Date(Date.now() - 172800000)
+                        .toISOString() },
+                    { id: 'rx3', user_id: 'demo', pharmacy_id: pharm[5]?.id || 'p3', image_url: null,
+                        notes: 'Hypertension meds', status: 'released', created_at: new Date(Date.now() - 259200000)
+                        .toISOString() },
+                ];
+            }
+
+            function renderPrescriptions() {
+                const list = $('prescriptionList');
+                const items = prescriptionsCache;
+                if (!items || !items.length) {
+                    list.innerHTML =
+                        `<div class="empty-state"><div class="icon-big">📋</div><h3>No prescriptions</h3><p>Upload your first prescription above.</p></div>`;
+                    return;
+                }
+                list.innerHTML = items.map(rx => {
+                    const pharm = pharmaciesCache.find(p => p.id === rx.pharmacy_id);
+                    const statusMap = { pending: 'badge-orange', held: 'badge-blue', released: 'badge-green',
+                        refunded: 'badge-red' };
+                    const statusLabel = rx.status || 'pending';
+                    return `
+                <div class="prescription-item">
+                  <div style="width:80px;height:80px;background:#EBE3DD;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;border:2px solid #D5CCC5;">
+                    🖼️
+                  </div>
+                  <div class="info">
+                    <div><strong>#${rx.id.slice(0,8)}</strong> · ${pharm ? pharm.name + ' ('+pharm.town+')' : 'N/A'}</div>
+                    <div style="font-size:14px;color:#A19DA4;">${rx.notes || 'No notes'}</div>
+                    <div><span class="badge ${statusMap[statusLabel] || 'badge-orange'}">${statusLabel.toUpperCase()}</span></div>
+                    <div style="font-size:12px;color:#A19DA4;">${new Date(rx.created_at).toLocaleDateString()}</div>
+                  </div>
+                </div>
+              `;
+                }).join('');
+            }
+
+            // ---- UPLOAD PRESCRIPTION ----
+            function uploadPrescription() {
+                const pharmacyId = $('prescPharmacy').value;
+                const notes = $('prescNotes').value.trim();
+                if (!pharmacyId) { toast('Please select a pharmacy.', 'error'); return; }
+                if (!uploadedPrescFile) { toast('Please select or scan a prescription image.', 'error'); return; }
+
+                const newRx = {
+                    id: 'rx' + Date.now(),
+                    user_id: 'demo',
+                    pharmacy_id: pharmacyId,
+                    image_url: null,
+                    notes: notes || 'Prescription uploaded',
+                    status: 'pending',
+                    created_at: new Date().toISOString(),
+                };
+                prescriptionsCache.unshift(newRx);
+                renderPrescriptions();
+                toast('Prescription uploaded (demo mode)', 'success');
+                uploadedPrescFile = null;
+                // Reset drop zone
+                const dz = $('dropZone');
+                dz.innerHTML =
+                    `<div class="icon-big">🖼️</div><p>Drop your prescription image here or click to browse</p><input type="file" accept="image/*" style="display:none;" />`;
+                setupDropZone();
+                $('prescNotes').value = '';
+            }
+
+            // ---- GLOBAL HELPER FUNCTIONS ----
+            window.viewPharmacyMeds = function(pharmacyId) {
+                document.getElementById('section-medicines').scrollIntoView({ behavior: 'smooth' });
+                $('medPharmacyFilter').value = pharmacyId;
+                filterMedicines();
+                toast('Showing medicines for selected pharmacy', 'info');
+            };
+
+            window.locatePharmacy = function(lat, lng) {
+                if (map) {
+                    map.setView([lat, lng], 15);
+                    toast('📍 Location focused on map', 'info');
+                } else {
+                    toast('Map not available', 'error');
+                }
+            };
+
+            window.orderMedicine = function(medId) {
+                const med = medicinesCache.find(m => m.id === medId);
+                if (med) {
+                    toast(`🛒 Added "${med.name}" to cart (demo)`, 'success');
+                } else {
+                    toast('Medicine not found', 'error');
+                }
+            };
+
+            // ==========================================================
+            // TOAST
+            // ==========================================================
+            function toast(message, type = 'info') {
+                const container = $('toastContainer');
+                const el = document.createElement('div');
+                el.className = `toast toast-${type}`;
+                el.textContent = message;
+                container.appendChild(el);
+                setTimeout(() => { el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 300); }, 3500);
+            }
+
+            // ==========================================================
+            // START
+            // ==========================================================
+            document.addEventListener('DOMContentLoaded', init);
+
+        })();
+    </script>
+
+</body>
+</html>
