@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Profile | Bosa Care — Doctor</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>My Profile | Bosa Care — Patient</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
   <style>
@@ -60,7 +59,6 @@
       font-size: 1.2rem;
       font-weight: 700;
     }
-    .nav-brand span { color: var(--coral); }
     .nav-brand .brand-bosa { color: #fff; }
     .nav-brand .brand-care { color: var(--coral); }
     .nav-center { 
@@ -132,13 +130,7 @@
       color: var(--coral); padding: 0.18rem 0.6rem;
       background: rgba(219,130,127,0.1); border: 1px solid rgba(219,130,127,0.25); border-radius: 100px;
     }
-    .avatar-spec { font-size: 0.75rem; color: var(--lilac); margin-top: 0.35rem; }
-    .avatar-joined { font-size: 0.72rem; color: var(--grey); margin-top: 0.2rem; }
-    .verified-badge {
-      display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.55rem;
-      padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.65rem; font-weight: 700;
-      background: rgba(94,96,77,0.1); color: var(--ebony); border: 1px solid var(--grey);
-    }
+    .avatar-joined { font-size: 0.72rem; color: var(--grey); margin-top: 0.35rem; }
 
     /* ===== MAIN CONTENT ===== */
     .main-col { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; }
@@ -156,8 +148,6 @@
       display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;
     }
     .card-title svg { width: 14px; height: 14px; stroke: var(--coral); fill: none; stroke-width: 2; }
-    .card-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-    .card-title-row .card-title { margin-bottom: 0; }
     .divider { height: 1px; background: var(--grey); margin: 1.25rem 0; }
 
     /* ===== FORMS ===== */
@@ -169,7 +159,6 @@
       letter-spacing: 0.09em; color: var(--lilac);
     }
     .field-req { color: var(--coral); margin-left: 2px; }
-    .field-hint { font-size: 0.72rem; color: var(--grey); margin-top: 0.2rem; }
     .dash-input, .dash-select, .dash-textarea {
       background: var(--cream); border: 1px solid var(--grey);
       border-radius: 10px; color: var(--ink); font-size: 0.86rem;
@@ -183,6 +172,11 @@
     .dash-input::placeholder, .dash-textarea::placeholder { color: var(--grey); }
     .dash-select { appearance: none; cursor: pointer; }
     .dash-select option { background: var(--white); }
+    .dash-input:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .input-wrap { position: relative; }
+    .input-wrap .input-icon { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--lilac); pointer-events: none; stroke: currentColor; fill: none; stroke-width: 2; }
+    .input-wrap .dash-input { padding-left: 2.5rem; }
 
     /* ===== BUTTONS ===== */
     .btn-primary {
@@ -209,25 +203,10 @@
     .btn-row { display: flex; gap: 0.65rem; margin-top: 1.25rem; flex-wrap: wrap; }
 
     /* ===== STATS ===== */
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
     .stat-chip { padding: 1rem; border-radius: 10px; background: var(--cream); border: 1px solid var(--grey); text-align: center; }
     .stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--coral); font-weight: 700; }
     .stat-lbl { font-size: 0.72rem; color: var(--lilac); margin-top: 0.2rem; }
-
-    /* ===== LICENSE STATUS ===== */
-    .license-status {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.9rem 1rem; border-radius: 10px;
-      background: rgba(94,96,77,0.08); border: 1px solid var(--grey);
-      margin-bottom: 1.5rem;
-    }
-    .license-status svg { width: 16px; height: 16px; color: var(--ebony); flex-shrink: 0; }
-    .license-status-text { font-size: 0.82rem; color: var(--ebony); font-weight: 600; }
-    .license-status-sub { font-size: 0.73rem; color: var(--lilac); margin-top: 0.1rem; }
-    .license-expiry-warn {
-      background: rgba(219,130,127,0.08); border-color: var(--coral);
-    }
-    .license-expiry-warn svg, .license-expiry-warn .license-status-text { color: var(--coral); }
 
     /* ===== DOCUMENTS ===== */
     .doc-upload-zone {
@@ -325,32 +304,6 @@
     .danger-info .danger-label { font-size: 0.86rem; font-weight: 600; color: var(--ink); margin-bottom: 0.15rem; }
     .danger-info .danger-sub { font-size: 0.75rem; color: var(--lilac); }
 
-    /* ===== AVAILABILITY ===== */
-    .avail-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.4rem; margin-bottom: 1rem; }
-    .avail-day {
-      padding: 0.5rem 0.25rem; border-radius: 8px; border: 1px solid var(--grey);
-      background: var(--cream); text-align: center; font-size: 0.72rem;
-      color: var(--lilac); cursor: pointer; transition: all 0.18s;
-    }
-    .avail-day.on { background: rgba(219,130,127,0.12); border-color: var(--coral); color: var(--coral-dark); font-weight: 600; }
-    .avail-day:hover { border-color: var(--coral); }
-
-    /* ===== TOAST ===== */
-    .toast {
-      position: fixed; bottom: 1.75rem; right: 1.75rem; z-index: 999;
-      padding: 0.8rem 1.25rem; border-radius: 12px; font-size: 0.83rem;
-      font-weight: 500; display: flex; align-items: center; gap: 0.6rem;
-      opacity: 0; transform: translateY(8px);
-      transition: all 0.3s cubic-bezier(0.22,1,0.36,1); pointer-events: none;
-    }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .toast.success { background: rgba(94,96,77,0.95); border: 1px solid var(--grey); color: #fff; }
-    .toast.error { background: rgba(219,130,127,0.95); border: 1px solid var(--coral); color: #fff; }
-    .toast.info { background: rgba(94,96,77,0.95); border: 1px solid var(--grey); color: #fff; }
-
-    .section-sub { font-size: 0.78rem; color: var(--lilac); margin-bottom: 1rem; line-height: 1.6; }
-    .hidden { display: none !important; }
-
     /* ===== AVATAR EDIT ===== */
     .avatar-edit-wrap {
       display: flex; align-items: center; gap: 1.5rem;
@@ -378,6 +331,21 @@
     .btn-upload-label svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
     #avatarUploadInput { display: none; }
 
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed; bottom: 1.75rem; right: 1.75rem; z-index: 999;
+      padding: 0.8rem 1.25rem; border-radius: 12px; font-size: 0.83rem;
+      font-weight: 500; display: flex; align-items: center; gap: 0.6rem;
+      opacity: 0; transform: translateY(8px);
+      transition: all 0.3s cubic-bezier(0.22,1,0.36,1); pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: rgba(94,96,77,0.95); border: 1px solid var(--grey); color: #fff; }
+    .toast.error { background: rgba(219,130,127,0.95); border: 1px solid var(--coral); color: #fff; }
+    .toast.info { background: rgba(94,96,77,0.95); border: 1px solid var(--grey); color: #fff; }
+
+    .section-sub { font-size: 0.78rem; color: var(--lilac); margin-bottom: 1rem; line-height: 1.6; }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 920px) {
       .page-shell { grid-template-columns: 1fr; }
@@ -387,12 +355,11 @@
       .avatar-ring { margin-bottom: 0; flex-shrink: 0; }
       nav { padding: 0.75rem 1rem; }
       .page-shell { padding: 0 1rem; margin: 1rem auto; }
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .stats-row { grid-template-columns: repeat(3, 1fr); }
     }
     @media (max-width: 540px) {
       .form-grid { grid-template-columns: 1fr; }
       .stats-row { grid-template-columns: 1fr 1fr; }
-      .avail-grid { grid-template-columns: repeat(4, 1fr); }
     }
   </style>
 </head>
@@ -407,13 +374,13 @@
       <span class="brand-care">Care</span>
     </div>
   </a>
-  <span class="nav-center">Doctor Profile &amp; Settings</span>
+  <span class="nav-center">Patient Profile &amp; Settings</span>
   <div class="nav-right">
-    <a href="doctor-dashboard.html" class="btn-nav">
+    <a href="patient-dashboard.html" class="btn-nav">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
       Dashboard
     </a>
-    <button class="btn-nav" onclick="doctorSignOut()">Sign Out</button>
+    <button class="btn-nav" onclick="patientSignOut()">Sign Out</button>
   </div>
 </nav>
 
@@ -423,18 +390,13 @@
   <aside>
     <div class="avatar-block">
       <div class="avatar-ring" id="avatarCircle">
-        <span>Dr</span>
+        <span id="avatarInitials">ST</span>
         <div class="avatar-edit-overlay">✎ Edit</div>
       </div>
       <div>
-        <div class="avatar-name" id="avatarName">Dr. Shatho Tumelo</div>
-        <div class="avatar-role">Physician</div>
-        <div class="avatar-spec" id="avatarSpec">General Practitioner</div>
+        <div class="avatar-name" id="avatarName">Shatho Tumelo</div>
+        <div class="avatar-role">Patient</div>
         <div class="avatar-joined" id="avatarJoined">Joined March 2024</div>
-        <div class="verified-badge">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Verified Practitioner
-        </div>
       </div>
     </div>
 
@@ -444,17 +406,13 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Personal Info
       </div>
-      <div class="nav-item" data-panel="professional">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-        Professional Details
-      </div>
-      <div class="nav-item" data-panel="practice">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Practice Info
+      <div class="nav-item" data-panel="medical">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/></svg>
+        Medical &amp; Emergency
       </div>
       <div class="nav-item" data-panel="documents">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Credentials &amp; Docs
+        Documents
       </div>
       <div class="sidebar-group-label">Settings</div>
       <div class="nav-item" data-panel="security">
@@ -483,14 +441,14 @@
           Profile Photo
         </div>
         <div class="avatar-edit-wrap">
-          <div class="avatar-preview" id="avatarPreview">Dr</div>
+          <div class="avatar-preview" id="avatarPreview">ST</div>
           <div class="avatar-edit-actions">
             <label class="btn-upload-label" for="avatarUploadInput">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               Upload Photo
             </label>
             <input type="file" id="avatarUploadInput" accept="image/*"/>
-            <button class="btn-secondary" style="font-size:0.78rem;" onclick="doctorRemoveAvatar()">Remove Photo</button>
+            <button class="btn-secondary" style="font-size:0.78rem;" onclick="patientRemoveAvatar()">Remove Photo</button>
             <p>JPG, PNG or GIF · Max 2 MB</p>
           </div>
         </div>
@@ -501,16 +459,10 @@
         </div>
         <div class="form-grid">
           <div class="form-field">
-            <label class="field-label">Title</label>
-            <select class="dash-select" id="pTitle">
-              <option value="Dr." selected>Dr.</option>
-              <option value="Prof.">Prof.</option>
-              <option value="Mr.">Mr.</option>
-              <option value="Mrs.">Mrs.</option>
-              <option value="Ms.">Ms.</option>
-            </select>
+            <label class="field-label">Username</label>
+            <input class="dash-input" id="pUsername" type="text" value="shatho.tumelo" disabled/>
           </div>
-          <div class="form-field" style="grid-column:span 1;"><!-- spacer --></div>
+          <div class="form-field"><!-- spacer --></div>
           <div class="form-field">
             <label class="field-label">First Name <span class="field-req">*</span></label>
             <input class="dash-input" id="pFirstName" type="text" placeholder="First name" value="Shatho"/>
@@ -523,174 +475,151 @@
             <label class="field-label">Email Address</label>
             <div class="input-wrap">
               <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              <input class="dash-input" id="pEmail" type="email" placeholder="professional@hospital.com" value="dr.tumelo@bosacare.bw"/>
+              <input class="dash-input" id="pEmail" type="email" placeholder="you@example.com" value="shatho.tumelo@bosacare.bw"/>
             </div>
           </div>
           <div class="form-field">
             <label class="field-label">Phone Number</label>
             <input class="dash-input" id="pPhone" type="tel" placeholder="+267 7X XXX XXXX" value="+267 71 234 567"/>
           </div>
+          <div class="form-field">
+            <label class="field-label">Date of Birth</label>
+            <input class="dash-input" id="pDOB" type="date" value="1990-05-15"/>
+          </div>
+          <div class="form-field">
+            <label class="field-label">Gender</label>
+            <select class="dash-select" id="pGender">
+              <option value="">— Select —</option>
+              <option selected>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+              <option>Prefer not to say</option>
+            </select>
+          </div>
           <div class="form-field full">
-            <label class="field-label">Professional Bio</label>
-            <textarea class="dash-textarea" id="pBio" placeholder="Brief professional biography for patients…">Dedicated General Practitioner with 12 years of experience in primary care, chronic disease management, and preventive medicine. Committed to providing compassionate, patient-centered healthcare in Botswana.</textarea>
+            <label class="field-label">Home Address</label>
+            <input class="dash-input" id="pAddress" type="text" placeholder="Plot / street, ward, city" value="Plot 145, Gaborone West, Gaborone"/>
+          </div>
+          <div class="form-field full">
+            <label class="field-label">ID / Omang Number</label>
+            <input class="dash-input" id="pIDNumber" type="text" placeholder="National ID number" value="111-222-333"/>
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-primary" onclick="doctorSaveProfile()">Save Changes</button>
-          <button class="btn-secondary" onclick="doctorLoadProfile()">Discard</button>
+          <button class="btn-primary" onclick="patientSaveProfile()">Save Changes</button>
+          <button class="btn-secondary" onclick="patientLoadProfile()">Discard</button>
         </div>
       </div>
 
       <div class="card">
         <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          Practice Overview
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          My Activity
         </div>
         <div class="stats-row">
           <div class="stat-chip">
-            <div class="stat-num" id="statPatients">142</div>
-            <div class="stat-lbl">Patients</div>
+            <div class="stat-num" id="statAppts">4</div>
+            <div class="stat-lbl">Appointments</div>
           </div>
           <div class="stat-chip">
-            <div class="stat-num" id="statRx">89</div>
+            <div class="stat-num" id="statRx">3</div>
             <div class="stat-lbl">Prescriptions</div>
           </div>
           <div class="stat-chip">
-            <div class="stat-num" id="statSubs">34</div>
-            <div class="stat-lbl">Submissions</div>
-          </div>
-          <div class="stat-chip">
-            <div class="stat-num" id="statDocs">7</div>
+            <div class="stat-num" id="statDocs">2</div>
             <div class="stat-lbl">Documents</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ===== PROFESSIONAL DETAILS ===== -->
-    <div class="panel" id="panel-professional">
+    <!-- ===== MEDICAL & EMERGENCY ===== -->
+    <div class="panel" id="panel-medical">
       <div class="card">
         <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          Medical License
-        </div>
-
-        <div class="license-status" id="licenseStatusBox">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          <div>
-            <div class="license-status-text">License Active</div>
-            <div class="license-status-sub" id="licenseStatusSub">Valid until 31 December 2026</div>
-          </div>
-        </div>
-
-        <div class="form-grid">
-          <div class="form-field">
-            <label class="field-label">Specialization</label>
-            <select class="dash-select" id="pSpecialization">
-              <option value="">— Select —</option>
-              <option selected>General Practitioner</option>
-              <option>Internal Medicine</option>
-              <option>Paediatrics</option>
-              <option>Obstetrics &amp; Gynaecology</option>
-              <option>Surgery</option>
-              <option>Orthopaedics</option>
-              <option>Cardiology</option>
-              <option>Dermatology</option>
-              <option>Psychiatry</option>
-              <option>Radiology</option>
-              <option>Emergency Medicine</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label class="field-label">Years of Experience</label>
-            <input class="dash-input" id="pYearsExp" type="number" placeholder="e.g. 10" min="0" max="60" value="12"/>
-          </div>
-          <div class="form-field">
-            <label class="field-label">License Number</label>
-            <input class="dash-input" id="pLicenseNumber" type="text" placeholder="e.g. BW-MED-0012345" value="BW-MED-0087421"/>
-          </div>
-          <div class="form-field">
-            <label class="field-label">Issuing Body</label>
-            <select class="dash-select" id="pLicenseIssuer">
-              <option value="">— Select —</option>
-              <option selected>Botswana Health Professions Council</option>
-              <option>HPCSA (South Africa)</option>
-              <option>GMC (UK)</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label class="field-label">License Expiry Date</label>
-            <input class="dash-input" id="pLicenseExpiry" type="date" value="2026-12-31" onchange="checkLicenseExpiry(this.value)"/>
-          </div>
-          <div class="form-field">
-            <label class="field-label">Languages Spoken</label>
-            <input class="dash-input" id="pLanguages" type="text" placeholder="e.g. English, Setswana" value="English, Setswana, Afrikaans"/>
-          </div>
-          <div class="form-field">
-            <label class="field-label">Consultation Fee (BWP)</label>
-            <input class="dash-input" id="pConsultFee" type="text" placeholder="e.g. 350" value="450"/>
-          </div>
-        </div>
-        <div class="btn-row">
-          <button class="btn-primary" onclick="doctorSaveProfile()">Save Professional Info</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== PRACTICE INFO ===== -->
-    <div class="panel" id="panel-practice">
-      <div class="card">
-        <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Practice / Hospital Details
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/></svg>
+          Medical Information
         </div>
         <div class="form-grid">
+          <div class="form-field">
+            <label class="field-label">Blood Type</label>
+            <select class="dash-select" id="pBlood">
+              <option value="">— Select —</option>
+              <option selected>O+</option>
+              <option>O-</option>
+              <option>A+</option><option>A-</option>
+              <option>B+</option><option>B-</option>
+              <option>AB+</option><option>AB-</option>
+              <option>Unknown</option>
+            </select>
+          </div>
+          <div class="form-field"><!-- spacer --></div>
           <div class="form-field full">
-            <label class="field-label">Hospital / Clinic Name</label>
-            <input class="dash-input" id="pHospitalName" type="text" placeholder="e.g. Princess Marina Hospital" value="Princess Marina Hospital"/>
-          </div>
-          <div class="form-field">
-            <label class="field-label">City</label>
-            <input class="dash-input" id="pPracticeCity" type="text" placeholder="e.g. Gaborone" value="Gaborone"/>
-          </div>
-          <div class="form-field">
-            <label class="field-label">Country</label>
-            <select class="dash-select" id="pPracticeCountry">
-              <option selected>Botswana</option>
-              <option>South Africa</option>
-              <option>Zimbabwe</option>
-              <option>Namibia</option>
-              <option>Zambia</option>
-              <option>Other</option>
-            </select>
+            <label class="field-label">Medical Notes</label>
+            <textarea class="dash-textarea" id="pMedNotes" placeholder="Allergies, chronic conditions, current medication…">No known allergies. No chronic conditions reported. Occasional headaches.</textarea>
           </div>
         </div>
 
         <div class="divider"></div>
         <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Availability
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          Medical Aid
         </div>
-        <p class="section-sub">Select your available consultation days.</p>
-        <div class="avail-grid" id="availGrid">
-          <div class="avail-day on" data-day="Mon">Mon</div>
-          <div class="avail-day on" data-day="Tue">Tue</div>
-          <div class="avail-day on" data-day="Wed">Wed</div>
-          <div class="avail-day on" data-day="Thu">Thu</div>
-          <div class="avail-day on" data-day="Fri">Fri</div>
-          <div class="avail-day" data-day="Sat">Sat</div>
-          <div class="avail-day" data-day="Sun">Sun</div>
-        </div>
-        <div class="form-grid" style="margin-top:1rem;">
+        <div class="form-grid">
           <div class="form-field">
-            <label class="field-label">Consultation Hours</label>
-            <input class="dash-input" id="pAvailability" type="text" placeholder="e.g. 08:00 – 17:00" value="08:00 – 17:00"/>
+            <label class="field-label">Medical Aid Provider</label>
+            <select class="dash-select" id="pMedicalAid">
+              <option value="">— None —</option>
+              <option selected>BOMAID</option>
+              <option>PULA Medical Aid Fund</option>
+              <option>Botswana Public Officers Medical Aid Scheme (BPOMAS)</option>
+              <option>Botsogo Health Plan</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="field-label">Membership Number</label>
+            <input class="dash-input" id="pMedicalAidMember" type="text" placeholder="Membership number" value="BOM-2024-0042"/>
+          </div>
+          <div class="form-field">
+            <label class="field-label">Policy / Scheme Number</label>
+            <input class="dash-input" id="pMedicalAidNumber" type="text" placeholder="Policy number" value="POL-8721"/>
+          </div>
+          <div class="form-field">
+            <label class="field-label">Dependants</label>
+            <input class="dash-input" id="pDependants" type="number" min="0" placeholder="0" value="2"/>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Emergency Contact
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="field-label">Contact Name</label>
+            <input class="dash-input" id="pECName" type="text" placeholder="Full name" value="Mpho Tumelo"/>
+          </div>
+          <div class="form-field">
+            <label class="field-label">Relationship</label>
+            <select class="dash-select" id="pECRelation">
+              <option value="">— Select —</option>
+              <option>Parent</option>
+              <option selected>Spouse</option>
+              <option>Sibling</option>
+              <option>Child</option>
+              <option>Friend</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-field full">
+            <label class="field-label">Contact Phone</label>
+            <input class="dash-input" id="pECPhone" type="tel" placeholder="+267 7X XXX XXXX" value="+267 72 345 678"/>
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-primary" onclick="doctorSaveProfile()">Save Practice Info</button>
+          <button class="btn-primary" onclick="patientSaveProfile()">Save Medical Info</button>
         </div>
       </div>
     </div>
@@ -700,18 +629,18 @@
       <div class="card">
         <div class="card-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Upload Credential / Document
+          Upload Document
         </div>
-        <p class="section-sub">Upload your medical license, certificates, CPD records, ID or any professional documents. Files are stored locally.</p>
+        <p class="section-sub">Upload your medical records, test results, or insurance documents. Files are stored locally.</p>
 
         <div class="doc-filters">
           <span class="doc-filter-label">Category:</span>
           <select class="dash-select" id="docCategory" style="width:auto;padding:0.45rem 0.75rem;font-size:0.82rem;">
-            <option value="Medical License">Medical License</option>
-            <option value="Degree / Certificate">Degree / Certificate</option>
-            <option value="CPD Record">CPD Record</option>
+            <option value="Medical Record">Medical Record</option>
+            <option value="Test Results">Test Results</option>
+            <option value="Prescription">Prescription</option>
+            <option value="Insurance">Insurance</option>
             <option value="ID Document">ID Document</option>
-            <option value="Insurance">Professional Insurance</option>
             <option value="General">General</option>
           </select>
         </div>
@@ -719,7 +648,7 @@
         <label class="doc-upload-zone" for="docUploadInput">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           <p>Click to upload or drag &amp; drop files here</p>
-          <small>PDF, JPG, PNG, DOCX · Max 15 MB each · Multiple files allowed</small>
+          <small>PDF, JPG, PNG, DOCX · Max 10 MB each · Multiple files allowed</small>
         </label>
         <input type="file" id="docUploadInput" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.doc"/>
       </div>
@@ -772,7 +701,7 @@
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn-primary" onclick="doctorChangePassword()">Update Password</button>
+          <button class="btn-primary" onclick="patientChangePassword()">Update Password</button>
         </div>
       </div>
 
@@ -798,7 +727,7 @@
             <div class="toggle-sub">Get an email when a new device signs in.</div>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="toggleLoginAlerts" checked onchange="doctorSavePref('loginAlerts', this.checked)"/>
+            <input type="checkbox" id="toggleLoginAlerts" checked onchange="patientSavePref('loginAlerts', this.checked)"/>
             <div class="toggle-track"></div><div class="toggle-thumb"></div>
           </label>
         </div>
@@ -808,7 +737,7 @@
             <div class="toggle-sub">Use Google Authenticator or Authy for extra security.</div>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="toggle2FA" onchange="doctorSavePref('2fa', this.checked)"/>
+            <input type="checkbox" id="toggle2FA" onchange="patientSavePref('2fa', this.checked)"/>
             <div class="toggle-track"></div><div class="toggle-thumb"></div>
           </label>
         </div>
@@ -824,31 +753,58 @@
         </div>
         <div class="toggle-row">
           <div class="toggle-info">
-            <div class="toggle-label">New Patient Submissions</div>
-            <div class="toggle-sub">Alert when a patient submits symptoms for review.</div>
+            <div class="toggle-label">Appointment Reminders</div>
+            <div class="toggle-sub">Alert before an upcoming appointment.</div>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="notifAppt" checked onchange="doctorSavePref('notifAppt', this.checked)"/>
+            <input type="checkbox" id="notifAppt" checked onchange="patientSavePref('notifAppt', this.checked)"/>
             <div class="toggle-track"></div><div class="toggle-thumb"></div>
           </label>
         </div>
         <div class="toggle-row">
           <div class="toggle-info">
-            <div class="toggle-label">Appointment Requests</div>
-            <div class="toggle-sub">Email when a patient books or cancels an appointment.</div>
+            <div class="toggle-label">Prescription Updates</div>
+            <div class="toggle-sub">Email when a doctor issues or updates a prescription.</div>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="notifRx" checked onchange="doctorSavePref('notifRx', this.checked)"/>
+            <input type="checkbox" id="notifRx" checked onchange="patientSavePref('notifRx', this.checked)"/>
             <div class="toggle-track"></div><div class="toggle-thumb"></div>
           </label>
         </div>
         <div class="toggle-row">
           <div class="toggle-info">
-            <div class="toggle-label">Patient Messages</div>
-            <div class="toggle-sub">Alert when a patient sends a direct message.</div>
+            <div class="toggle-label">Messages</div>
+            <div class="toggle-sub">Alert when a doctor sends you a direct message.</div>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="notifMsg" checked onchange="doctorSavePref('notifMsg', this.checked)"/>
+            <input type="checkbox" id="notifMsg" checked onchange="patientSavePref('notifMsg', this.checked)"/>
+            <div class="toggle-track"></div><div class="toggle-thumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Weekly Health Summary</div>
+            <div class="toggle-sub">A weekly digest of your appointments and records.</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="notifWeekly" onchange="patientSavePref('notifWeekly', this.checked)"/>
+            <div class="toggle-track"></div><div class="toggle-thumb"></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Privacy
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Share Records with Doctors</div>
+            <div class="toggle-sub">Allow doctors you book with to view your medical records.</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="privShare" checked onchange="patientSavePref('shareRecords', this.checked)"/>
             <div class="toggle-track"></div><div class="toggle-thumb"></div>
           </label>
         </div>
@@ -858,7 +814,44 @@
             <div class="toggle-sub">Allow Bosa Care to use anonymised data to improve the AI model.</div>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="privAnalytics" checked onchange="doctorSavePref('analytics', this.checked)"/>
+            <input type="checkbox" id="privAnalytics" checked onchange="patientSavePref('analytics', this.checked)"/>
+            <div class="toggle-track"></div><div class="toggle-thumb"></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M20 12h-2M17.66 17.66l-1.41-1.41M12 20v-2M6.34 17.66l1.41-1.41M4 12h2M6.34 6.34L7.75 7.75"/></svg>
+          Display Preferences
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Compact Layout</div>
+            <div class="toggle-sub">Show more information with less spacing.</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="prefCompact" onchange="patientSavePref('compact', this.checked)"/>
+            <div class="toggle-track"></div><div class="toggle-thumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Reduce Motion</div>
+            <div class="toggle-sub">Minimise animations across the app.</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="prefReduceMotion" onchange="patientSavePref('reduceMotion', this.checked)"/>
+            <div class="toggle-track"></div><div class="toggle-thumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">24-Hour Time Format</div>
+            <div class="toggle-sub">Show times as 14:30 instead of 2:30 PM.</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="pref24h" onchange="patientSavePref('24h', this.checked)"/>
             <div class="toggle-track"></div><div class="toggle-thumb"></div>
           </label>
         </div>
@@ -878,15 +871,15 @@
         <div class="form-grid">
           <div class="form-field">
             <label class="field-label">Account Type</label>
-            <input class="dash-input" id="accType" value="Doctor" disabled/>
+            <input class="dash-input" id="accType" value="Patient" disabled/>
           </div>
           <div class="form-field">
             <label class="field-label">Account ID</label>
-            <input class="dash-input" id="accId" value="DOC-2024-087421" disabled/>
+            <input class="dash-input" id="accId" value="PAT-2024-00742" disabled/>
           </div>
           <div class="form-field full">
-            <label class="field-label">Registered Email</label>
-            <input class="dash-input" id="accEmail" value="dr.tumelo@bosacare.bw" disabled/>
+            <label class="field-label">Username</label>
+            <input class="dash-input" id="accUsername" value="shatho.tumelo" disabled/>
           </div>
         </div>
       </div>
@@ -899,9 +892,9 @@
         <div class="danger-row">
           <div class="danger-info">
             <div class="danger-label">Download My Data</div>
-            <div class="danger-sub">Export all your profile, appointments, prescriptions as JSON.</div>
+            <div class="danger-sub">Export all your profile, appointments and prescriptions as JSON.</div>
           </div>
-          <button class="btn-secondary" onclick="doctorExportData()">⬇ Export</button>
+          <button class="btn-secondary" onclick="patientExportData()">⬇ Export</button>
         </div>
       </div>
 
@@ -915,14 +908,14 @@
             <div class="danger-label">Sign Out</div>
             <div class="danger-sub">Log out of your current session.</div>
           </div>
-          <button class="btn-secondary" onclick="doctorSignOut()">Sign Out</button>
+          <button class="btn-secondary" onclick="patientSignOut()">Sign Out</button>
         </div>
         <div class="danger-row" style="border-color:var(--coral);background:rgba(219,130,127,0.05);">
           <div class="danger-info">
             <div class="danger-label" style="color:var(--coral)">Delete Account</div>
             <div class="danger-sub">Permanently remove your account and all data. Cannot be undone.</div>
           </div>
-          <button class="btn-danger" onclick="doctorConfirmDelete()">Delete</button>
+          <button class="btn-danger" onclick="patientConfirmDelete()">Delete</button>
         </div>
       </div>
     </div>
@@ -934,51 +927,15 @@
 
 <script>
   // ============================================
-  // PROFILE JAVASCRIPT FUNCTIONS
+  // PATIENT PROFILE JAVASCRIPT FUNCTIONS
   // ============================================
-
-  // ===== AVAILABILITY TOGGLE =====
-  document.querySelectorAll(".avail-day").forEach(btn => {
-    btn.addEventListener("click", function () {
-      this.classList.toggle("on");
-    });
-  });
-
-  // ===== LICENSE EXPIRY CHECK =====
-  function checkLicenseExpiry(val) {
-    if (!val) return;
-    const box = document.getElementById("licenseStatusBox");
-    const sub = document.getElementById("licenseStatusSub");
-    if (!box) return;
-    const expiry = new Date(val);
-    const now = new Date();
-    const days = Math.round((expiry - now) / (1000 * 60 * 60 * 24));
-    if (days < 0) {
-      box.className = "license-status license-expiry-warn";
-      box.querySelector(".license-status-text").textContent = "License Expired";
-      if (sub) sub.textContent = "Please renew your license immediately.";
-    } else if (days < 90) {
-      box.className = "license-status license-expiry-warn";
-      box.querySelector(".license-status-text").textContent = "License Expiring Soon";
-      if (sub) sub.textContent = `Expires in ${days} day${days !== 1 ? "s" : ""}`;
-    } else {
-      box.className = "license-status";
-      box.querySelector(".license-status-text").textContent = "License Active";
-      if (sub) sub.textContent = `Valid until ${new Date(val).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })}`;
-    }
-  }
 
   // ===== SIDEBAR NAVIGATION =====
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', function() {
-      // Remove active from all nav items
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       this.classList.add('active');
-
-      // Hide all panels
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-
-      // Show corresponding panel
       const panelId = this.dataset.panel;
       const panel = document.getElementById(`panel-${panelId}`);
       if (panel) panel.classList.add('active');
@@ -1031,59 +988,55 @@
   }
 
   // ===== SAVE PROFILE =====
-  function doctorSaveProfile() {
-    // Collect form data
+  function patientSaveProfile() {
     const data = {
-      title: document.getElementById('pTitle').value,
       firstName: document.getElementById('pFirstName').value,
       lastName: document.getElementById('pLastName').value,
       email: document.getElementById('pEmail').value,
       phone: document.getElementById('pPhone').value,
-      bio: document.getElementById('pBio').value,
-      specialization: document.getElementById('pSpecialization').value,
-      yearsExp: document.getElementById('pYearsExp').value,
-      licenseNumber: document.getElementById('pLicenseNumber').value,
-      licenseIssuer: document.getElementById('pLicenseIssuer').value,
-      licenseExpiry: document.getElementById('pLicenseExpiry').value,
-      languages: document.getElementById('pLanguages').value,
-      consultFee: document.getElementById('pConsultFee').value,
-      hospital: document.getElementById('pHospitalName').value,
-      city: document.getElementById('pPracticeCity').value,
-      country: document.getElementById('pPracticeCountry').value,
-      availability: document.getElementById('pAvailability').value
+      dob: document.getElementById('pDOB').value,
+      gender: document.getElementById('pGender').value,
+      address: document.getElementById('pAddress').value,
+      idNumber: document.getElementById('pIDNumber').value,
+      blood: document.getElementById('pBlood').value,
+      medNotes: document.getElementById('pMedNotes').value,
+      medicalAid: document.getElementById('pMedicalAid').value,
+      medicalAidMember: document.getElementById('pMedicalAidMember').value,
+      medicalAidNumber: document.getElementById('pMedicalAidNumber').value,
+      dependants: document.getElementById('pDependants').value,
+      ecName: document.getElementById('pECName').value,
+      ecRelation: document.getElementById('pECRelation').value,
+      ecPhone: document.getElementById('pECPhone').value
     };
-
-    localStorage.setItem('doctorProfile', JSON.stringify(data));
+    localStorage.setItem('patientProfile', JSON.stringify(data));
     profileToast('Profile saved successfully!', 'success');
   }
 
   // ===== LOAD PROFILE =====
-  function doctorLoadProfile() {
-    const saved = localStorage.getItem('doctorProfile');
+  function patientLoadProfile() {
+    const saved = localStorage.getItem('patientProfile');
     if (!saved) return;
-
     try {
       const data = JSON.parse(saved);
       const fields = {
-        'pTitle': data.title,
         'pFirstName': data.firstName,
         'pLastName': data.lastName,
         'pEmail': data.email,
         'pPhone': data.phone,
-        'pBio': data.bio,
-        'pSpecialization': data.specialization,
-        'pYearsExp': data.yearsExp,
-        'pLicenseNumber': data.licenseNumber,
-        'pLicenseIssuer': data.licenseIssuer,
-        'pLicenseExpiry': data.licenseExpiry,
-        'pLanguages': data.languages,
-        'pConsultFee': data.consultFee,
-        'pHospitalName': data.hospital,
-        'pPracticeCity': data.city,
-        'pPracticeCountry': data.country,
-        'pAvailability': data.availability
+        'pDOB': data.dob,
+        'pGender': data.gender,
+        'pAddress': data.address,
+        'pIDNumber': data.idNumber,
+        'pBlood': data.blood,
+        'pMedNotes': data.medNotes,
+        'pMedicalAid': data.medicalAid,
+        'pMedicalAidMember': data.medicalAidMember,
+        'pMedicalAidNumber': data.medicalAidNumber,
+        'pDependants': data.dependants,
+        'pECName': data.ecName,
+        'pECRelation': data.ecRelation,
+        'pECPhone': data.ecPhone
       };
-
       Object.keys(fields).forEach(id => {
         const el = document.getElementById(id);
         if (el && fields[id] !== undefined) {
@@ -1092,10 +1045,6 @@
           }
         }
       });
-
-      // Trigger license check
-      if (data.licenseExpiry) checkLicenseExpiry(data.licenseExpiry);
-
       profileToast('Profile loaded', 'info');
     } catch (e) {
       console.error('Error loading profile:', e);
@@ -1103,7 +1052,7 @@
   }
 
   // ===== CHANGE PASSWORD =====
-  function doctorChangePassword() {
+  function patientChangePassword() {
     const current = document.getElementById('secCurrent').value;
     const newPass = document.getElementById('secNew').value;
     const confirm = document.getElementById('secConfirm').value;
@@ -1112,75 +1061,67 @@
       profileToast('Please fill in all password fields.', 'error');
       return;
     }
-
     if (newPass !== confirm) {
       profileToast('New passwords do not match.', 'error');
       return;
     }
-
     if (newPass.length < 8) {
       profileToast('Password must be at least 8 characters.', 'error');
       return;
     }
 
-    // Store password change (simulated)
-    localStorage.setItem('doctorPassword', newPass);
+    localStorage.setItem('patientPassword', newPass);
     profileToast('Password updated successfully!', 'success');
-
-    // Clear fields
     document.getElementById('secCurrent').value = '';
     document.getElementById('secNew').value = '';
     document.getElementById('secConfirm').value = '';
   }
 
   // ===== SAVE PREFERENCES =====
-  function doctorSavePref(key, value) {
-    const prefs = JSON.parse(localStorage.getItem('doctorPrefs') || '{}');
+  function patientSavePref(key, value) {
+    const prefs = JSON.parse(localStorage.getItem('patientPrefs') || '{}');
     prefs[key] = value;
-    localStorage.setItem('doctorPrefs', JSON.stringify(prefs));
+    localStorage.setItem('patientPrefs', JSON.stringify(prefs));
     profileToast(`Preference saved: ${key} = ${value}`, 'success');
   }
 
   // ===== EXPORT DATA =====
-  function doctorExportData() {
+  function patientExportData() {
     const data = {
-      profile: JSON.parse(localStorage.getItem('doctorProfile') || '{}'),
-      prefs: JSON.parse(localStorage.getItem('doctorPrefs') || '{}'),
+      profile: JSON.parse(localStorage.getItem('patientProfile') || '{}'),
+      prefs: JSON.parse(localStorage.getItem('patientPrefs') || '{}'),
       appointments: JSON.parse(localStorage.getItem('appointments') || '[]'),
       prescriptions: JSON.parse(localStorage.getItem('prescriptions') || '[]'),
       submissions: JSON.parse(localStorage.getItem('submissions') || '[]'),
       exportedAt: new Date().toISOString()
     };
-
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `bosacare_data_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `bosacare_patient_data_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     profileToast('Data exported successfully!', 'success');
   }
 
   // ===== SIGN OUT =====
-  function doctorSignOut() {
+  function patientSignOut() {
     if (confirm('Are you sure you want to sign out?')) {
-      localStorage.removeItem('doctorLoggedIn');
-      localStorage.removeItem('doctorEmail');
-      localStorage.removeItem('doctorName');
-      window.location.href = 'doctor-login.html';
+      localStorage.removeItem('patientLoggedIn');
+      localStorage.removeItem('patientUsername');
+      window.location.href = 'patient-login.html';
     }
   }
 
   // ===== DELETE ACCOUNT =====
-  function doctorConfirmDelete() {
+  function patientConfirmDelete() {
     if (confirm('⚠️ Are you absolutely sure? This will permanently delete all your data.')) {
       if (confirm('This cannot be undone. Delete your account?')) {
-        localStorage.removeItem('doctorProfile');
-        localStorage.removeItem('doctorPrefs');
-        localStorage.removeItem('doctorLoggedIn');
-        localStorage.removeItem('doctorEmail');
-        localStorage.removeItem('doctorName');
+        localStorage.removeItem('patientProfile');
+        localStorage.removeItem('patientPrefs');
+        localStorage.removeItem('patientLoggedIn');
+        localStorage.removeItem('patientUsername');
         localStorage.removeItem('appointments');
         localStorage.removeItem('prescriptions');
         localStorage.removeItem('submissions');
@@ -1191,32 +1132,26 @@
   }
 
   // ===== REMOVE AVATAR =====
-  function doctorRemoveAvatar() {
-    localStorage.removeItem('doctorAvatar');
-    document.getElementById('avatarPreview').textContent = 'Dr';
-    document.querySelector('.avatar-ring span').textContent = 'Dr';
+  function patientRemoveAvatar() {
+    localStorage.removeItem('patientAvatar');
+    document.getElementById('avatarPreview').textContent = 'ST';
+    document.querySelector('.avatar-ring span').textContent = 'ST';
     profileToast('Avatar removed', 'info');
   }
 
   // ===== INITIALISE =====
   document.addEventListener('DOMContentLoaded', function () {
-    // Load saved profile data if exists
-    doctorLoadProfile();
-
-    // Check license expiry on load
-    const expiryEl = document.getElementById('pLicenseExpiry');
-    if (expiryEl && expiryEl.value) checkLicenseExpiry(expiryEl.value);
+    patientLoadProfile();
 
     // Load preferences
-    const prefs = JSON.parse(localStorage.getItem('doctorPrefs') || '{}');
+    const prefs = JSON.parse(localStorage.getItem('patientPrefs') || '{}');
     document.querySelectorAll('.toggle-switch input').forEach(input => {
       if (prefs[input.id] !== undefined) {
         input.checked = prefs[input.id];
       }
     });
 
-    // Show welcome toast
-    setTimeout(() => profileToast('Welcome to your profile, Dr. Tumelo 👋', 'info'), 500);
+    setTimeout(() => profileToast('Welcome to your profile, Shatho 👋', 'info'), 500);
   });
 
   // ===== AVATAR UPLOAD =====
@@ -1227,9 +1162,8 @@
     const reader = new FileReader();
     reader.onload = function(event) {
       const dataUrl = event.target.result;
-      localStorage.setItem('doctorAvatar', dataUrl);
+      localStorage.setItem('patientAvatar', dataUrl);
 
-      // Update avatar previews
       document.getElementById('avatarPreview').style.backgroundImage = `url(${dataUrl})`;
       document.getElementById('avatarPreview').style.backgroundSize = 'cover';
       document.getElementById('avatarPreview').textContent = '';
@@ -1244,7 +1178,7 @@
   });
 
   // ===== LOAD SAVED AVATAR =====
-  const savedAvatar = localStorage.getItem('doctorAvatar');
+  const savedAvatar = localStorage.getItem('patientAvatar');
   if (savedAvatar) {
     document.getElementById('avatarPreview').style.backgroundImage = `url(${savedAvatar})`;
     document.getElementById('avatarPreview').style.backgroundSize = 'cover';
@@ -1260,7 +1194,7 @@
     const files = Array.from(e.target.files);
     if (!files.length) return;
 
-    const docs = JSON.parse(localStorage.getItem('doctorDocs') || '[]');
+    const docs = JSON.parse(localStorage.getItem('patientDocs') || '[]');
     const category = document.getElementById('docCategory').value;
 
     files.forEach(file => {
@@ -1275,24 +1209,22 @@
           data: event.target.result,
           uploadedAt: new Date().toISOString()
         });
-        localStorage.setItem('doctorDocs', JSON.stringify(docs));
-        renderDocuments();
+        localStorage.setItem('patientDocs', JSON.stringify(docs));
+        renderPatientDocuments();
         profileToast(`Uploaded: ${file.name}`, 'success');
       };
       reader.readAsDataURL(file);
     });
-
-    // Reset input
     e.target.value = '';
   });
 
   // ===== RENDER DOCUMENTS =====
-  function renderDocuments() {
+  function renderPatientDocuments() {
     const container = document.getElementById('docsList');
-    const docs = JSON.parse(localStorage.getItem('doctorDocs') || '[]');
+    const docs = JSON.parse(localStorage.getItem('patientDocs') || '[]');
 
     if (!docs.length) {
-      container.innerHTML = '<div class="empty-docs">No documents uploaded yet.<br>Upload your credentials above.</div>';
+      container.innerHTML = '<div class="empty-docs">No documents uploaded yet.<br>Upload your medical records above.</div>';
       return;
     }
 
@@ -1304,10 +1236,10 @@
           <div class="doc-meta">${doc.category} · ${formatFileSize(doc.size)} · ${new Date(doc.uploadedAt).toLocaleDateString()}</div>
         </div>
         <div class="doc-actions">
-          <button class="doc-btn doc-btn-dl" onclick="downloadDoc('${doc.id}')" title="Download">
+          <button class="doc-btn doc-btn-dl" onclick="downloadPatientDoc('${doc.id}')" title="Download">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           </button>
-          <button class="doc-btn doc-btn-del" onclick="deleteDoc('${doc.id}')" title="Delete">
+          <button class="doc-btn doc-btn-del" onclick="deletePatientDoc('${doc.id}')" title="Delete">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           </button>
         </div>
@@ -1328,29 +1260,28 @@
     return (bytes / 1048576).toFixed(1) + ' MB';
   }
 
-  function downloadDoc(id) {
-    const docs = JSON.parse(localStorage.getItem('doctorDocs') || '[]');
+  function downloadPatientDoc(id) {
+    const docs = JSON.parse(localStorage.getItem('patientDocs') || '[]');
     const doc = docs.find(d => d.id === id);
     if (!doc) return;
-
     const link = document.createElement('a');
     link.href = doc.data;
     link.download = doc.name;
     link.click();
   }
 
-  function deleteDoc(id) {
+  function deletePatientDoc(id) {
     if (!confirm('Delete this document?')) return;
-    let docs = JSON.parse(localStorage.getItem('doctorDocs') || '[]');
+    let docs = JSON.parse(localStorage.getItem('patientDocs') || '[]');
     docs = docs.filter(d => d.id !== id);
-    localStorage.setItem('doctorDocs', JSON.stringify(docs));
-    renderDocuments();
+    localStorage.setItem('patientDocs', JSON.stringify(docs));
+    renderPatientDocuments();
     profileToast('Document deleted', 'info');
   }
 
   // Initialise documents on load
-  document.addEventListener('DOMContentLoaded', renderDocuments);
+  document.addEventListener('DOMContentLoaded', renderPatientDocuments);
 </script>
-
+<script src="profile.js"></script>
 </body>
 </html>
