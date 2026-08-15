@@ -539,6 +539,111 @@
     .vitals-grid{grid-template-columns:repeat(2,1fr);}
     .rx-row{grid-template-columns:1fr;}
   }
+  /* Voice Recorder Styles */
+.voice-recorder-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid var(--grey);
+    margin-bottom: 1.5rem;
+}
+
+.mode-toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.mode-btn {
+    padding: 0.5rem 1.2rem;
+    border-radius: 999px;
+    border: 1px solid var(--grey);
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.mode-btn.active {
+    background: var(--coral);
+    color: white;
+    border-color: var(--coral);
+}
+
+.voice-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.8rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--grey);
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    background: var(--cream);
+}
+
+.voice-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    color: var(--coral-dark);
+    font-weight: 500;
+}
+
+.pulse-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--coral);
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.voice-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+}
+
+.voice-output {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--grey);
+    padding-top: 1rem;
+}
+
+.output-section {
+    margin-bottom: 1rem;
+}
+
+.output-section label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--lilac);
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.output-box {
+    background: var(--cream);
+    padding: 0.8rem;
+    border-radius: var(--radius-sm);
+    min-height: 60px;
+    white-space: pre-wrap;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.hidden {
+    display: none !important;
+}
 </style>
 </head>
 <body>
@@ -569,6 +674,66 @@
 
   <!-- MAIN -->
   <main class="main">
+    <!-- Voice Recorder Section -->
+<div class="voice-recorder-card">
+    <div class="card-header">
+        <h3>🎤 Voice Recorder</h3>
+        <span class="badge">AI-powered</span>
+    </div>
+    
+    <!-- Mode Toggle -->
+    <div class="mode-toggle">
+        <button class="mode-btn active" id="typeModeBtn" onclick="setInputMode('type')">
+            📝 Type
+        </button>
+        <button class="mode-btn" id="voiceModeBtn" onclick="startRecording()">
+            🎤 Record & Transcribe
+        </button>
+    </div>
+    
+    <!-- Text Input -->
+    <textarea 
+        id="voiceInput" 
+        class="voice-textarea" 
+        placeholder="Type or speak your notes..."
+        rows="4"
+    ></textarea>
+    
+    <!-- Recording Status -->
+    <div id="voiceStatus" class="voice-status hidden">
+        <span class="pulse-dot"></span>
+        Recording... Speak clearly
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="voice-actions">
+        <button class="btn-primary" onclick="generateSummary()">
+            🧠 Generate Summary
+        </button>
+        <button class="btn-secondary" onclick="downloadTranscript()">
+            ⬇ Transcript
+        </button>
+        <button class="btn-secondary" onclick="downloadSummary()">
+            ⬇ Summary
+        </button>
+    </div>
+    
+    <!-- Output Area -->
+    <div id="voiceOutput" class="voice-output hidden">
+        <div class="output-section">
+            <label>📄 AI Summary</label>
+            <div id="summaryText" class="output-box">
+                Summary will appear here...
+            </div>
+        </div>
+        <div class="output-section">
+            <label>📝 Full Transcript</label>
+            <div id="transcriptText" class="output-box">
+                No transcript yet...
+            </div>
+        </div>
+    </div>
+</div>
 
     <div class="topbar">
       <div>
