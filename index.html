@@ -3,462 +3,737 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bosa Care · Doctor Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <title>Bosa Care · Doctor Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
-        /* ----- reset & base ----- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background: #f2eeea;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f8f5f2;
+            color: #2d2e26;
             min-height: 100vh;
-            padding: 2rem 1rem;
         }
 
-        .landing {
-            max-width: 1300px;
-            width: 100%;
-            background: #FFE9DA;
-            border-radius: 40px;
-            padding: 2rem 2rem 2.5rem;
-            box-shadow: 0 20px 40px -12px rgba(94, 96, 77, 0.25);
-            border: 1px solid rgba(219, 130, 127, 0.15);
+        /* ===== PALETTE ===== */
+        :root {
+            --petal: #FFE9DA;
+            --coral: #DB827F;
+            --dust: #D5CCC5;
+            --lilac: #A19DA4;
+            --ebony: #5E604D;
+            --ebony-light: #7a7c66;
+            --cream: #fdf8f4;
+            --shadow: 0 8px 30px rgba(94, 96, 77, 0.08);
+            --shadow-hover: 0 12px 40px rgba(94, 96, 77, 0.15);
         }
 
-        /* palette utilities */
-        .bg-petal {
-            background: #FFE9DA;
-        }
-        .bg-coral {
-            background: #DB827F;
-        }
-        .bg-dust {
-            background: #D5CCC5;
-        }
-        .bg-lilac {
-            background: #A19DA4;
-        }
-        .bg-ebony {
-            background: #5E604D;
-        }
-        .text-ebony {
-            color: #5E604D;
-        }
-        .text-coral {
-            color: #DB827F;
-        }
-        .text-lilac {
-            color: #A19DA4;
+        /* ===== TOP NAV ===== */
+        .top-nav {
+            background: white;
+            padding: 0 2.5rem;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(213, 204, 197, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .section-label {
-            font-size: 0.85rem;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-            color: #5E604D;
-            opacity: 0.75;
-            font-weight: 600;
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ebony);
+            letter-spacing: -0.5px;
+            text-decoration: none;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-bottom: 0.75rem;
-        }
-        .section-label i {
-            color: #DB827F;
         }
 
-        .feature-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(2px);
-            border-radius: 28px;
-            padding: 1.5rem 1.5rem 1.8rem;
-            box-shadow: 0 6px 14px rgba(94, 96, 77, 0.06);
-            border: 1px solid rgba(213, 204, 197, 0.3);
-            transition: all 0.15s;
-            height: 100%;
-        }
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.85);
-            border-color: #DB827F;
-            box-shadow: 0 12px 24px -10px rgba(219, 130, 127, 0.15);
+        .logo span {
+            color: var(--coral);
         }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.8rem;
-            margin-top: 1.8rem;
-        }
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .air-scroll-pill {
-            background: #D5CCC5;
-            padding: 0.5rem 1.2rem;
-            border-radius: 60px;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-weight: 500;
-            color: #2d2e26;
-            border: 1px solid #A19DA4;
-        }
-        .doctor-badge {
-            background: #5E604D;
-            color: #FFE9DA;
-            padding: 0.3rem 1rem;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .transcript-bubble {
-            background: #fff;
-            border-radius: 20px;
-            padding: 1rem 1.2rem;
-            border-left: 5px solid #DB827F;
-            color: #2d2e26;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-        .keyword-tag {
-            background: #FFE9DA;
-            color: #5E604D;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-block;
-            border: 1px solid #DB827F;
-        }
-        .condition-tag {
-            background: #DB827F;
-            color: white;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-        .prescription-item {
-            background: white;
-            border-radius: 16px;
-            padding: 0.7rem 1rem;
+        .nav-links {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #D5CCC5;
-        }
-        .appointment-peak {
-            background: #A19DA4;
-            color: white;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        .btn-outline-ebony {
-            border: 1.5px solid #5E604D;
-            background: transparent;
-            color: #5E604D;
-            padding: 0.5rem 1.2rem;
-            border-radius: 60px;
-            font-weight: 500;
-            cursor: default;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .btn-outline-ebony i {
-            color: #DB827F;
+            gap: 0.5rem;
+            list-style: none;
         }
 
-        .patient-avatar {
-            width: 40px;
-            height: 40px;
+        .nav-links a {
+            text-decoration: none;
+            color: var(--ebony-light);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--petal);
+            color: var(--ebony);
+        }
+
+        .nav-links a.active {
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .doctor-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+            border-radius: 40px;
+            border: 1px solid var(--dust);
+            transition: 0.2s;
+        }
+
+        .doctor-profile:hover {
+            border-color: var(--coral);
+            background: var(--petal);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: #D5CCC5;
+            background: var(--coral);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #5E604D;
             font-weight: 600;
-            font-size: 0.9rem;
-            flex-shrink: 0;
+            font-size: 0.875rem;
+            overflow: hidden;
         }
-        /* placeholder for actual photos - replace background with image */
-        .patient-avatar img {
+
+        .avatar img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
             object-fit: cover;
         }
 
-        hr {
-            border: 0;
-            border-top: 2px dashed #D5CCC5;
-            margin: 1rem 0;
+        .doctor-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--ebony);
         }
-        .credit {
-            text-align: right;
-            font-size: 0.8rem;
-            color: #A19DA4;
-            margin-top: 1.2rem;
+
+        .doctor-role {
+            font-size: 0.7rem;
+            color: var(--lilac);
         }
-        .credit span {
-            background: #5E604D;
-            color: #FFE9DA;
-            padding: 0.1rem 0.8rem;
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: 3rem 2.5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .hero-text h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--ebony);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-text h1 span {
+            color: var(--coral);
+        }
+
+        .hero-text p {
+            color: var(--ebony-light);
+            font-size: 1rem;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .specialties {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+
+        .specialty-tag {
+            background: var(--petal);
+            color: var(--ebony);
+            padding: 0.25rem 0.9rem;
             border-radius: 40px;
-            font-weight: 500;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(219, 130, 127, 0.2);
         }
 
-        .specialty-pill {
-            background: #5E604D;
-            color: #FFE9DA;
-            padding: 0.15rem 0.7rem;
-            border-radius: 30px;
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            background: white;
+            padding: 1rem 1.8rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(213, 204, 197, 0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ebony);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--lilac);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== QUICK ACTIONS ===== */
+        .quick-actions {
+            padding: 0 2.5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .quick-actions h2 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--ebony-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(213, 204, 197, 0.2);
+            box-shadow: var(--shadow);
+            transition: all 0.25s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--coral);
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--petal);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--coral);
+            font-size: 1.25rem;
+        }
+
+        .action-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--ebony);
+        }
+
+        .action-card p {
+            font-size: 0.8rem;
+            color: var(--ebony-light);
+            line-height: 1.4;
+        }
+
+        .action-badge {
+            font-size: 0.6rem;
+            background: var(--coral);
+            color: white;
+            padding: 0.15rem 0.6rem;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        /* ===== TODAY'S PATIENTS ===== */
+        .patients-section {
+            padding: 0 2.5rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--ebony);
+        }
+
+        .section-header a {
+            color: var(--coral);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .section-header a:hover {
+            text-decoration: underline;
+        }
+
+        .patient-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .patient-row {
+            background: white;
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            border: 1px solid rgba(213, 204, 197, 0.2);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            transition: 0.2s;
+        }
+
+        .patient-row:hover {
+            border-color: var(--coral);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .patient-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .patient-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--dust);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--ebony);
+            font-size: 0.8rem;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .patient-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .patient-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .patient-name {
+            font-weight: 600;
+            color: var(--ebony);
+            font-size: 0.95rem;
+        }
+
+        .patient-meta {
+            font-size: 0.8rem;
+            color: var(--ebony-light);
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .patient-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .condition-badge {
             font-size: 0.65rem;
-            font-weight: 500;
+            font-weight: 600;
+            padding: 0.15rem 0.7rem;
+            border-radius: 40px;
+            background: var(--petal);
+            color: var(--ebony);
+            border: 1px solid rgba(219, 130, 127, 0.15);
         }
 
+        .patient-status {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 0.2rem 0.9rem;
+            border-radius: 40px;
+        }
+
+        .status-waiting {
+            background: #fff3e0;
+            color: #e67e22;
+        }
+
+        .status-inprogress {
+            background: #e8f8f5;
+            color: #1abc9c;
+        }
+
+        .status-done {
+            background: #eafaf1;
+            color: #27ae60;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            border: 1.5px solid var(--ebony);
+            background: transparent;
+            color: var(--ebony);
+            font-weight: 500;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-sm:hover {
+            background: var(--ebony);
+            color: white;
+        }
+
+        .btn-primary-sm {
+            background: var(--coral);
+            border-color: var(--coral);
+            color: white;
+        }
+
+        .btn-primary-sm:hover {
+            background: #c96e6b;
+            border-color: #c96e6b;
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 820px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+            .top-nav {
+                padding: 0 1.25rem;
+                height: 64px;
             }
-            .landing {
-                padding: 1.5rem;
+            .nav-links {
+                display: none;
+            }
+            .hero {
+                padding: 2rem 1.25rem 1.5rem;
+            }
+            .hero-content {
+                flex-direction: column;
+            }
+            .hero-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+            .quick-actions {
+                padding: 0 1.25rem 1.5rem;
+            }
+            .patients-section {
+                padding: 0 1.25rem 2rem;
+            }
+            .patient-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .patient-status {
+                justify-content: flex-start;
+            }
+            .doctor-name {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 1.5rem;
+            }
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                padding: 0.75rem 1rem;
+            }
+            .stat-item {
+                flex: 1;
+                min-width: 60px;
+            }
+            .stat-number {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="landing">
-
-        <!-- ===== HEADER ===== -->
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem 0.5rem;">
-            <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
-                <h1 style="font-weight: 700; font-size: 2rem; letter-spacing: -0.02em; color: #5E604D;">Bosa Care</h1>
-                <span class="doctor-badge"><i class="fas fa-user-md" style="margin-right: 6px;"></i> Doctor panel</span>
-                <span style="display: flex; gap: 0.3rem; flex-wrap: wrap;">
-                    <span class="specialty-pill">HIV/AIDS</span>
-                    <span class="specialty-pill">Cancer</span>
-                    <span class="specialty-pill">Hypertension</span>
-                    <span class="specialty-pill">Anaemia</span>
-                    <span class="specialty-pill">Diabetes</span>
-                </span>
-            </div>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <span class="air-scroll-pill"><i class="fas fa-arrow-up"></i> air scroll · payment</span>
-                <span style="background: #DB827F; color: white; padding: 0.2rem 0.8rem; border-radius: 40px; font-size: 0.7rem; font-weight: 600;"><i class="fas fa-lock"></i> escrow</span>
+    <!-- ===== TOP NAV ===== -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="#" class="logo">Bosa<span>Care</span></a>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="#">Patients</a></li>
+                <li><a href="#">Appointments</a></li>
+                <li><a href="#">Prescriptions</a></li>
+                <li><a href="#">Reports</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <i class="fas fa-bell" style="color: var(--ebony-light); font-size: 1.1rem; cursor: pointer;"></i>
+            <div class="doctor-profile">
+                <div class="avatar">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Dr. Molefe" />
+                </div>
+                <div>
+                    <div class="doctor-name">Dr. K. Molefe</div>
+                    <div class="doctor-role">General Practitioner</div>
+                </div>
+                <i class="fas fa-chevron-down" style="font-size: 0.7rem; color: var(--lilac);"></i>
             </div>
         </div>
+    </nav>
 
-        <!-- ===== SUBTITLE ===== -->
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-top: 0.2rem;">
-            <p style="color: #5E604D; opacity: 0.7; font-size: 0.95rem;">
-                <i class="fas fa-stethoscope" style="color: #DB827F; margin-right: 6px;"></i>
-                Specialised care · HIV · Cancer · Hypertension · Anaemia · Diabetes
-            </p>
-            <p style="color: #A19DA4; font-size: 0.8rem;"><i class="fas fa-clock"></i> peak times · appointment flow</p>
-        </div>
-
-        <!-- ===== DASHBOARD GRID ===== -->
-        <div class="dashboard-grid">
-
-            <!-- 1. voice transcription + keywords (specialised) -->
-            <div class="feature-card">
-                <div class="section-label"><i class="fas fa-microphone"></i> voice transcription · consultation</div>
-                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <span class="keyword-tag"><i class="fas fa-circle" style="color: #DB827F; font-size: 0.4rem; vertical-align: middle;"></i> CD4 count</span>
-                        <span class="keyword-tag"><i class="fas fa-circle" style="color: #DB827F; font-size: 0.4rem; vertical-align: middle;"></i> viral load</span>
-                        <span class="keyword-tag"><i class="fas fa-circle" style="color: #DB827F; font-size: 0.4rem; vertical-align: middle;"></i> hypertension</span>
-                        <span class="keyword-tag"><i class="fas fa-circle" style="color: #DB827F; font-size: 0.4rem; vertical-align: middle;"></i> HbA1c</span>
-                        <span class="keyword-tag"><i class="fas fa-circle" style="color: #DB827F; font-size: 0.4rem; vertical-align: middle;"></i> haemoglobin</span>
-                        <span class="keyword-tag"><i class="fas fa-circle" style="color: #DB827F; font-size: 0.4rem; vertical-align: middle;"></i> tumour markers</span>
-                    </div>
-                    <div class="transcript-bubble">
-                        <i class="fas fa-quote-left" style="color: #DB827F; opacity: 0.5; margin-right: 6px;"></i>
-                        “Patient with HIV (CD4 320), hypertensive (BP 150/95), and type 2 diabetes. HbA1c 8.2%...”
-                        <div style="margin-top: 8px; display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                            <span style="background: #FFE9DA; padding: 0.1rem 0.6rem; border-radius: 30px; font-size: 0.7rem; border:1px solid #DB827F;">🤖 AI: HIV</span>
-                            <span style="background: #FFE9DA; padding: 0.1rem 0.6rem; border-radius: 30px; font-size: 0.7rem; border:1px solid #DB827F;">🤖 AI: hypertension</span>
-                            <span style="background: #FFE9DA; padding: 0.1rem 0.6rem; border-radius: 30px; font-size: 0.7rem; border:1px solid #DB827F;">🤖 AI: diabetes</span>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <span class="btn-outline-ebony" style="padding: 0.3rem 1rem;"><i class="fas fa-play"></i> transcribe</span>
-                        <span class="btn-outline-ebony" style="padding: 0.3rem 1rem;"><i class="fas fa-sync-alt"></i> pick keywords</span>
-                    </div>
-                    <small style="color: #A19DA4;"><i class="fas fa-notes-medical"></i> real‑time voice → text + symptom extraction</small>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Good morning, <span>Dr. Molefe</span> 👋</h1>
+                <p>You have 8 patients today. Here's a quick overview of your day.</p>
+                <div class="specialties">
+                    <span class="specialty-tag">HIV/AIDS</span>
+                    <span class="specialty-tag">Cancer</span>
+                    <span class="specialty-tag">Hypertension</span>
+                    <span class="specialty-tag">Anaemia</span>
+                    <span class="specialty-tag">Diabetes</span>
                 </div>
             </div>
-
-            <!-- 2. pills / supplies transcription (specialised) -->
-            <div class="feature-card">
-                <div class="section-label"><i class="fas fa-capsules"></i> transcription · pills & supplies</div>
-                <div style="display: flex; flex-direction: column; gap: 0.7rem;">
-                    <div class="prescription-item">
-                        <span><i class="fas fa-prescription-bottle" style="color: #DB827F;"></i> ART (TDF/3TC/DTG)</span>
-                        <span style="background: #D5CCC5; padding: 0.1rem 0.6rem; border-radius: 30px; font-size: 0.7rem;">HIV</span>
-                    </div>
-                    <div class="prescription-item">
-                        <span><i class="fas fa-prescription-bottle" style="color: #DB827F;"></i> Amlodipine 10mg</span>
-                        <span style="background: #D5CCC5; padding: 0.1rem 0.6rem; border-radius: 30px; font-size: 0.7rem;">hypertension</span>
-                    </div>
-                    <div class="prescription-item">
-                        <span><i class="fas fa-syringe" style="color: #DB827F;"></i> Insulin (NovoRapid)</span>
-                        <span style="background: #D5CCC5; padding: 0.1rem 0.6rem; border-radius: 30px; font-size: 0.7rem;">diabetes</span>
-                    </div>
-                    <div class="prescription-item">
-                        <span><i class="fas fa-prescription-bottle" style="color: #DB827F;"></i> Ferrous sulfate</span>
-                        <span style="background: #D5CCC5; padding: 0.1rem 0.6rem; border-radius: 30px; font-size: 0.7rem;">anaemia</span>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem; margin-top: 0.2rem;">
-                        <span class="btn-outline-ebony" style="padding: 0.3rem 1rem;"><i class="fas fa-print"></i> transcribe Rx</span>
-                        <span class="btn-outline-ebony" style="padding: 0.3rem 1rem;"><i class="fas fa-edit"></i> add item</span>
-                    </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Today's Patients</div>
                 </div>
-            </div>
-
-            <!-- 3. prescription sender + patient list with avatars -->
-            <div class="feature-card">
-                <div class="section-label"><i class="fas fa-paper-plane"></i> prescription sender</div>
-                <div style="display: flex; flex-direction: column; gap: 0.9rem;">
-                    <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
-                        <span style="background: #DB827F; color: white; padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.8rem;"><i class="fas fa-user"></i> patient</span>
-                        <span style="background: #5E604D; color: white; padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.8rem;"><i class="fas fa-store"></i> pharmacy</span>
-                    </div>
-
-                    <!-- Patient with avatar placeholder (representative) -->
-                    <div style="background: white; border-radius: 20px; padding: 0.8rem 1rem; border:1px solid #D5CCC5; display: flex; align-items: center; gap: 0.8rem;">
-                        <div class="patient-avatar" style="background: #A19DA4; color: white; font-size: 0.7rem; overflow: hidden;">
-                            <!-- REPLACE src with actual photo of a Black person -->
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Patient" style="width:100%; height:100%; object-fit:cover;" />
-                        </div>
-                        <div style="flex:1;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <span><i class="fas fa-file-prescription"></i> Rx #0423 · ART</span>
-                                <span><i class="fas fa-check-circle" style="color: #5E604D;"></i> sent</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 0.8rem; color: #5E604D;">
-                                <span>Thabo M. · HIV</span>
-                                <span>pharmacy: BosaPharm</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Another patient example -->
-                    <div style="background: white; border-radius: 20px; padding: 0.8rem 1rem; border:1px solid #D5CCC5; display: flex; align-items: center; gap: 0.8rem;">
-                        <div class="patient-avatar" style="background: #DB827F; color: white; font-size: 0.7rem; overflow: hidden;">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Patient" style="width:100%; height:100%; object-fit:cover;" />
-                        </div>
-                        <div style="flex:1;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <span><i class="fas fa-file-prescription"></i> Rx #0424 · Amlodipine</span>
-                                <span><i class="fas fa-clock" style="color: #DB827F;"></i> pending</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 0.8rem; color: #5E604D;">
-                                <span>Kefilwe S. · Hypertension</span>
-                                <span>pharmacy: BosaPharm</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; gap: 0.5rem;">
-                        <span class="btn-outline-ebony" style="padding: 0.3rem 1.2rem;"><i class="fas fa-share"></i> send to both</span>
-                        <span class="btn-outline-ebony" style="padding: 0.3rem 1.2rem;"><i class="fas fa-undo-alt"></i> resend</span>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Waiting</div>
                 </div>
-            </div>
-
-            <!-- 4. appointment + peak -->
-            <div class="feature-card">
-                <div class="section-label"><i class="fas fa-calendar-check"></i> appointment · peak times</div>
-                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                        <span class="appointment-peak"><i class="fas fa-chart-line"></i> 9–11am <span style="background: white; color:#5E604D; padding:0 0.4rem; border-radius:20px;">🔥</span> high</span>
-                        <span class="appointment-peak" style="background: #D5CCC5; color:#2d2e26;">1–3pm medium</span>
-                        <span class="appointment-peak" style="background: #A19DA4;">4–6pm low</span>
-                    </div>
-                    <div style="background: white; border-radius: 20px; padding: 0.8rem 1rem; border:1px solid #D5CCC5;">
-                        <div style="display: flex; align-items: center; gap: 0.8rem;">
-                            <div class="patient-avatar" style="width:32px; height:32px; background:#DB827F; color:white; font-size:0.6rem; overflow:hidden;">
-                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Patient" style="width:100%; height:100%; object-fit:cover;" />
-                            </div>
-                            <div style="flex:1;">
-                                <div><i class="fas fa-user-injured" style="color: #DB827F;"></i> next: Neo K. · 10:30 <span style="float: right; background: #FFE9DA; padding:0.1rem 0.6rem; border-radius:30px; font-size:0.7rem;">peak</span></div>
-                                <div style="font-size:0.8rem; color:#5E604D;">HIV + Diabetes follow-up</div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 6px; font-size:0.85rem; color:#5E604D;"><i class="fas fa-clock"></i> 3 more requests · queue: 12min</div>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <span class="btn-outline-ebony" style="padding: 0.3rem 1rem;"><i class="fas fa-plus"></i> request</span>
-                        <span class="btn-outline-ebony" style="padding: 0.3rem 1rem;"><i class="fas fa-chart-pie"></i> peak view</span>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">In Progress</div>
                 </div>
-            </div>
-
-            <!-- 5. air scroll + symptoms (full width) -->
-            <div class="feature-card full-width">
-                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1.5rem;">
-                    <!-- left: air scroll payment -->
-                    <div style="flex: 2; min-width: 200px;">
-                        <div class="section-label"><i class="fas fa-coins"></i> air scroll · payment escrow</div>
-                        <div style="background: #5E604D; padding: 0.8rem 1.2rem; border-radius: 60px; display: inline-flex; align-items: center; gap: 1.2rem; color: #FFE9DA; flex-wrap: wrap;">
-                            <span><i class="fas fa-wallet"></i> consultation fee: 220 BWP</span>
-                            <span style="background: #DB827F; padding: 0.1rem 1rem; border-radius: 60px; color: white;"><i class="fas fa-arrow-up"></i> air scroll active</span>
-                            <span><i class="fas fa-lock"></i> funds hold</span>
-                        </div>
-                        <div style="margin-top: 0.6rem; display: flex; gap: 0.8rem; flex-wrap: wrap;">
-                            <span class="btn-outline-ebony" style="background:#DB827F; color:white; border-color:#DB827F; padding:0.4rem 1.5rem;"><i class="fas fa-check"></i> release after consult</span>
-                            <span style="color:#A19DA4; font-size:0.8rem;"><i class="fas fa-info-circle"></i> only lands on doctor's side after consultation</span>
-                        </div>
-                    </div>
-                    <!-- right: type symptoms -->
-                    <div style="flex: 1.5; min-width: 180px;">
-                        <div class="section-label"><i class="fas fa-pen"></i> type symptoms</div>
-                        <div style="background: white; border-radius: 40px; padding: 0.3rem 0.3rem 0.3rem 1.2rem; display: flex; border:1px solid #D5CCC5;">
-                            <input type="text" placeholder="e.g. fatigue, neuropathy..." style="border: none; background: transparent; width: 100%; padding: 0.6rem 0; outline: none; font-size:0.9rem;" value="fatigue, neuropathy, dizziness" />
-                            <span style="background: #DB827F; color:white; padding:0.4rem 1.2rem; border-radius: 40px; font-size:0.8rem; display:inline-flex; align-items:center;"><i class="fas fa-arrow-right"></i> add</span>
-                        </div>
-                        <div style="display: flex; gap: 0.3rem; margin-top: 0.3rem; flex-wrap: wrap;">
-                            <span class="keyword-tag">fatigue</span>
-                            <span class="keyword-tag">neuropathy</span>
-                            <span class="keyword-tag">dizziness</span>
-                            <span class="keyword-tag">polyuria</span>
-                            <span class="keyword-tag">anaemia</span>
-                        </div>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Completed</div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- ===== FOOTER ===== -->
-        <hr />
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
-            <div style="display: flex; gap: 0.8rem; font-size:0.85rem; color:#5E604D;">
-                <span><i class="fas fa-phone-alt" style="color:#DB827F;"></i> +267 71 234 567</span>
-                <span><i class="fas fa-hospital-user"></i> Bosa Care clinic</span>
-                <span><i class="fas fa-heartbeat" style="color:#DB827F;"></i> HIV · Cancer · Hypertension · Anaemia · Diabetes</span>
-            </div>
-            <div class="credit">
-                <span>NYNÁ @nynatrema</span> · palette: Powder Petal, Coral, Dust, Lilac, Ebony
-            </div>
+    <!-- ===== QUICK ACTIONS ===== -->
+    <section class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-grid">
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-microphone"></i></div>
+                <h3>Voice Transcription</h3>
+                <p>Record consultation and extract symptoms</p>
+                <span class="action-badge">NEW</span>
+            </a>
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-prescription-bottle"></i></div>
+                <h3>Prescription Sender</h3>
+                <p>Send to patient & pharmacy instantly</p>
+            </a>
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-calendar-check"></i></div>
+                <h3>Appointments</h3>
+                <p>View and manage patient bookings</p>
+                <span style="font-size:0.7rem; color:var(--coral);">Peak: 9–11am</span>
+            </a>
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-coins"></i></div>
+                <h3>Payments</h3>
+                <p>Air scroll · secure escrow</p>
+            </a>
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-notes-medical"></i></div>
+                <h3>Symptoms Checker</h3>
+                <p>Type and track patient symptoms</p>
+            </a>
+            <a href="#" class="action-card">
+                <div class="action-icon"><i class="fas fa-file-alt"></i></div>
+                <h3>Patient Records</h3>
+                <p>Access full medical history</p>
+            </a>
         </div>
-    </div>
+    </section>
+
+    <!-- ===== TODAY'S PATIENTS ===== -->
+    <section class="patients-section">
+        <div class="section-header">
+            <h2><i class="fas fa-user-injured" style="color: var(--coral); margin-right: 0.5rem;"></i> Today's Patients</h2>
+            <a href="#">View all →</a>
+        </div>
+        <div class="patient-list">
+
+            <!-- Patient 1 -->
+            <div class="patient-row">
+                <div class="patient-info">
+                    <div class="patient-avatar">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Neo K." />
+                    </div>
+                    <div class="patient-details">
+                        <div class="patient-name">Neo K.</div>
+                        <div class="patient-meta">
+                            <span><i class="far fa-clock"></i> 10:30</span>
+                            <span><i class="fas fa-venus-mars"></i> 42 · Female</span>
+                            <span class="condition-badge">HIV + Diabetes</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="patient-status">
+                    <span class="status-badge status-waiting">Waiting</span>
+                    <button class="btn-sm btn-primary-sm">Start Consult</button>
+                </div>
+            </div>
+
+            <!-- Patient 2 -->
+            <div class="patient-row">
+                <div class="patient-info">
+                    <div class="patient-avatar">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Thabo M." />
+                    </div>
+                    <div class="patient-details">
+                        <div class="patient-name">Thabo M.</div>
+                        <div class="patient-meta">
+                            <span><i class="far fa-clock"></i> 11:15</span>
+                            <span><i class="fas fa-venus-mars"></i> 55 · Male</span>
+                            <span class="condition-badge">Hypertension</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="patient-status">
+                    <span class="status-badge status-inprogress">In Progress</span>
+                    <button class="btn-sm">Resume</button>
+                </div>
+            </div>
+
+            <!-- Patient 3 -->
+            <div class="patient-row">
+                <div class="patient-info">
+                    <div class="patient-avatar">
+                        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Kefilwe S." />
+                    </div>
+                    <div class="patient-details">
+                        <div class="patient-name">Kefilwe S.</div>
+                        <div class="patient-meta">
+                            <span><i class="far fa-clock"></i> 12:00</span>
+                            <span><i class="fas fa-venus-mars"></i> 38 · Female</span>
+                            <span class="condition-badge">Anaemia</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="patient-status">
+                    <span class="status-badge status-waiting">Waiting</span>
+                    <button class="btn-sm btn-primary-sm">Start Consult</button>
+                </div>
+            </div>
+
+            <!-- Patient 4 -->
+            <div class="patient-row">
+                <div class="patient-info">
+                    <div class="patient-avatar">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Mogomotsi R." />
+                    </div>
+                    <div class="patient-details">
+                        <div class="patient-name">Mogomotsi R.</div>
+                        <div class="patient-meta">
+                            <span><i class="far fa-clock"></i> 14:30</span>
+                            <span><i class="fas fa-venus-mars"></i> 61 · Male</span>
+                            <span class="condition-badge">Cancer (Prostate)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="patient-status">
+                    <span class="status-badge status-done">Completed</span>
+                    <button class="btn-sm">View Notes</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
 
 </body>
 </html>
