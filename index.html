@@ -456,6 +456,66 @@
   }
   .modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;}
 
+  /* appointment load heatmap */
+  .load-legend{
+    display:flex;align-items:center;gap:6px;
+    font-size:11.5px;color:var(--lilac);
+  }
+  .legend-bar{
+    width:64px;height:8px;border-radius:999px;
+    background:linear-gradient(90deg, var(--cream), var(--coral));
+    border:1px solid var(--grey);
+  }
+  .load-summary{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:var(--ebony);
+    margin:0 0 18px;
+  }
+  .heatmap{
+    display:grid;
+    grid-template-columns:52px repeat(5, 1fr);
+    gap:4px;
+  }
+  .hm-corner{}
+  .hm-daylabel{
+    font-size:12px;font-weight:600;color:var(--ebony);
+    text-align:center;padding-bottom:4px;
+  }
+  .hm-hourlabel{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;color:var(--lilac);
+    display:flex;align-items:center;
+    justify-content:flex-end;padding-right:6px;
+  }
+  .hm-cell{
+    height:26px;border-radius:6px;
+    border:1px solid rgba(94,96,77,0.06);
+  }
+  .hm-cell.hm-peak{
+    box-shadow:inset 0 0 0 2px var(--ebony);
+  }
+  @media (max-width:860px){
+    .heatmap{grid-template-columns:40px repeat(5,1fr);}
+    .hm-cell{height:20px;}
+    .hm-daylabel{font-size:10.5px;}
+  }
+
+  /* toast */
+  .toast{
+    position:fixed;left:50%;bottom:28px;
+    transform:translate(-50%,12px);
+    background:var(--ebony);color:#fff;
+    padding:11px 20px;border-radius:999px;
+    font-size:13px;font-weight:500;
+    box-shadow:var(--shadow-lift);
+    opacity:0;pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+    z-index:80;
+    max-width:88vw;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+
   /* mobile bottom nav */
   .mobile-nav{display:none;}
 
@@ -518,7 +578,7 @@
       </div>
       <div class="search-wrap">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input type="text" placeholder="Search patients, reports…" aria-label="Search">
+        <input type="text" id="topSearch" placeholder="Search patients…" aria-label="Search patients">
       </div>
     </div>
 
@@ -589,14 +649,25 @@
         <div class="card-head">
           <h2 class="card-title">Patients</h2>
         </div>
-        <div class="patient-search">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <input type="text" placeholder="Find a patient" aria-label="Find a patient">
-        </div>
         <div id="patientList" style="display:flex;flex-direction:column;gap:2px;"></div>
+        <p id="patientEmpty" style="display:none;font-size:13px;color:var(--lilac);padding:10px 4px;">No patients match your search.</p>
       </section>
 
     </div>
+
+    <!-- APPOINTMENT LOAD -->
+    <section class="card" id="load" style="margin-top:20px;">
+      <div class="card-head">
+        <h2 class="card-title">Appointment load this week</h2>
+        <div class="load-legend">
+          <span>Fewer</span>
+          <span class="legend-bar"></span>
+          <span>Busier</span>
+        </div>
+      </div>
+      <p class="load-summary" id="loadSummary"></p>
+      <div class="heatmap" id="heatmap"></div>
+    </section>
 
   </main>
 </div>
@@ -658,7 +729,8 @@
     </div>
     <div class="field">
       <label for="apDate">Date</label>
-      <input type="date" id="apDate">
+      <input type="text" id="apDate" placeholder="e.g. 15 Aug or 2026-08-20" inputmode="numeric" autocomplete="off">
+      <p class="field-hint">Leave blank for today, or type a date</p>
     </div>
     <div class="field">
       <label for="apTime">Time</label>
@@ -770,10 +842,16 @@ document.getElementById('rxSend').addEventListener('click', ()=>{
 });
 
 // schedule modal
+const TODAY_DATE = '2026-08-15'; // matches the greeting date shown above
 const scheduleModal = document.getElementById('scheduleModal');
-document.getElementById('openSchedule').addEventListener('click', ()=>scheduleModal.classList.add('open'));
-document.getElementById('apCancel').addEventListener('click', ()=>scheduleModal.classList.remove('open'));
 const scheduleList = document.getElementById('scheduleList');
+const todayCountEl = document.querySelector('.stat-num'); // "Appointments today" is the first stat
+
+document.getElementById('openSchedule').addEventListener('click', ()=>{
+  scheduleModal.classList.add('open');
+  document.getElementById('apPatient').focus();
+});
+document.getElementById('apCancel').addEventListener('click', ()=>scheduleModal.classList.remove('open'));
 
 function parseTypedTime(raw){
   const s = raw.trim();
@@ -789,6 +867,60 @@ function parseTypedTime(raw){
   return `${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
 }
 
+const MONTHS = {jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+
+function parseTypedDate(raw){
+  const s = raw.trim();
+  if(!s) return TODAY_DATE; // blank = today
+  if(/^today$/i.test(s)) return TODAY_DATE;
+  if(/^tomorrow$/i.test(s)) return '2026-08-16';
+
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/); // 2026-08-20
+  if(m) return isValidYMD(+m[1],+m[2],+m[3]) ? ymd(+m[1],+m[2],+m[3]) : null;
+
+  m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?$/); // 20/08 or 20/08/2026 (day/month)
+  if(m){
+    const day=+m[1], month=+m[2];
+    const year = m[3] ? (m[3].length===2 ? 2000+ +m[3] : +m[3]) : 2026;
+    return isValidYMD(year,month,day) ? ymd(year,month,day) : null;
+  }
+
+  m = s.match(/^(\d{1,2})\s+([a-zA-Z]{3,9})\s*,?\s*(\d{4})?$/); // "20 Aug" / "20 Aug 2026"
+  if(m){
+    const day=+m[1], month=MONTHS[m[2].slice(0,3).toLowerCase()], year = m[3] ? +m[3] : 2026;
+    return (month && isValidYMD(year,month,day)) ? ymd(year,month,day) : null;
+  }
+
+  m = s.match(/^([a-zA-Z]{3,9})\s+(\d{1,2})\s*,?\s*(\d{4})?$/); // "Aug 20" / "August 20, 2026"
+  if(m){
+    const month=MONTHS[m[1].slice(0,3).toLowerCase()], day=+m[2], year = m[3] ? +m[3] : 2026;
+    return (month && isValidYMD(year,month,day)) ? ymd(year,month,day) : null;
+  }
+
+  return null;
+}
+function isValidYMD(y,mo,d){ return mo>=1 && mo<=12 && d>=1 && d<=31 && y>=2020 && y<=2100; }
+function ymd(y,mo,d){ return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+
+function formatNiceDate(dateStr){
+  const d = new Date(dateStr + 'T00:00:00');
+  if(isNaN(d)) return dateStr;
+  return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
+}
+
+let toastEl;
+function showToast(msg){
+  if(!toastEl){
+    toastEl = document.createElement('div');
+    toastEl.className = 'toast';
+    document.body.appendChild(toastEl);
+  }
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=>toastEl.classList.remove('show'), 3400);
+}
+
 document.getElementById('apConfirm').addEventListener('click', ()=>{
   const nameEl = document.getElementById('apPatient');
   const dateEl = document.getElementById('apDate');
@@ -797,40 +929,51 @@ document.getElementById('apConfirm').addEventListener('click', ()=>{
 
   const name = nameEl.value.trim();
   const time = parseTypedTime(timeEl.value || '');
+  const dateVal = parseTypedDate(dateEl.value || '');
 
   timeEl.classList.toggle('field-error', !!timeEl.value && !time);
+  dateEl.classList.toggle('field-error', !!dateEl.value.trim() && !dateVal);
 
-  if(!name || !time){
-    (name ? timeEl : nameEl).focus();
+  if(!name || !time || !dateVal){
+    (!name ? nameEl : (!dateVal ? dateEl : timeEl)).focus();
     return;
   }
 
   const reason = reasonEl.value.trim() || 'General consultation';
+  const isToday = dateVal === TODAY_DATE;
 
-  const item = document.createElement('div');
-  item.className = 'sched-item sched-item-new';
-  item.dataset.time = time;
-  item.innerHTML = `
-    <div class="sched-time">${time}</div>
-    <div class="sched-info"><div class="sched-name">${name}</div><div class="sched-reason">${reason}</div></div>
-    <span class="pill pill-pending">Pending</span>
-  `;
+  if(isToday){
+    const item = document.createElement('div');
+    item.className = 'sched-item sched-item-new';
+    item.dataset.time = time;
+    item.innerHTML = `
+      <div class="sched-time">${time}</div>
+      <div class="sched-info"><div class="sched-name">${name}</div><div class="sched-reason">${reason}</div></div>
+      <span class="pill pill-pending">Pending</span>
+    `;
+    // insert in time order — only ever compares against today's items
+    const existing = Array.from(scheduleList.querySelectorAll('.sched-item'));
+    const next = existing.find(row => row.dataset.time > time);
+    if(next){ scheduleList.insertBefore(item, next); } else { scheduleList.appendChild(item); }
+    item.scrollIntoView({behavior:'smooth', block:'center'});
 
-  // insert in time order
-  const existing = Array.from(scheduleList.querySelectorAll('.sched-item'));
-  const next = existing.find(row => row.dataset.time > time);
-  if(next){ scheduleList.insertBefore(item, next); } else { scheduleList.appendChild(item); }
-  item.scrollIntoView({behavior:'smooth', block:'center'});
+    if(todayCountEl) todayCountEl.textContent = scheduleList.querySelectorAll('.sched-item').length;
+    showToast(`Added to today's schedule at ${time}`);
+  } else {
+    showToast(`Scheduled for ${formatNiceDate(dateVal)} at ${time} — it won't clutter today's list`);
+  }
 
   scheduleModal.classList.remove('open');
   nameEl.value='';
   dateEl.value='';
+  dateEl.classList.remove('field-error');
   timeEl.value='';
   timeEl.classList.remove('field-error');
   reasonEl.value='';
 });
 document.getElementById('apCancel').addEventListener('click', ()=>{
   document.getElementById('apTime').classList.remove('field-error');
+  document.getElementById('apDate').classList.remove('field-error');
 });
 scheduleModal.addEventListener('click', e=>{ if(e.target===scheduleModal) scheduleModal.classList.remove('open'); });
 
@@ -848,13 +991,72 @@ document.querySelectorAll('.navitem').forEach(btn=>{
   });
 });
 
-// live filter for patient search
-document.querySelector('.patient-search input').addEventListener('input', (e)=>{
-  const q = e.target.value.toLowerCase();
+// live filter for patient search (top bar is the single working search)
+const topSearch = document.getElementById('topSearch');
+const patientEmpty = document.getElementById('patientEmpty');
+topSearch.addEventListener('input', (e)=>{
+  const q = e.target.value.trim().toLowerCase();
+  let visibleCount = 0;
   document.querySelectorAll('.patient-row').forEach((row,i)=>{
-    row.style.display = patients[i].name.toLowerCase().includes(q) ? 'flex' : 'none';
+    const match = patients[i].name.toLowerCase().includes(q) || patients[i].cond.toLowerCase().includes(q);
+    row.style.display = match ? 'flex' : 'none';
+    if(match) visibleCount++;
   });
+  patientEmpty.style.display = (q && visibleCount===0) ? 'block' : 'none';
+  if(q) document.getElementById('patients').scrollIntoView({behavior:'smooth', block:'start'});
 });
+
+// ---- Appointment load heatmap: peak vs quiet hours across the week ----
+(function(){
+  const hours = [8,9,10,11,12,13,14,15,16,17];
+  const days = ['Mon','Tue','Wed','Thu','Fri'];
+  // mock booking counts per hour for each day (clinic pattern: morning + post-lunch peaks, lunchtime dip)
+  const loadData = {
+    Mon:[2,5,6,4,2,3,5,4,2,1],
+    Tue:[3,6,7,5,2,4,6,5,3,1],
+    Wed:[1,3,4,3,1,2,3,2,1,0],
+    Thu:[3,6,7,6,3,5,6,4,3,2],
+    Fri:[2,4,5,4,2,3,4,3,2,1],
+  };
+
+  const allValues = days.flatMap(d => loadData[d]);
+  const maxVal = Math.max(...allValues);
+
+  function cellColor(v){
+    const t = maxVal ? v / maxVal : 0;
+    const c1 = [255,233,218]; // cream
+    const c2 = [219,130,127]; // coral
+    const r = Math.round(c1[0] + (c2[0]-c1[0]) * t);
+    const g = Math.round(c1[1] + (c2[1]-c1[1]) * t);
+    const b = Math.round(c1[2] + (c2[2]-c1[2]) * t);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  const heatmap = document.getElementById('heatmap');
+  let html = '<div class="hm-corner"></div>';
+  days.forEach(d => html += `<div class="hm-daylabel">${d}</div>`);
+
+  hours.forEach((h, hi) => {
+    html += `<div class="hm-hourlabel">${String(h).padStart(2,'0')}:00</div>`;
+    days.forEach(d => {
+      const v = loadData[d][hi];
+      const isPeak = v === maxVal;
+      html += `<div class="hm-cell${isPeak ? ' hm-peak' : ''}" style="background:${cellColor(v)}" title="${d} ${String(h).padStart(2,'0')}:00 — ${v} appointment${v===1?'':'s'}"></div>`;
+    });
+  });
+  heatmap.innerHTML = html;
+
+  // work out peak / quiet hours (summed across the week) for the summary line
+  const hourTotals = hours.map((h, hi) => days.reduce((sum, d) => sum + loadData[d][hi], 0));
+  const maxTotal = Math.max(...hourTotals);
+  const minTotal = Math.min(...hourTotals);
+  const fmt = h => `${String(h).padStart(2,'0')}:00`;
+  const peakHours = hours.filter((h, hi) => hourTotals[hi] === maxTotal).map(fmt);
+  const quietHours = hours.filter((h, hi) => hourTotals[hi] === minTotal).map(fmt);
+
+  document.getElementById('loadSummary').textContent =
+    `Peak hours: ${peakHours.join(', ')} · Quietest: ${quietHours.join(', ')}`;
+})();
 </script>
 
 </body>
