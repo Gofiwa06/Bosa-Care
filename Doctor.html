@@ -669,6 +669,7 @@
       <li><button class="navitem" data-nav="rx">
         <svg viewBox="0 0 24 24"><path d="M8.5 8.5l7 7"/><path d="M6.5 15.5l3-3-4-4-3 3a3 3 0 0 0 4 4z"/><path d="M14.5 6.5l4 4 3-3a3 3 0 0 0-4-4z"/></svg>
         Rx</button></li>
+      
     </ul>
   </nav>
 
@@ -1222,6 +1223,16 @@ topSearch.addEventListener('input', (e)=>{
   document.getElementById('loadSummary').textContent =
     `Peak hours: ${peakHours.join(', ')} · Quietest: ${quietHours.join(', ')}`;
 })();
+
+  // Navigate to doctor profile page
+function goToProfile() {
+  window.location.href = 'profile-doctor.html';
+}
+
+// Navigate to patient profile page (for patient dashboard)
+function goToPatientProfile() {
+  window.location.href = 'profile-patient.html';
+}
 </script>
 
 </body>
