@@ -1,477 +1,670 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="en">
- 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
-    <title>Bosa Care | Patient Dashboard</title>
- 
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bosa-Care — Healthcare, without the hassle.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'OpenDyslexic';
+    font-style:normal;
+    font-weight:400;
+    font-display:swap;
+    src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-400-normal.woff2) format('woff2');
+  }
+  @font-face{
+    font-family:'OpenDyslexic';
+    font-style:normal;
+    font-weight:700;
+    font-display:swap;
+    src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-700-normal.woff2) format('woff2');
+  }
+
+  :root{
+    --ink:#454735;
+    --ink-deep:#33351F;
+    --sand:#FFE9DA;
+    --sand-dim:#F4DECD;
+    --dust:#D5CCC5;
+    --lilac:#A19DA4;
+    --coral:#DB827F;
+    --coral-deep:#C56B66;
+    --line: rgba(69,71,53,0.18);
+    --ink-soft: rgba(69,71,53,0.74);
+    --radius: 18px;
+    --shadow: 0 20px 50px -25px rgba(69,71,53,0.45);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--sand);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    transition:font-family .15s ease;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;margin:0;padding:0;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--coral-deep);font-weight:600;
+  }
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--coral);display:inline-block;}
+
+  /* ---------- Dyslexia-friendly mode ----------
+     Toggled by the "Aa" button in the nav. Swaps body copy to OpenDyslexic
+     (falls back to Comic Sans MS, then a plain sans-serif) and loosens
+     spacing, which research on dyslexia-friendly type recommends. */
+  body.dyslexia-mode{
+    font-family:'OpenDyslexic','Comic Sans MS','Comic Sans',sans-serif;
+    letter-spacing:0.01em;
+    line-height:1.75;
+  }
+  body.dyslexia-mode h1,
+  body.dyslexia-mode h2,
+  body.dyslexia-mode h3,
+  body.dyslexia-mode .display{
+    font-family:'OpenDyslexic','Comic Sans MS','Comic Sans',sans-serif;
+    letter-spacing:0;
+  }
+  body.dyslexia-mode p,
+  body.dyslexia-mode .sub,
+  body.dyslexia-mode li{
+    line-height:1.85;
+    word-spacing:0.06em;
+  }
+  .a11y-toggle{
+    display:flex;align-items:center;gap:7px;
+    padding:9px 14px;border-radius:100px;font-size:13px;font-weight:600;
+    border:1.5px solid var(--line);color:var(--ink);
+    transition:background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .a11y-toggle:hover{border-color:var(--coral);color:var(--coral-deep);}
+  .a11y-toggle.active{background:var(--ink);color:var(--sand);border-color:var(--ink);}
+  .a11y-toggle .glyph{font-family:'Fraunces',serif;font-size:14px;}
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky;top:0;z-index:60;
+    background:rgba(255,233,218,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s ease, box-shadow .3s ease;
+  }
+  header.scrolled{border-color:var(--line); box-shadow:0 8px 24px -20px rgba(69,71,53,0.35);}
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 32px;max-width:1160px;margin:0 auto;
+    gap:18px;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Fraunces',serif;font-weight:600;font-size:21px;
+  }
+  /* Logo mark left empty for your own picture/logo file.
+     Drop an image named logo.png next to this HTML file and it will appear
+     here automatically. Until then this shows a soft dashed placeholder. */
+  .logo-mark{
+    width:36px;height:36px;border-radius:10px;flex:none;
+    border:1.5px dashed var(--ink-soft);
+    background:var(--sand-dim);
+    overflow:hidden;position:relative;
+  }
+  .logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
+  .nav-links{display:flex;align-items:center;gap:34px;font-size:14.5px;font-weight:500;color:var(--ink-soft);}
+  .nav-links a{transition:color .2s;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-cta{display:flex;align-items:center;gap:10px;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px 22px;border-radius:100px;font-size:14.5px;font-weight:600;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+    white-space:nowrap;
+  }
+  .btn-ghost{color:var(--ink);}
+  .btn-ghost:hover{color:var(--coral-deep);}
+  .btn-primary{
+    background:var(--ink);color:var(--sand);
+    box-shadow:0 12px 24px -12px rgba(69,71,53,0.55);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 28px -12px rgba(69,71,53,0.6);}
+  .btn-outline{
+    border:1.5px solid var(--ink);color:var(--ink);
+  }
+  .btn-outline:hover{background:var(--ink);color:var(--sand);}
+  .btn-block{width:100%;}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;padding:88px 0 60px;overflow:hidden;}
+  .hero::before{
+    content:"";position:absolute;top:-180px;right:-180px;width:520px;height:520px;
+    background:radial-gradient(circle, rgba(219,130,127,0.30), transparent 70%);
+    filter:blur(10px);z-index:0;
+  }
+  .hero-grid{
+    position:relative;z-index:1;
+    display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center;
+  }
+  .hero h1{font-size:clamp(38px,4.6vw,58px);line-height:1.04;color:var(--ink);}
+  .hero h1 em{font-style:italic;color:var(--coral-deep);}
+  .hero .sub{
+    margin-top:22px;font-size:17.5px;line-height:1.6;color:var(--ink-soft);max-width:480px;
+  }
+  .hero .cta-row{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+  .trust-line{
+    margin-top:28px;display:flex;align-items:center;gap:10px;
+    font-size:13px;color:var(--ink-soft);
+  }
+  .trust-line .dots{display:flex;}
+  .trust-line .dots span{
+    width:9px;height:9px;border-radius:50%;margin-left:-4px;border:2px solid var(--sand);
+  }
+  .trust-line .dots span:nth-child(1){background:var(--coral);}
+  .trust-line .dots span:nth-child(2){background:var(--lilac);}
+  .trust-line .dots span:nth-child(3){background:var(--ink);}
+
+  /* ---------- Hero carousel (hospitals & clinics across Botswana) ---------- */
+  .hero-carousel{position:relative;z-index:1;}
+  .carousel-viewport{
+    border-radius:26px;overflow:hidden;box-shadow:var(--shadow);
+    aspect-ratio:4/5;position:relative;background:var(--sand-dim);
+    border:1px solid var(--line);
+  }
+  .carousel-track{display:flex;height:100%;transition:transform .55s cubic-bezier(.65,.05,.36,1);}
+  .carousel-slide{min-width:100%;height:100%;position:relative;}
+  .carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+  .slide-fallback{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(150deg,var(--dust),var(--lilac));
+  }
+  .slide-icon{font-size:46px;opacity:.5;}
+  .slide-caption{
+    position:absolute;left:0;right:0;bottom:0;padding:24px 26px;
+    background:linear-gradient(0deg, rgba(51,53,31,0.85), transparent 75%);
+    color:var(--sand);
+  }
+  .slide-loc{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.85;}
+  .slide-name{display:block;font-family:'Fraunces',serif;font-size:19px;margin-top:4px;}
+  .car-arrow{
+    position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;
+    background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;
+    box-shadow:0 10px 20px -10px rgba(69,71,53,.5);color:var(--ink);z-index:2;
+  }
+  .car-arrow:hover{background:var(--coral);color:#fff;}
+  .car-arrow.left{left:-16px;}
+  .car-arrow.right{right:-16px;}
+  .carousel-dots{display:flex;gap:6px;justify-content:center;margin-top:16px;}
+  .carousel-dots span{width:7px;height:7px;border-radius:50%;background:var(--dust);cursor:pointer;transition:background .2s,width .2s;display:inline-block;}
+  .carousel-dots span.active{background:var(--coral);width:20px;border-radius:4px;}
+
+  /* ---------- Problem section ---------- */
+  .problem{padding:100px 0 40px;}
+  .section-head{max-width:600px;}
+  .section-head h2{font-size:clamp(28px,3.4vw,38px);margin-top:14px;line-height:1.15;}
+  .problem-grid{
+    margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+  }
+  .p-card{
+    background:#fff;border-radius:var(--radius);padding:26px 22px;border:1px solid var(--line);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .p-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+  .p-card .glyph{
+    width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    font-size:19px;margin-bottom:16px;background:var(--sand-dim);
+  }
+  .p-card h3{font-size:16.5px;font-weight:600;font-family:'Space Grotesk',sans-serif;}
+  .p-card p{margin-top:8px;font-size:13.8px;line-height:1.55;color:var(--ink-soft);}
+
+  /* ---------- Features ---------- */
+  .features{padding:120px 0 40px;}
+  .feat-grid{
+    margin-top:52px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  }
+  .feat-card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px 26px;
+  }
+  .feat-card .glyph{
+    width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+    font-size:21px;background:linear-gradient(145deg,var(--coral),var(--lilac));color:#fff;
+    margin-bottom:20px;
+  }
+  .feat-card h3{font-size:19px;}
+  .feat-card p{margin-top:10px;font-size:14px;line-height:1.6;color:var(--ink-soft);}
+  .feat-card.big{
+    grid-column:span 3;
+    background:linear-gradient(120deg,var(--ink) 0%, var(--ink-deep) 100%);
+    color:var(--sand);display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;padding:38px 40px;
+  }
+  .feat-card.big h3{font-size:24px;color:#fff;}
+  .feat-card.big p{color:rgba(255,233,218,0.8);}
+  .feat-card.big .glyph{background:rgba(255,233,218,0.16);color:var(--sand);}
+  .pay-logos{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
+  .pay-logos span{
+    padding:8px 14px;border-radius:100px;font-size:12.5px;font-weight:600;
+    background:rgba(255,233,218,0.12);border:1px solid rgba(255,233,218,0.28);
+  }
+
+  /* ---------- How it works ---------- */
+  .how{padding:120px 0 40px;}
+  .how-track{
+    margin-top:56px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;
+  }
+  .how-track::before{
+    content:"";position:absolute;top:23px;left:6%;right:6%;height:1.5px;
+    background:repeating-linear-gradient(90deg,var(--line) 0 8px, transparent 8px 16px);
+    z-index:0;
+  }
+  .how-step{position:relative;z-index:1;padding-right:20px;}
+  .how-step .num{
+    width:46px;height:46px;border-radius:50%;background:var(--sand);
+    border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:20px;
+  }
+  .how-step:nth-child(4) .num{background:var(--ink);color:var(--sand);}
+  .how-step h3{font-size:16.5px;}
+  .how-step p{margin-top:8px;font-size:13.6px;line-height:1.55;color:var(--ink-soft);}
+
+  /* ---------- For patients/facilities ---------- */
+  .split{padding:120px 0 40px;}
+  .split-grid{margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  .split-card{
+    border-radius:var(--radius);padding:36px 32px;
+  }
+  .split-card.patients{background:var(--sand-dim);border:1px solid var(--line);}
+  .split-card.facilities{background:var(--ink);color:var(--sand);}
+  .split-card .tag{
+    width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:22px;
+  }
+  .split-card.patients .tag{background:#fff;}
+  .split-card.facilities .tag{background:rgba(255,233,218,0.14);}
+  .split-card h3{font-size:21px;}
+  .split-card li{
+    display:flex;align-items:center;gap:10px;font-size:14.5px;padding:11px 0;
+    border-top:1px solid rgba(69,71,53,0.12);
+  }
+  .split-card.facilities li{border-top:1px solid rgba(255,233,218,0.14);}
+  .split-card li:first-of-type{border-top:none;}
+  .split-card ul{margin-top:20px;}
+  .checkdot{width:6px;height:6px;border-radius:50%;background:var(--coral);flex:none;}
+  .split-card.facilities .checkdot{background:var(--lilac);}
+
+  /* ---------- Airscoll / payment methods ---------- */
+  .airscoll{padding:120px 0 40px;}
+  .airscoll-panel{
+    border-radius:28px;padding:60px 50px;background:var(--sand-dim);border:1px solid var(--line);
+    display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;position:relative;overflow:hidden;
+  }
+  .airscoll-copy h2{font-size:clamp(26px,3vw,34px);}
+  .airscoll-copy p{margin-top:16px;font-size:15px;line-height:1.65;color:var(--ink-soft);max-width:420px;}
+  .flow{position:relative;height:230px;display:flex;align-items:center;justify-content:center;}
+  .flow-node{
+    background:#fff;border-radius:16px;padding:14px 18px;font-size:13.5px;font-weight:600;
+    box-shadow:0 14px 30px -18px rgba(69,71,53,0.4);position:absolute;
+  }
+  .flow-node.center{z-index:2;background:var(--ink);color:var(--sand);}
+  .flow-node.n1{top:8px;left:0;}
+  .flow-node.n2{top:8px;right:0;}
+  .flow-node.n3{bottom:8px;left:6px;}
+  .flow-node.n4{bottom:8px;right:6px;}
+  .flow svg{position:absolute;inset:0;width:100%;height:100%;}
+  .flow path{fill:none;stroke:var(--coral);stroke-width:1.5;stroke-dasharray:4 6;opacity:.65;}
+  .pulse{fill:var(--lilac);}
+
+  /* ---------- Impact ---------- */
+  .impact{padding:120px 0 40px;}
+  .impact-panel{
+    border-radius:28px;background:var(--ink);color:var(--sand);padding:60px 50px;
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px;text-align:center;
+  }
+  .impact-panel .item .arrow{font-size:26px;color:var(--coral);}
+  .impact-panel .item h3{font-family:'Fraunces',serif;font-size:22px;margin-top:10px;}
+  .impact-panel .item p{margin-top:8px;font-size:13.5px;color:rgba(255,233,218,0.75);}
+
+  /* ---------- Final CTA ---------- */
+  .final-cta{padding:130px 0 110px;text-align:center;}
+  .final-cta h2{font-size:clamp(30px,4vw,46px);}
+  .final-cta p{margin:18px auto 0;max-width:480px;font-size:15.5px;color:var(--ink-soft);}
+  .final-cta .btn-primary{margin-top:30px;padding:15px 34px;font-size:15.5px;}
+
+  footer{border-top:1px solid var(--line);padding:40px 0;}
+  .foot-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink-soft);flex-wrap:wrap;gap:14px;}
+  .foot-logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:16px;}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(51,53,31,0.58);backdrop-filter:blur(3px);
+    display:flex;align-items:center;justify-content:center;z-index:200;
+    opacity:0;pointer-events:none;transition:opacity .25s ease;padding:20px;
+  }
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .modal{
+    background:var(--sand);border-radius:22px;width:100%;max-width:380px;padding:34px 32px 30px;
+    box-shadow:0 40px 80px -30px rgba(69,71,53,0.6);
+    transform:translateY(16px) scale(.97);transition:transform .25s ease;
+  }
+  .overlay.open .modal{transform:translateY(0) scale(1);}
+  .modal-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .modal-top h3{font-size:22px;}
+  .close-btn{
+    width:30px;height:30px;border-radius:50%;background:var(--sand-dim);display:flex;align-items:center;justify-content:center;font-size:15px;
+  }
+  .tabs{display:flex;gap:4px;margin-top:22px;background:var(--sand-dim);padding:4px;border-radius:100px;}
+  .tab{flex:1;text-align:center;padding:9px 0;border-radius:100px;font-size:13.5px;font-weight:600;color:var(--ink-soft);transition:all .2s;}
+  .tab.active{background:var(--ink);color:var(--sand);}
+  .field{margin-top:16px;}
+  .field label{font-size:12.5px;font-weight:600;color:var(--ink-soft);}
+  .field input{
+    width:100%;margin-top:7px;padding:12px 14px;border-radius:11px;border:1.5px solid var(--line);
+    background:#fff;font-family:inherit;font-size:14.5px;color:var(--ink);
+  }
+  .field input:focus{outline:2px solid var(--coral);outline-offset:1px;border-color:transparent;}
+  .modal .btn-primary{margin-top:22px;}
+  .switch-line{margin-top:16px;text-align:center;font-size:13px;color:var(--ink-soft);}
+  .switch-line button{color:var(--coral-deep);font-weight:600;}
+  .form-panel{display:none;}
+  .form-panel.active{display:block;}
+  .toast{
+    position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--sand);padding:14px 24px;border-radius:100px;font-size:13.5px;
+    box-shadow:0 20px 40px -18px rgba(69,71,53,.6);z-index:300;opacity:0;pointer-events:none;
+    transition:all .3s ease;display:flex;align-items:center;gap:10px;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast .dot{width:8px;height:8px;border-radius:50%;background:var(--coral);}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:920px){
+    .nav-links{display:none;}
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-carousel{order:-1;}
+    .carousel-viewport{aspect-ratio:16/10;}
+    .problem-grid{grid-template-columns:repeat(2,1fr);}
+    .feat-grid{grid-template-columns:1fr;}
+    .feat-card.big{grid-column:span 1;grid-template-columns:1fr;}
+    .how-track{grid-template-columns:repeat(2,1fr);gap:30px;}
+    .how-track::before{display:none;}
+    .split-grid{grid-template-columns:1fr;}
+    .airscoll-panel{grid-template-columns:1fr;}
+    .impact-panel{grid-template-columns:1fr;gap:36px;}
+    .a11y-toggle span.label{display:none;}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 20px;}
+    nav{padding:16px 20px;}
+    .problem-grid{grid-template-columns:1fr;}
+    .car-arrow{width:32px;height:32px;font-size:15px;}
+    .car-arrow.left{left:6px;}
+    .car-arrow.right{right:6px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+</style>
 </head>
- 
 <body>
- 
- 
-    <header class="mobile-header">
- 
-        <div class="brand">
-            <div class="brand-icon">+</div>
- 
-            <div>
-                <span class="brand-bosa">Bosa</span>
-                <span class="brand-care">Care</span>
-            </div>
+
+<header id="siteHeader">
+  <nav>
+    <div class="logo">
+      <span class="logo-mark"><img src="logo.png" alt="Bosa-Care logo" onerror="this.style.display='none'"></span>
+      Bosa-Care
+    </div>
+    <ul class="nav-links">
+      <li><a href="know.html">Must Know's</a></li>
+      <li><a href="about.html"> About Us</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+    </ul>
+    <div class="nav-cta">
+      <button class="a11y-toggle" id="a11yToggle" onclick="toggleDyslexiaMode()" aria-pressed="false">
+        <span class="glyph">Aa</span><span class="label">Dyslexia-friendly</span>
+      </button>
+      <a class="btn btn-ghost" href="login.html">Log in</a>
+      <a class="btn btn-primary" href="signup.html">Sign up</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">One platform · every step of care</span>
+      <h1>Healthcare, <em>without</em><br>the hassle.</h1>
+      <p class="sub">Bosa-Care connects patients, healthcare facilities and pharmacies in one seamless platform — book appointments, access records and pay for care, all in one place.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="signup.html">Get started</a>
+        <a href="#how" class="btn btn-outline">See how it works</a>
+      </div>
+      <div class="trust-line">
+        <span class="dots"><span></span><span></span><span></span></span>
+        One platform. Your healthcare journey. Simplified.
+      </div>
+    </div>
+
+    <!-- Carousel: hospitals & clinics across Botswana.
+         Drop matching image files into an /images folder (same names as the src
+         attributes below) and each slide will use your real photo automatically.
+         Until then, each slide shows a soft placeholder with the facility name. -->
+    <div class="hero-carousel">
+      <div class="carousel-viewport">
+        <div class="carousel-track" id="carouselTrack">
+
+          <div class="carousel-slide">
+            <img src="images/princess-marina-hospital.jpg" alt="Princess Marina Hospital, Gaborone" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">.</span></div>
+            <div class="slide-caption"><span class="slide-loc">Gaborone</span><span class="slide-name">Princess Marina Hospital</span></div>
+          </div>
+
+          <div class="carousel-slide">
+            <img src="images/nyangabgwe-hospital.jpg" alt="Nyangabgwe Referral Hospital, Francistown" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">.</span></div>
+            <div class="slide-caption"><span class="slide-loc">Francistown</span><span class="slide-name">Nyangabgwe Referral Hospital</span></div>
+          </div>
+
+          <div class="carousel-slide">
+            <img src="images/scottish-livingstone-hospital.jpg" alt="Scottish Livingstone Hospital, Molepolole" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">.</span></div>
+            <div class="slide-caption"><span class="slide-loc">Molepolole</span><span class="slide-name">Scottish Livingstone Hospital</span></div>
+          </div>
+
+          <div class="carousel-slide">
+            <img src="images/bokamoso-hospital.jpg" alt="Bokamoso Private Hospital, Gaborone" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">.</span></div>
+            <div class="slide-caption"><span class="slide-loc">Gaborone</span><span class="slide-name">Bokamoso Private Hospital</span></div>
+          </div>
+
+          <div class="carousel-slide">
+            <img src="images/letsholathebe-hospital.jpg" alt="Letsholathebe II Memorial Hospital, Maun" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">.</span></div>
+            <div class="slide-caption"><span class="slide-loc">Maun</span><span class="slide-name">Letsholathebe II Memorial Hospital</span></div>
+          </div>
+
+          <div class="carousel-slide">
+            <img src="images/gaborone-clinic.jpg" alt="Community clinic, Gaborone" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">.</span></div>
+            <div class="slide-caption"><span class="slide-loc">Gaborone</span><span class="slide-name">Community Health Clinic</span></div>
+          </div>
+
         </div>
- 
-        <button class="menu-button" id="menuButton">
-            ☰
-        </button>
->
- 
-    </header>
- 
- 
- 
-    <aside class="sidebar" id="sidebar">
- 
-        <div class="sidebar-brand">
- 
-            <div class="brand-icon">+</div>
- 
-            <div>
-                <span class="brand-bosa">Bosa</span>
-                <span class="brand-care">Care</span>
-            </div>
- 
+        <button class="car-arrow left" onclick="moveCarousel(-1)" aria-label="Previous slide">‹</button>
+        <button class="car-arrow right" onclick="moveCarousel(1)" aria-label="Next slide">›</button>
+      </div>
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+  </div>
+</section>
+
+<section class="problem">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The problem</span>
+      <h2>Healthcare shouldn't mean spending your whole day in a queue.</h2>
+    </div>
+    <div class="problem-grid">
+      <div class="p-card"><div class="glyph">🕐</div><h3>Long waiting times</h3><p>Unnecessary queues can turn a simple visit into hours of waiting.</p></div>
+      <div class="p-card"><div class="glyph">📄</div><h3>Paperwork</h3><p>Manual documentation makes accessing and managing patient information harder.</p></div>
+      <div class="p-card"><div class="glyph">💊</div><h3>Pharmacy delays</h3><p>Patients face extra waiting just to collect their medication.</p></div>
+      <div class="p-card"><div class="glyph">💳</div><h3>Payment friction</h3><p>Multiple, unfamiliar payment processes make transactions inconvenient.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The solution</span>
+      <h2>One healthcare journey. One platform.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="glyph">📅</div><h3>Smart appointments</h3><p>Book and manage appointments without unnecessary queues, at facilities near you.</p></div>
+      <div class="feat-card"><div class="glyph">🗂️</div><h3>Digital health records</h3><p>Access your medical information digitally instead of relying entirely on paper.</p></div>
+      <div class="feat-card"><div class="glyph">💊</div><h3>Pharmacy management</h3><p>Track prescriptions and collect medication with a more organised process.</p></div>
+      <div class="feat-card big">
+        <div>
+          
+        <div>
+         
         </div>
- 
- 
-        <div class="patient-profile">
- 
-            <div class="patient-avatar">
-                ST
-            </div>
- 
-            <div>
-                <strong>Shatho Tumelo</strong>
-                <span>Patient</span>
-            </div>
- 
-        </div>
- 
- 
-        <nav class="navigation">
- 
-            <p class="nav-heading">
-                MAIN MENU
-            </p>
- 
-            <a href="index.html" class="nav-link active">
-                <span>⌂</span>
-                Dashboard
-            </a>
- 
-            <a href="symptom-detector.html" class="nav-link">
-                <span>🤖</span>
-                Symptom Checker
-            </a>
- 
- 
-            <p class="nav-heading nav-space">
-                HEALTH SCREENING
-            </p>
- 
-            <a href="cancer.html" class="nav-link">
-                <span>🎗️</span>
-                Cancer Screening
-            </a>
- 
-            <a href="hiv.html" class="nav-link">
-                <span>🧬</span>
-                HIV / AIDS
-            </a>
- 
-            <a href="hypertension.html" class="nav-link">
-                <span>❤️</span>
-                Hypertension
-            </a>
- 
-            <a href="diabetes.html" class="nav-link">
-                <span>🩸</span>
-                Diabetes
-            </a>
- 
-            <a href="anemia.html" class="nav-link">
-                <span>🩸</span>
-                Anemia
-            </a>
- 
- 
-            <p class="nav-heading nav-space">
-                ACCOUNT
-            </p>
- 
-            <a href="profile.html" class="nav-link">
-                <span>👤</span>
-                My Profile
-            </a>
- 
-            <a href="#" class="nav-link">
-                <span>📋</span>
-                Health Records
-            </a>
-            <a href="#" class="nav-link">
-                <span>📅</span>
-                Appointments
-            </a>
- 
-        </nav>
- 
- 
-        <button class="emergency-button" id="emergencyButton">
- 
-            <span>🚨</span>
- 
-            <div>
-                <strong>Emergency Help</strong>
-                <small>Get urgent assistance</small>
-            </div>
- 
-        </button>
- 
-    </aside>
- 
- 
- 
-    <main class="main-content">
- 
- 
-    
- 
-        <div class="topbar">
- 
-            <div>
-                <p class="breadcrumb">
-                    Patient Portal / Dashboard
-                </p>
-            </div>
- 
- 
-            <div class="topbar-right">
- 
-                <button
-                    class="notification-button"
-                    id="notificationButton"
-                >
-                    🔔
-                    <span class="notification-dot"></span>
-                </button>
- 
- 
-                <div class="top-profile">
- 
-                    <div class="top-avatar">
-                        ST
-                    </div>
- 
-                    <div>
-                        <strong>Shatho Tumelo</strong>
-                        <span>Patient</span>
-                    </div>
- 
-                </div>
- 
-            </div>
- 
-        </div>
- 
- 
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">How it works</span>
+      <h2>Four steps from booking to better care.</h2>
+    </div>
+    <div class="how-track">
+      <div class="how-step"><div class="num">01</div><h3>Register</h3><p>Create your Bosa-Care profile in minutes.</p></div>
+      <div class="how-step"><div class="num">02</div><h3>Book</h3><p>Find your healthcare service and schedule your visit.</p></div>
+      <div class="how-step"><div class="num">03</div><h3>Manage</h3><p>Access records, prescriptions and healthcare information.</p></div>
+      <div class="how-step"><div class="num">04</div><h3>Pay</h3><p>Complete your healthcare transaction seamlessly through Airscoll.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="split" id="facilities">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Built for both sides of care</span>
+      <h2>For patients, and for the people who care for them.</h2>
+    </div>
+    <div class="split-grid">
+      <div class="split-card patients">
+        <div class="tag">👤</div>
+        <h3>For patients</h3>
+        <ul>
+          <li><span class="checkdot"></span>Book appointments</li>
+          <li><span class="checkdot"></span>Manage healthcare information</li>
+          <li><span class="checkdot"></span>View prescriptions</li>
+          <li><span class="checkdot"></span>Reduce unnecessary waiting</li>
+        </ul>
+      </div>
+      <div class="split-card facilities">
+        <div class="tag">🏥</div>
+        <h3>For healthcare facilities</h3>
+        <ul>
+          <li><span class="checkdot"></span>Manage appointments</li>
+          <li><span class="checkdot"></span>Access patient records</li>
+          <li><span class="checkdot"></span>Reduce paperwork</li>
+          <li><span class="checkdot"></span>Manage pharmacy processes</li>
+          <li><span class="checkdot"></span>Track transactions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="impact">
+  <div class="wrap">
+    <div class="impact-panel">
+      <div class="item"><div class="arrow">↓</div><h3>Waiting time</h3><p>Less time in queues, more time on your day.</p></div>
+      <div class="item"><div class="arrow">↓</div><h3>Paperwork</h3><p>Records and prescriptions, all digital.</p></div>
      
- 
-        <section class="hero">
- 
-            <div class="hero-content">
- 
-                <p class="eyebrow">
-                    BOSA CARE • YOUR HEALTH, YOUR CARE
-                </p>
- 
-                <h1>
-                    Good afternoon, Shatho Tumelo 👋
-                </h1>
- 
-                <p class="hero-text">
-                    Welcome to Bosa Care. Explore your health
-                    screening tools and keep track of your
-                    wellbeing.
-                </p>
- 
- 
-                <div class="hero-buttons">
- 
-                    <button
-                        class="primary-button"
-                        onclick="openSymptomChecker()"
-                    >
-                        🤖 Check my symptoms
-                    </button>
- 
-                    <button
-                        class="secondary-button"
-                        onclick="scrollToScreenings()"
-                    >
-                        Explore screenings
-                    </button>
- 
-                </div>
- 
-            </div>
- 
- 
-            <div class="hero-graphic">
- 
-                <div class="circle circle-one"></div>
-                <div class="circle circle-two"></div>
- 
-                <div class="health-symbol">
-                    +
-                </div>
- 
-                <div class="floating-stat stat-one">
-                    <span>❤️</span>
-                    <div>
-                        <strong>5</strong>
-                        <small>Health areas</small>
-                    </div>
-                </div>
- 
-                <div class="floating-stat stat-two">
-                    <span>✓</span>
-                    <div>
-                        <strong>Care</strong>
-                        <small>Starts with awareness</small>
-                    </div>
-                </div>
- 
-            </div>
- 
-        </section>
- 
- 
-        <section class="overview-section">
- 
-            <div class="section-title">
- 
-                <div>
-                    <p class="eyebrow">
-                        HEALTH OVERVIEW
-                    </p>
- 
-                    <h2>
-                        Your health at a glance
-                    </h2>
-                </div>
- 
-                <span class="last-updated">
-                    Last updated today
-                </span>
- 
-            </div>
- 
- 
-            <div class="overview-grid">
- 
- 
-                <div class="overview-card">
- 
-                    <div class="overview-icon red">
-                        ❤️
-                    </div>
- 
-                    <div>
-                        <span>
-                            Blood Pressure
-                        </span>
- 
-                        <strong>
-                            118/76
-                        </strong>
- 
-                        <small class="good">
-                            ● Within expected range
-                        </small>
-                    </div>
- 
-                </div>
- 
- 
-                <div class="overview-card">
- 
-                    <div class="overview-icon purple">
-                        🩸
-                    </div>
- 
-                    <div>
-                        <span>
-                            Blood Glucose
-                        </span>
- 
-                        <strong>
-                            5.6 mmol/L
-                        </strong>
- 
-                        <small class="good">
-                            ● Reading recorded
-                        </small>
-                    </div>
- 
-                </div>
- 
- 
-                <div class="overview-card">
- 
-                    <div class="overview-icon orange">
-                        🩸
-                    </div>
- 
-                    <div>
-                        <span>
-                            Anemia Check
-                        </span>
- 
-                        <strong>
-                            Normal
-                        </strong>
- 
-                        <small>
-                            ● No signs of anemia
-                        </small>
-                    </div>
- 
-                </div>
- 
- 
-                <div class="overview-card">
- 
-                    <div class="overview-icon green">
-                        ✓
-                    </div>
- 
-                    <div>
-                        <span>
-                            Screenings
-                        </span>
- 
-                        <strong>
-                            4/ 5
-                        </strong>
- 
-                        <small>
-                            Completed this month
-                        </small>
-                    </div>
- 
-                </div>
- 
-            </div>
- 
-        </section>
- 
- 
-        <!-- =========================
-             MAIN SCREENING FEATURES
-        ========================== -->
- 
-        <section
-            class="screening-section"
-            id="screenings"
-        >
- 
-            <div class="section-title">
- 
-                <div>
- 
-                    <p class="eyebrow">
-                        HEALTH SCREENING
-                    </p>
- 
-                    <h2>
-                        Explore your health areas
-                    </h2>
- 
-                    <p class="section-description">
-                        Use these tools to learn about risk
-                        factors, symptoms and healthy habits.
-                    </p>
- 
-                </div>
- 
-            </div>
- 
- 
-            <div class="screening-grid">
- 
- 
-                <!-- CANCER -->
- 
-                <article
-                    class="screening-card cancer"
-                    onclick="openPage('cancer.html')"
-                >
- 
-                    <div class="card-top">
- 
-                        <div class="feature-icon">
-                            🎗️
-                        </div>
- 
-                        <span class="feature-number">
-                            01
-                        </span>
- 
-                    </div>
- 
-                    <span class="feature-label">
-                        CANCER AWARENESS
-                    </span>
- 
-                    <h3>
-                        Cancer Screening
-                    </h3>
- 
-                    <p>
-                        Learn about common warning signs,
-                        risk factors and recommended
-                        screening conversations.
-                    </p>
- 
-                    <button>
-                        Explore cancer screening
-                        <span>→</span>
-                    </button>
- 
-                </article>
- 
- 
-                <!-- HIV -->
- 
-                <article
-                    class="screening-card hiv"
-                    onclick="openPage('hiv.html')"
-                >
- 
-                    <div class="card-top">
- 
-                        <div class="feature-icon">
-                            🧬
-                        </div>
- 
-                        <span class="feature-number">
-                            02
-                        </span>
- 
-                    </div>
- 
-                    <span c
-        
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="wrap">
+    <span class="eyebrow">Your health. Your time. Your choice.</span>
+    <h2>Experience a simpler way to navigate healthcare.</h2>
+    <p>Join Bosa-Care and bring your appointments, records, pharmacy and payments into one place.</p>
+    <a class="btn btn-primary" href="signup.html">Get started</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div class="foot-logo">Bosa-Care</div>
+    <span>© 2026 Bosa-Care · Gaborone, Botswana</span>
+  </div>
+</footer>
+
+<script>
+  // Header scroll state
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 8);
+  });
+
+  // Dyslexia-friendly font toggle (OpenDyslexic, falls back to Comic Sans MS)
+  function toggleDyslexiaMode(){
+    const btn = document.getElementById('a11yToggle');
+    const on = document.body.classList.toggle('dyslexia-mode');
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+
+  // Hospitals & clinics carousel
+  const slides = document.querySelectorAll('.carousel-slide');
+  const track = document.getElementById('carouselTrack');
+  const dotsWrap = document.getElementById('carouselDots');
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('span');
+    if(i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => { current = i; updateCarousel(); });
+    dotsWrap.appendChild(dot);
+  });
+
+  function updateCarousel(){
+    track.style.transform = `translateX(-${current * 100}%)`;
+    [...dotsWrap.children].forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+  function moveCarousel(dir){
+    current = (current + dir + slides.length) % slides.length;
+    updateCarousel();
+  }
+
+  let autoplay = setInterval(() => moveCarousel(1), 4500);
+  const carouselEl = document.querySelector('.hero-carousel');
+  carouselEl.addEventListener('mouseenter', () => clearInterval(autoplay));
+  carouselEl.addEventListener('mouseleave', () => { autoplay = setInterval(() => moveCarousel(1), 4500); });
+</script>
+
+</body>
+</html>
