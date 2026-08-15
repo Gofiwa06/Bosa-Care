@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>Bosa Care | Patient Dashboard</title>
+ 
+    <link rel="stylesheet" href="style.css">
+</head>
+ 
+<body>
+ 
+ 
+    <header class="mobile-header">
+ 
+        <div class="brand">
+            <div class="brand-icon">+</div>
+ 
+            <div>
+                <span class="brand-bosa">Bosa</span>
+                <span class="brand-care">Care</span>
+            </div>
+        </div>
+ 
+        <button class="menu-button" id="menuButton">
+            ☰
+        </button>
+>
+ 
+    </header>
+ 
+ 
+ 
+    <aside class="sidebar" id="sidebar">
+ 
+        <div class="sidebar-brand">
+ 
+            <div class="brand-icon">+</div>
+ 
+            <div>
+                <span class="brand-bosa">Bosa</span>
+                <span class="brand-care">Care</span>
+            </div>
+ 
+        </div>
+ 
+ 
+        <div class="patient-profile">
+ 
+            <div class="patient-avatar">
+                ST
+            </div>
+ 
+            <div>
+                <strong>Shatho Tumelo</strong>
+                <span>Patient</span>
+            </div>
+ 
+        </div>
+ 
+ 
+        <nav class="navigation">
+ 
+            <p class="nav-heading">
+                MAIN MENU
+            </p>
+ 
+            <a href="index.html" class="nav-link active">
+                <span>⌂</span>
+                Dashboard
+            </a>
+ 
+            <a href="symptom-detector.html" class="nav-link">
+                <span>🤖</span>
+                Symptom Checker
+            </a>
+ 
+ 
+            <p class="nav-heading nav-space">
+                HEALTH SCREENING
+            </p>
+ 
+            <a href="cancer.html" class="nav-link">
+                <span>🎗️</span>
+                Cancer Screening
+            </a>
+ 
+            <a href="hiv.html" class="nav-link">
+                <span>🧬</span>
+                HIV / AIDS
+            </a>
+ 
+            <a href="hypertension.html" class="nav-link">
+                <span>❤️</span>
+                Hypertension
+            </a>
+ 
+            <a href="diabetes.html" class="nav-link">
+                <span>🩸</span>
+                Diabetes
+            </a>
+ 
+            <a href="anemia.html" class="nav-link">
+                <span>🩸</span>
+                Anemia
+            </a>
+ 
+ 
+            <p class="nav-heading nav-space">
+                ACCOUNT
+            </p>
+ 
+            <a href="profile.html" class="nav-link">
+                <span>👤</span>
+                My Profile
+            </a>
+ 
+            <a href="#" class="nav-link">
+                <span>📋</span>
+                Health Records
+            </a>
+            <a href="#" class="nav-link">
+                <span>📅</span>
+                Appointments
+            </a>
+ 
+        </nav>
+ 
+ 
+        <button class="emergency-button" id="emergencyButton">
+ 
+            <span>🚨</span>
+ 
+            <div>
+                <strong>Emergency Help</strong>
+                <small>Get urgent assistance</small>
+            </div>
+ 
+        </button>
+ 
+    </aside>
+ 
+ 
+ 
+    <main class="main-content">
+ 
+ 
+    
+ 
+        <div class="topbar">
+ 
+            <div>
+                <p class="breadcrumb">
+                    Patient Portal / Dashboard
+                </p>
+            </div>
+ 
+ 
+            <div class="topbar-right">
+ 
+                <button
+                    class="notification-button"
+                    id="notificationButton"
+                >
+                    🔔
+                    <span class="notification-dot"></span>
+                </button>
+ 
+ 
+                <div class="top-profile">
+ 
+                    <div class="top-avatar">
+                        ST
+                    </div>
+ 
+                    <div>
+                        <strong>Shatho Tumelo</strong>
+                        <span>Patient</span>
+                    </div>
+ 
+                </div>
+ 
+            </div>
+ 
+        </div>
+ 
+ 
+     
+ 
+        <section class="hero">
+ 
+            <div class="hero-content">
+ 
+                <p class="eyebrow">
+                    BOSA CARE • YOUR HEALTH, YOUR CARE
+                </p>
+ 
+                <h1>
+                    Good afternoon, Shatho Tumelo 👋
+                </h1>
+ 
+                <p class="hero-text">
+                    Welcome to Bosa Care. Explore your health
+                    screening tools and keep track of your
+                    wellbeing.
+                </p>
+ 
+ 
+                <div class="hero-buttons">
+ 
+                    <button
+                        class="primary-button"
+                        onclick="openSymptomChecker()"
+                    >
+                        🤖 Check my symptoms
+                    </button>
+ 
+                    <button
+                        class="secondary-button"
+                        onclick="scrollToScreenings()"
+                    >
+                        Explore screenings
+                    </button>
+ 
+                </div>
+ 
+            </div>
+ 
+ 
+            <div class="hero-graphic">
+ 
+                <div class="circle circle-one"></div>
+                <div class="circle circle-two"></div>
+ 
+                <div class="health-symbol">
+                    +
+                </div>
+ 
+                <div class="floating-stat stat-one">
+                    <span>❤️</span>
+                    <div>
+                        <strong>5</strong>
+                        <small>Health areas</small>
+                    </div>
+                </div>
+ 
+                <div class="floating-stat stat-two">
+                    <span>✓</span>
+                    <div>
+                        <strong>Care</strong>
+                        <small>Starts with awareness</small>
+                    </div>
+                </div>
+ 
+            </div>
+ 
+        </section>
+ 
+ 
+        <section class="overview-section">
+ 
+            <div class="section-title">
+ 
+                <div>
+                    <p class="eyebrow">
+                        HEALTH OVERVIEW
+                    </p>
+ 
+                    <h2>
+                        Your health at a glance
+                    </h2>
+                </div>
+ 
+                <span class="last-updated">
+                    Last updated today
+                </span>
+ 
+            </div>
+ 
+ 
+            <div class="overview-grid">
+ 
+ 
+                <div class="overview-card">
+ 
+                    <div class="overview-icon red">
+                        ❤️
+                    </div>
+ 
+                    <div>
+                        <span>
+                            Blood Pressure
+                        </span>
+ 
+                        <strong>
+                            118/76
+                        </strong>
+ 
+                        <small class="good">
+                            ● Within expected range
+                        </small>
+                    </div>
+ 
+                </div>
+ 
+ 
+                <div class="overview-card">
+ 
+                    <div class="overview-icon purple">
+                        🩸
+                    </div>
+ 
+                    <div>
+                        <span>
+                            Blood Glucose
+                        </span>
+ 
+                        <strong>
+                            5.6 mmol/L
+                        </strong>
+ 
+                        <small class="good">
+                            ● Reading recorded
+                        </small>
+                    </div>
+ 
+                </div>
+ 
+ 
+                <div class="overview-card">
+ 
+                    <div class="overview-icon orange">
+                        🩸
+                    </div>
+ 
+                    <div>
+                        <span>
+                            Anemia Check
+                        </span>
+ 
+                        <strong>
+                            Normal
+                        </strong>
+ 
+                        <small>
+                            ● No signs of anemia
+                        </small>
+                    </div>
+ 
+                </div>
+ 
+ 
+                <div class="overview-card">
+ 
+                    <div class="overview-icon green">
+                        ✓
+                    </div>
+ 
+                    <div>
+                        <span>
+                            Screenings
+                        </span>
+ 
+                        <strong>
+                            4/ 5
+                        </strong>
+ 
+                        <small>
+                            Completed this month
+                        </small>
+                    </div>
+ 
+                </div>
+ 
+            </div>
+ 
+        </section>
+ 
+ 
+        <!-- =========================
+             MAIN SCREENING FEATURES
+        ========================== -->
+ 
+        <section
+            class="screening-section"
+            id="screenings"
+        >
+ 
+            <div class="section-title">
+ 
+                <div>
+ 
+                    <p class="eyebrow">
+                        HEALTH SCREENING
+                    </p>
+ 
+                    <h2>
+                        Explore your health areas
+                    </h2>
+ 
+                    <p class="section-description">
+                        Use these tools to learn about risk
+                        factors, symptoms and healthy habits.
+                    </p>
+ 
+                </div>
+ 
+            </div>
+ 
+ 
+            <div class="screening-grid">
+ 
+ 
+                <!-- CANCER -->
+ 
+                <article
+                    class="screening-card cancer"
+                    onclick="openPage('cancer.html')"
+                >
+ 
+                    <div class="card-top">
+ 
+                        <div class="feature-icon">
+                            🎗️
+                        </div>
+ 
+                        <span class="feature-number">
+                            01
+                        </span>
+ 
+                    </div>
+ 
+                    <span class="feature-label">
+                        CANCER AWARENESS
+                    </span>
+ 
+                    <h3>
+                        Cancer Screening
+                    </h3>
+ 
+                    <p>
+                        Learn about common warning signs,
+                        risk factors and recommended
+                        screening conversations.
+                    </p>
+ 
+                    <button>
+                        Explore cancer screening
+                        <span>→</span>
+                    </button>
+ 
+                </article>
+ 
+ 
+                <!-- HIV -->
+ 
+                <article
+                    class="screening-card hiv"
+                    onclick="openPage('hiv.html')"
+                >
+ 
+                    <div class="card-top">
+ 
+                        <div class="feature-icon">
+                            🧬
+                        </div>
+ 
+                        <span class="feature-number">
+                            02
+                        </span>
+ 
+                    </div>
+ 
+                    <span c
+        
