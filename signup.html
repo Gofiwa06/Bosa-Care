@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign up — Bosa-Care</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  @font-face{
+    font-family:'OpenDyslexic';font-style:normal;font-weight:400;font-display:swap;
+    src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-400-normal.woff2) format('woff2');
+  }
+  @font-face{
+    font-family:'OpenDyslexic';font-style:normal;font-weight:700;font-display:swap;
+    src:url(https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-700-normal.woff2) format('woff2');
+  }
+  :root{
+    --ink:#454735; --ink-deep:#33351F; --sand:#FFE9DA; --sand-dim:#F4DECD;
+    --dust:#D5CCC5; --lilac:#A19DA4; --coral:#DB827F; --coral-deep:#C56B66;
+    --line: rgba(69,71,53,0.18); --ink-soft: rgba(69,71,53,0.74);
+    --radius: 18px; --shadow: 0 20px 50px -25px rgba(69,71,53,0.45);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;min-height:100vh;background:var(--sand);color:var(--ink);
+    font-family:'Space Grotesk',sans-serif;-webkit-font-smoothing:antialiased;
+    display:flex;transition:font-family .15s ease;
+  }
+  h1,h2,.display{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;margin:0;}
+  p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+  body.dyslexia-mode{font-family:'OpenDyslexic','Comic Sans MS','Comic Sans',sans-serif;letter-spacing:0.01em;line-height:1.75;}
+  body.dyslexia-mode h1, body.dyslexia-mode h2, body.dyslexia-mode .display{font-family:'OpenDyslexic','Comic Sans MS','Comic Sans',sans-serif;letter-spacing:0;}
+  body.dyslexia-mode p{line-height:1.85;word-spacing:0.06em;}
+
+  .side{
+    flex:1;min-height:100vh;display:none;position:relative;overflow:hidden;
+    background:linear-gradient(150deg,var(--ink) 0%, var(--ink-deep) 100%);
+    color:var(--sand);padding:52px 48px;flex-direction:column;justify-content:space-between;
+  }
+  .side::before{
+    content:"";position:absolute;top:-160px;right:-160px;width:420px;height:420px;
+    background:radial-gradient(circle, rgba(219,130,127,0.28), transparent 70%);
+  }
+  .side-top{position:relative;z-index:1;display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:20px;}
+  .side-logo-mark{width:32px;height:32px;border-radius:9px;border:1.5px dashed rgba(255,233,218,0.5);flex:none;}
+  .side-mid{position:relative;z-index:1;max-width:400px;}
+  .side-mid .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:600;}
+  .side-mid h1{margin-top:16px;font-size:clamp(28px,3vw,36px);line-height:1.15;}
+  .side-mid p{margin-top:16px;font-size:14.5px;line-height:1.65;color:rgba(255,233,218,0.78);}
+  .side-list{position:relative;z-index:1;margin-top:26px;display:flex;flex-direction:column;gap:12px;}
+  .side-list li{display:flex;align-items:center;gap:10px;font-size:13.8px;color:rgba(255,233,218,0.85);list-style:none;}
+  .side-list .dot{width:6px;height:6px;border-radius:50%;background:var(--coral);flex:none;}
+  .side-foot{position:relative;z-index:1;font-size:12.5px;color:rgba(255,233,218,0.55);}
+
+  .panel{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px;}
+  .panel-inner{width:100%;max-width:400px;}
+  .top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;}
+  .brand{display:flex;align-items:center;gap:9px;font-family:'Fraunces',serif;font-weight:600;font-size:19px;}
+  .logo-mark{width:30px;height:30px;border-radius:9px;border:1.5px dashed var(--ink-soft);background:var(--sand-dim);flex:none;overflow:hidden;}
+  .logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
+  .a11y-toggle{
+    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:100px;font-size:12.5px;font-weight:600;
+    border:1.5px solid var(--line);color:var(--ink);transition:all .18s ease;
+  }
+  .a11y-toggle:hover{border-color:var(--coral);color:var(--coral-deep);}
+  .a11y-toggle.active{background:var(--ink);color:var(--sand);border-color:var(--ink);}
+  .a11y-toggle .glyph{font-family:'Fraunces',serif;}
+
+  h2.title{font-size:26px;}
+  .subtext{margin-top:8px;font-size:14px;color:var(--ink-soft);}
+
+  .oauth-btn{
+    margin-top:22px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+    padding:12px 18px;border-radius:100px;border:1.5px solid var(--line);background:#fff;
+    font-size:14px;font-weight:600;transition:border-color .18s ease, box-shadow .18s ease;
+  }
+  .oauth-btn:hover{border-color:var(--ink);box-shadow:var(--shadow);}
+  .oauth-btn svg{width:18px;height:18px;flex:none;}
+
+  .divider{display:flex;align-items:center;gap:12px;margin:22px 0;font-size:12px;color:var(--ink-soft);}
+  .divider::before, .divider::after{content:"";flex:1;height:1px;background:var(--line);}
+
+  form{display:flex;flex-direction:column;gap:14px;}
+  .field label{font-size:12.5px;font-weight:600;color:var(--ink-soft);}
+  .field input, .field select{
+    width:100%;margin-top:7px;padding:12px 14px;border-radius:11px;border:1.5px solid var(--line);
+    background:#fff;font-family:inherit;font-size:14.5px;color:var(--ink);appearance:none;
+  }
+  .field select{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23454735' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--coral);outline-offset:1px;border-color:transparent;}
+  .field .hint{margin-top:6px;font-size:11.5px;color:var(--ink-soft);}
+
+  .btn-primary{
+    margin-top:4px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:13px 22px;border-radius:100px;font-size:14.5px;font-weight:600;
+    background:var(--ink);color:var(--sand);box-shadow:0 12px 24px -12px rgba(69,71,53,0.55);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-primary:disabled{opacity:.6;transform:none;cursor:default;}
+
+  .switch-line{margin-top:20px;text-align:center;font-size:13.5px;color:var(--ink-soft);}
+  .switch-line a{color:var(--coral-deep);font-weight:600;}
+
+  .msg{margin-top:16px;padding:11px 14px;border-radius:11px;font-size:13px;display:none;}
+  .msg.error{display:block;background:rgba(219,130,127,0.14);color:var(--coral-deep);}
+  .msg.info{display:block;background:var(--sand-dim);color:var(--ink);}
+
+  @media (min-width:920px){ .side{display:flex;} }
+  @media (prefers-reduced-motion: reduce){ *{transition-duration:.001ms !important;} }
+</style>
+</head>
+<body>
+
+<div class="side">
+  <div class="side-top"><span class="side-logo-mark"></span>Bosa-Care</div>
+  <div class="side-mid">
+    <span class="eyebrow">Made for ongoing care</span>
+    <h1>One account. Every part of managing your condition.</h1>
+    <p>Tell us what you're managing and Bosa-Care tailors your appointments, records and reminders around it.</p>
+    <ul class="side-list">
+      <li><span class="dot"></span>HIV care &amp; treatment tracking</li>
+      <li><span class="dot"></span>Hypertension monitoring</li>
+      <li><span class="dot"></span>Diabetes management</li>
+      <li><span class="dot"></span>Low blood pressure support</li>
+      <li><span class="dot"></span>Cancer care coordination</li>
+    </ul>
+  </div>
+  <div class="side-foot">© 2026 Bosa-Care · Gaborone, Botswana</div>
+</div>
+
+<div class="panel">
+  <div class="panel-inner">
+    <div class="top-row">
+      <a class="brand" href="homepage.html"><span class="logo-mark"><img src="logo.png" alt="" onerror="this.style.display='none'"></span>Bosa-Care</a>
+      <button class="a11y-toggle" id="a11yToggle" onclick="toggleDyslexiaMode()" aria-pressed="false">
+        <span class="glyph">Aa</span>
+      </button>
+    </div>
+
+    <h2 class="title">Create your account</h2>
+    <p class="subtext">Set up your Bosa-Care profile in a couple of minutes.</p>
+
+    <button class="oauth-btn" id="googleBtn" onclick="signupWithGoogle()">
+      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.4 29.4 35.5 24 35.5c-6.9 0-12.5-5.6-12.5-12.5S17.1 10.5 24 10.5c3.2 0 6.1 1.2 8.3 3.2l6-6C34.6 4.2 29.6 2 24 2 11.9 2 2 11.9 2 24s9.9 22 22 22 22-9.9 22-22c0-1.5-.2-3-.4-4.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.2 0 6.1 1.2 8.3 3.2l6-6C34.6 6.2 29.6 4 24 4c-7.9 0-14.7 4.4-18.3 11z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.6l-6.5-5.5C29.5 34.5 26.9 35.5 24 35.5c-5.3 0-9.8-3.6-11.4-8.4l-6.6 5.1C9.4 39.6 16.1 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.7 2-2 3.7-3.7 5l6.5 5.5C41.6 35.5 44 30.2 44 24c0-1.5-.2-3-.4-3.5z"/></svg>
+      Sign up with Google
+    </button>
+
+    <div class="divider">or sign up with email</div>
+
+    <form id="signupForm">
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" id="suName" required placeholder="Your name">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="suEmail" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="suPassword" required minlength="6" placeholder="At least 6 characters">
+      </div>
+      <div class="field">
+        <label>What are you managing?</label>
+        <select id="suCondition" required>
+          <option value="" disabled selected>Select one</option>
+          <option value="HIV">HIV</option>
+          <option value="Hypertension">Hypertension</option>
+          <option value="Diabetes">Diabetes</option>
+          <option value="Low Blood">Low Blood</option>
+          <option value="Cancer">Cancer</option>
+          <option value="Other">Other</option>
+          <option value="Prefer not to say">Prefer not to say</option>
+        </select>
+        <p class="hint">This helps Bosa-Care tailor your reminders and facility matches. Kept private, visible only to you.</p>
+      </div>
+      <button class="btn-primary" type="submit" id="signupSubmit">Create account</button>
+    </form>
+
+    <div class="msg" id="msgBox"></div>
+
+    <div class="switch-line">Already have an account? <a href="login.html">Log in</a></div>
+  </div>
+</div>
+
+<script src="supabase-config.js"></script>
+<script>
+  function toggleDyslexiaMode(){
+    const btn = document.getElementById('a11yToggle');
+    const on = document.body.classList.toggle('dyslexia-mode');
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+
+  function showMsg(text, type){
+    const box = document.getElementById('msgBox');
+    box.textContent = text;
+    box.className = 'msg ' + type;
+  }
+
+  (async () => {
+    const { data } = await supabaseClient.auth.getSession();
+    if (data.session) window.location.href = 'dashboard.html';
+  })();
+
+  async function signupWithGoogle(){
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + window.location.pathname.replace('signup.html','dashboard.html') }
+    });
+    if (error) showMsg(error.message, 'error');
+  }
+
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('signupSubmit');
+    btn.disabled = true; btn.textContent = 'Creating account…';
+
+    const full_name = document.getElementById('suName').value.trim();
+    const email = document.getElementById('suEmail').value.trim();
+    const password = document.getElementById('suPassword').value;
+    const condition = document.getElementById('suCondition').value;
+
+    // full_name and condition are passed as user metadata — the trigger in
+    // supabase-setup.sql reads them and creates the matching profiles row.
+    const { data, error } = await supabaseClient.auth.signUp({
+      email, password,
+      options: { data: { full_name, condition } }
+    });
+
+    if (error) {
+      showMsg(error.message, 'error');
+      btn.disabled = false; btn.textContent = 'Create account';
+      return;
+    }
+
+    if (data.session) {
+      // Email confirmation is off in Supabase settings — user is logged in immediately
+      showMsg('Account created — redirecting…', 'info');
+      window.location.href = 'dashboard.html';
+    } else {
+      // Email confirmation is on — Supabase sent a confirmation link
+      showMsg('Account created! Check your email to confirm before logging in.', 'info');
+      btn.disabled = false; btn.textContent = 'Create account';
+    }
+  });
+</script>
+
+</body>
+</html>
