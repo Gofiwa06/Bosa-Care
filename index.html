@@ -1,1063 +1,477 @@
 <!DOCTYPE html>
 <html lang="en">
+ 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bosa-Care · Doctor Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --cream:#FFE9DA;
-    --coral:#DB827F;
-    --coral-dark:#c46a67;
-    --grey:#D5CCC5;
-    --lilac:#A19DA4;
-    --ebony:#5E604D;
-    --white:#FFFFFF;
-    --ink:#3d3e33;
-    --radius:16px;
-    --radius-sm:10px;
-    --shadow:0 4px 18px rgba(94,96,77,0.08);
-    --shadow-lift:0 10px 30px rgba(94,96,77,0.16);
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--cream);
-    color:var(--ink);
-    font-family:'Work Sans',sans-serif;
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
-  }
-  ::selection{background:var(--coral);color:#fff;}
-  a{color:inherit;}
-  button{font-family:inherit;cursor:pointer;}
-  :focus-visible{outline:2px solid var(--coral-dark);outline-offset:2px;}
-
-  .app{
-    display:grid;
-    grid-template-columns:88px 1fr;
-    min-height:100vh;
-  }
-
-  /* ---------- SIDEBAR ---------- */
-  .sidebar{
-    background:var(--ebony);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:22px 0;
-    gap:6px;
-  }
-  .brand{
-    width:40px;height:40px;border-radius:10px;
-    background:var(--coral);
-    display:flex;align-items:center;justify-content:center;
-    color:#fff;font-family:'Fraunces',serif;font-weight:600;font-size:18px;
-    margin-bottom:28px;
-    flex-shrink:0;
-  }
-  .navlist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;width:100%;align-items:center;}
-  .navitem{
-    width:56px;height:56px;border-radius:14px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:3px;
-    color:rgba(255,255,255,0.55);
-    background:transparent;border:none;
-    font-size:10px;letter-spacing:.01em;
-    transition:background .15s ease, color .15s ease;
-  }
-  .navitem svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;}
-  .navitem:hover{background:rgba(255,255,255,0.08);color:#fff;}
-  .navitem.active{background:var(--coral);color:#fff;}
-
-  /* ---------- MAIN ---------- */
-  .main{
-    padding:36px 44px 60px;
-    max-width:1180px;
-    width:100%;
-  }
-
-  .topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:24px;
-    flex-wrap:wrap;
-  }
-  .greeting-eyebrow{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:var(--coral-dark);
-    font-weight:600;
-    margin:0 0 6px;
-  }
-  .greeting{
-    font-family:'Fraunces',serif;
-    font-weight:600;
-    font-size:clamp(28px,4vw,38px);
-    color:var(--ebony);
-    margin:0;
-    line-height:1.15;
-  }
-  .greeting-sub{
-    margin:8px 0 0;
-    color:var(--lilac);
-    font-size:15px;
-  }
-
-  .search-wrap{
-    position:relative;
-    min-width:240px;
-  }
-  .search-wrap input{
-    width:100%;
-    padding:12px 16px 12px 40px;
-    border-radius:999px;
-    border:1px solid var(--grey);
-    background:var(--white);
-    font-family:inherit;
-    font-size:14px;
-    color:var(--ink);
-  }
-  .search-wrap input::placeholder{color:var(--lilac);}
-  .search-wrap svg{
-    position:absolute;left:14px;top:50%;transform:translateY(-50%);
-    width:16px;height:16px;stroke:var(--lilac);fill:none;stroke-width:2;
-  }
-
-  /* pulse divider — signature element */
-  .pulse{
-    margin:26px 0 30px;
-    width:100%;
-    height:34px;
-    overflow:hidden;
-  }
-  .pulse svg{width:100%;height:100%;display:block;}
-  .pulse path{
-    fill:none;
-    stroke:var(--coral);
-    stroke-width:2;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-    stroke-dasharray:6 1400;
-    stroke-dashoffset:0;
-    animation:pulse-travel 3.4s linear infinite;
-  }
-  @keyframes pulse-travel{
-    0%{stroke-dashoffset:1400;}
-    100%{stroke-dashoffset:0;}
-  }
-  @media (prefers-reduced-motion: reduce){
-    .pulse path{animation:none;stroke-dasharray:none;}
-  }
-
-  /* stat chips */
-  .stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:14px;
-    margin-bottom:30px;
-  }
-  .stat{
-    background:var(--white);
-    border:1px solid var(--grey);
-    border-radius:var(--radius-sm);
-    padding:16px 18px;
-    display:flex;
-    align-items:center;
-    gap:14px;
-  }
-  .stat-icon{
-    width:38px;height:38px;border-radius:10px;
-    display:flex;align-items:center;justify-content:center;
-    background:var(--cream);
-    flex-shrink:0;
-  }
-  .stat-icon svg{width:18px;height:18px;stroke:var(--coral-dark);fill:none;stroke-width:1.8;}
-  .stat-num{
-    font-family:'IBM Plex Mono',monospace;
-    font-weight:600;
-    font-size:22px;
-    color:var(--ebony);
-    line-height:1;
-  }
-  .stat-label{
-    font-size:12.5px;
-    color:var(--lilac);
-    margin-top:3px;
-  }
-
-  /* content grid */
-  .grid{
-    display:grid;
-    grid-template-columns:1.5fr 1fr;
-    gap:20px;
-    align-items:start;
-  }
-
-  .card{
-    background:var(--white);
-    border:1px solid var(--grey);
-    border-radius:var(--radius);
-    padding:22px;
-  }
-  .card-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:16px;
-  }
-  .card-title{
-    font-size:16px;
-    font-weight:600;
-    color:var(--ebony);
-    margin:0;
-  }
-  .link-btn{
-    background:none;border:none;
-    color:var(--coral-dark);
-    font-size:13px;
-    font-weight:600;
-    padding:0;
-  }
-  .link-btn:hover{text-decoration:underline;}
-
-  .btn{
-    border:none;border-radius:999px;
-    padding:10px 18px;
-    font-weight:600;
-    font-size:13.5px;
-    display:inline-flex;align-items:center;gap:7px;
-    transition:transform .12s ease, box-shadow .12s ease;
-  }
-  .btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;}
-  .btn-primary{background:var(--coral);color:#fff;}
-  .btn-primary:hover{background:var(--coral-dark);}
-  .btn-ghost{background:var(--cream);color:var(--ebony);}
-  .btn-ghost:hover{background:var(--grey);}
-
-  /* schedule list */
-  .sched-item{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    padding:12px 0;
-    border-top:1px solid var(--cream);
-  }
-  .sched-item:first-of-type{border-top:none;}
-  .sched-item-new{
-    border-radius:10px;
-    animation:new-row-flash 1.6s ease;
-  }
-  @keyframes new-row-flash{
-    0%{background:var(--cream);}
-    100%{background:transparent;}
-  }
-  @media (prefers-reduced-motion: reduce){
-    .sched-item-new{animation:none;}
-  }
-  .sched-time{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:13px;
-    font-weight:600;
-    color:var(--ebony);
-    width:64px;
-    flex-shrink:0;
-  }
-  .sched-info{flex:1;min-width:0;}
-  .sched-name{font-size:14.5px;font-weight:600;color:var(--ink);}
-  .sched-reason{font-size:12.5px;color:var(--lilac);}
-  .pill{
-    font-size:11px;
-    font-weight:600;
-    padding:4px 10px;
-    border-radius:999px;
-    white-space:nowrap;
-  }
-  .pill-confirmed{background:#e8f0e0;color:#5c7a3f;}
-  .pill-pending{background:#fbe9d8;color:var(--coral-dark);}
-  .pill-inprogress{background:#efe8f7;color:var(--lilac);}
-
-  /* patient list */
-  .patient-search{
-    display:flex;align-items:center;gap:8px;
-    background:var(--cream);
-    border-radius:999px;
-    padding:8px 14px;
-    margin-bottom:14px;
-  }
-  .patient-search svg{width:15px;height:15px;stroke:var(--lilac);fill:none;stroke-width:2;flex-shrink:0;}
-  .patient-search input{
-    border:none;background:none;outline:none;
-    font-family:inherit;font-size:13.5px;width:100%;color:var(--ink);
-  }
-  .patient-row{
-    display:flex;align-items:center;gap:12px;
-    padding:10px 8px;
-    border-radius:12px;
-    border:1px solid transparent;
-    width:100%;
-    background:none;
-    text-align:left;
-    transition:background .12s ease, border-color .12s ease;
-  }
-  .patient-row:hover{background:var(--cream);}
-  .patient-row.active{background:var(--cream);border-color:var(--coral);}
-  .avatar{
-    width:38px;height:38px;border-radius:50%;
-    background:var(--ebony);
-    color:#fff;
-    display:flex;align-items:center;justify-content:center;
-    font-size:13px;font-weight:600;
-    flex-shrink:0;
-  }
-  .patient-meta{flex:1;min-width:0;}
-  .patient-name{font-size:14px;font-weight:600;color:var(--ink);}
-  .patient-cond{font-size:12px;color:var(--lilac);}
-  .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-  .dot-stable{background:#7ba05b;}
-  .dot-watch{background:var(--coral);}
-
-  /* ---------- DRAWER ---------- */
-  .scrim{
-    position:fixed;inset:0;
-    background:rgba(94,96,77,0.35);
-    opacity:0;pointer-events:none;
-    transition:opacity .2s ease;
-    z-index:40;
-  }
-  .scrim.open{opacity:1;pointer-events:auto;}
-
-  .drawer{
-    position:fixed;top:0;right:0;bottom:0;
-    width:min(460px,100%);
-    background:var(--cream);
-    box-shadow:var(--shadow-lift);
-    transform:translateX(100%);
-    transition:transform .28s cubic-bezier(.4,0,.2,1);
-    z-index:50;
-    overflow-y:auto;
-    padding:26px 26px 50px;
-  }
-  .drawer.open{transform:translateX(0);}
-
-  .drawer-close{
-    background:var(--white);border:1px solid var(--grey);
-    width:34px;height:34px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    float:right;
-  }
-  .drawer-close svg{width:15px;height:15px;stroke:var(--ebony);fill:none;stroke-width:2.2;}
-
-  .drawer-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-top:4px;}
-  .drawer-avatar{
-    width:52px;height:52px;border-radius:50%;
-    background:var(--ebony);color:#fff;
-    display:flex;align-items:center;justify-content:center;
-    font-size:16px;font-weight:600;flex-shrink:0;
-  }
-  .drawer-name{
-    font-family:'Fraunces',serif;font-weight:600;
-    font-size:20px;color:var(--ebony);margin:0;
-  }
-  .drawer-sub{font-size:12.5px;color:var(--lilac);margin-top:2px;}
-
-  .section-label{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;letter-spacing:.07em;text-transform:uppercase;
-    color:var(--coral-dark);font-weight:600;
-    margin:26px 0 10px;
-  }
-  .section-label:first-of-type{margin-top:0;}
-
-  .vitals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-  .vital{
-    background:var(--white);border:1px solid var(--grey);
-    border-radius:10px;padding:10px 8px;text-align:center;
-  }
-  .vital-val{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px;color:var(--ebony);}
-  .vital-lbl{font-size:10px;color:var(--lilac);margin-top:2px;}
-
-  .history-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
-  .history-list li{
-    background:var(--white);border:1px solid var(--grey);border-radius:10px;
-    padding:10px 12px;font-size:13px;color:var(--ink);
-    display:flex;justify-content:space-between;gap:10px;
-  }
-  .history-list span{color:var(--lilac);font-size:11.5px;font-family:'IBM Plex Mono',monospace;flex-shrink:0;}
-
-  .ai-card{
-    background:var(--white);border:1px solid var(--grey);border-radius:12px;
-    padding:14px;
-  }
-  .ai-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-  .ai-badge{
-    font-size:10.5px;font-weight:600;color:#fff;background:var(--lilac);
-    padding:3px 9px;border-radius:999px;letter-spacing:.02em;
-  }
-  .ai-conf{font-size:11.5px;color:var(--lilac);font-family:'IBM Plex Mono',monospace;}
-  .ai-text{font-size:13.5px;line-height:1.5;color:var(--ink);margin:0;}
-
-  .lab-item{
-    display:flex;justify-content:space-between;align-items:center;
-    background:var(--white);border:1px solid var(--grey);border-radius:10px;
-    padding:10px 12px;margin-bottom:8px;
-  }
-  .lab-name{font-size:13px;font-weight:600;color:var(--ink);}
-  .lab-date{font-size:11px;color:var(--lilac);}
-
-  .rx-form{
-    background:var(--white);border:1px solid var(--grey);border-radius:12px;
-    padding:14px;display:flex;flex-direction:column;gap:10px;
-  }
-  .rx-form input, .rx-form textarea{
-    border:1px solid var(--grey);border-radius:8px;
-    padding:9px 11px;font-family:inherit;font-size:13px;
-    background:var(--cream);color:var(--ink);resize:none;
-  }
-  .rx-form textarea{min-height:56px;}
-  .rx-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .sent-note{
-    font-size:12px;color:#5c7a3f;font-weight:600;
-    display:none;align-items:center;gap:6px;margin-top:2px;
-  }
-  .sent-note svg{width:13px;height:13px;stroke:#5c7a3f;fill:none;stroke-width:2.5;}
-  .sent-note.show{display:flex;}
-
-  /* modal (schedule appointment / lab reports) */
-  .modal-scrim{
-    position:fixed;inset:0;background:rgba(94,96,77,0.35);
-    display:none;align-items:center;justify-content:center;
-    z-index:60;padding:20px;
-  }
-  .modal-scrim.open{display:flex;}
-  .modal{
-    background:var(--cream);border-radius:18px;
-    width:100%;max-width:420px;
-    padding:24px;box-shadow:var(--shadow-lift);
-    max-height:85vh;overflow-y:auto;
-  }
-  .modal h3{
-    font-family:'Fraunces',serif;font-size:19px;color:var(--ebony);margin:0 0 16px;
-  }
-  .modal label{font-size:12px;color:var(--lilac);font-weight:600;display:block;margin-bottom:5px;}
-  .field{margin-bottom:12px;}
-  .modal input, .modal select{
-    width:100%;border:1px solid var(--grey);border-radius:8px;
-    padding:9px 11px;font-family:inherit;font-size:13.5px;background:var(--white);
-  }
-  .modal input.field-error{border-color:var(--coral);}
-  .field-hint{
-    font-size:11px;color:var(--lilac);margin:5px 2px 0;
-  }
-  .modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;}
-
-  /* appointment load heatmap */
-  .load-legend{
-    display:flex;align-items:center;gap:6px;
-    font-size:11.5px;color:var(--lilac);
-  }
-  .legend-bar{
-    width:64px;height:8px;border-radius:999px;
-    background:linear-gradient(90deg, var(--cream), var(--coral));
-    border:1px solid var(--grey);
-  }
-  .load-summary{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12.5px;
-    color:var(--ebony);
-    margin:0 0 18px;
-  }
-  .heatmap{
-    display:grid;
-    grid-template-columns:52px repeat(5, 1fr);
-    gap:4px;
-  }
-  .hm-corner{}
-  .hm-daylabel{
-    font-size:12px;font-weight:600;color:var(--ebony);
-    text-align:center;padding-bottom:4px;
-  }
-  .hm-hourlabel{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:10.5px;color:var(--lilac);
-    display:flex;align-items:center;
-    justify-content:flex-end;padding-right:6px;
-  }
-  .hm-cell{
-    height:26px;border-radius:6px;
-    border:1px solid rgba(94,96,77,0.06);
-  }
-  .hm-cell.hm-peak{
-    box-shadow:inset 0 0 0 2px var(--ebony);
-  }
-  @media (max-width:860px){
-    .heatmap{grid-template-columns:40px repeat(5,1fr);}
-    .hm-cell{height:20px;}
-    .hm-daylabel{font-size:10.5px;}
-  }
-
-  /* toast */
-  .toast{
-    position:fixed;left:50%;bottom:28px;
-    transform:translate(-50%,12px);
-    background:var(--ebony);color:#fff;
-    padding:11px 20px;border-radius:999px;
-    font-size:13px;font-weight:500;
-    box-shadow:var(--shadow-lift);
-    opacity:0;pointer-events:none;
-    transition:opacity .2s ease, transform .2s ease;
-    z-index:80;
-    max-width:88vw;text-align:center;
-  }
-  .toast.show{opacity:1;transform:translate(-50%,0);}
-
-  /* mobile bottom nav */
-  .mobile-nav{display:none;}
-
-  @media (max-width:860px){
-    .app{grid-template-columns:1fr;}
-    .sidebar{
-      position:fixed;bottom:0;left:0;right:0;
-      flex-direction:row;justify-content:space-around;
-      padding:8px 4px;z-index:30;
-      box-shadow:0 -4px 14px rgba(0,0,0,0.12);
-    }
-    .brand{display:none;}
-    .navlist{flex-direction:row;justify-content:space-around;width:100%;}
-    .navitem{width:auto;height:auto;padding:4px 6px;font-size:9.5px;}
-    .main{padding:26px 18px 100px;}
-    .grid{grid-template-columns:1fr;}
-    .stats{grid-template-columns:1fr;}
-    .topbar{flex-direction:column;}
-    .search-wrap{width:100%;}
-    .drawer{width:100%;}
-    .vitals-grid{grid-template-columns:repeat(2,1fr);}
-    .rx-row{grid-template-columns:1fr;}
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>Bosa Care | Patient Dashboard</title>
+ 
+    <link rel="stylesheet" href="style.css">
 </head>
+ 
 <body>
-
-<div class="app">
-
-  <!-- SIDEBAR -->
-  <nav class="sidebar" aria-label="Primary">
-    <div class="brand">B</div>
-    <ul class="navlist">
-      <li><button class="navitem active" data-nav="home">
-        <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
-        Home</button></li>
-      <li><button class="navitem" data-nav="schedule">
-        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4M16 3v4"/></svg>
-        Schedule</button></li>
-      <li><button class="navitem" data-nav="patients">
-        <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M15 14.2c2.4.4 4 2.2 4 5.8"/></svg>
-        Patients</button></li>
-      <li><button class="navitem" data-nav="labs">
-        <svg viewBox="0 0 24 24"><path d="M9 3v6L4 18a2 2 0 0 0 1.8 3h12.4A2 2 0 0 0 20 18l-5-9V3"/><path d="M8 3h8"/></svg>
-        Labs</button></li>
-      <li><button class="navitem" data-nav="rx">
-        <svg viewBox="0 0 24 24"><path d="M8.5 8.5l7 7"/><path d="M6.5 15.5l3-3-4-4-3 3a3 3 0 0 0 4 4z"/><path d="M14.5 6.5l4 4 3-3a3 3 0 0 0-4-4z"/></svg>
-        Rx</button></li>
-    </ul>
-  </nav>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <div class="topbar">
-      <div>
-        <p class="greeting-eyebrow">Tuesday, 15 August</p>
-        <h1 class="greeting">Good morning, Dr. Amara</h1>
-        <p class="greeting-sub">You have 6 appointments today and 2 lab reports awaiting review.</p>
-      </div>
-      <div class="search-wrap">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input type="text" id="topSearch" placeholder="Search patients…" aria-label="Search patients">
-      </div>
-    </div>
-
-    <div class="pulse" aria-hidden="true">
-      <svg viewBox="0 0 1000 34" preserveAspectRatio="none">
-        <path d="M0,17 L120,17 L145,4 L165,30 L185,17 L210,17 L235,17 L255,4 L275,30 L295,17 L1000,17"/>
-      </svg>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg></div>
-        <div><div class="stat-num">6</div><div class="stat-label">Appointments today</div></div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M9 3v6L4 18a2 2 0 0 0 1.8 3h12.4A2 2 0 0 0 20 18l-5-9V3"/></svg></div>
-        <div><div class="stat-num">2</div><div class="stat-label">Lab reports pending</div></div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v3a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg></div>
-        <div><div class="stat-num">3</div><div class="stat-label">AI symptom flags</div></div>
-      </div>
-    </div>
-
-    <div class="grid">
-
-      <!-- SCHEDULE -->
-      <section class="card" id="schedule">
-        <div class="card-head">
-          <h2 class="card-title">Today's schedule</h2>
-          <button class="btn btn-primary" id="openSchedule">
-            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-            Schedule appointment
-          </button>
+ 
+ 
+    <header class="mobile-header">
+ 
+        <div class="brand">
+            <div class="brand-icon">+</div>
+ 
+            <div>
+                <span class="brand-bosa">Bosa</span>
+                <span class="brand-care">Care</span>
+            </div>
         </div>
-
-        <div id="scheduleList">
-        <div class="sched-item" data-time="09:00">
-          <div class="sched-time">09:00</div>
-          <div class="sched-info"><div class="sched-name">Thato Molefe</div><div class="sched-reason">Follow-up · Hypertension</div></div>
-          <span class="pill pill-confirmed">Confirmed</span>
+ 
+        <button class="menu-button" id="menuButton">
+            ☰
+        </button>
+>
+ 
+    </header>
+ 
+ 
+ 
+    <aside class="sidebar" id="sidebar">
+ 
+        <div class="sidebar-brand">
+ 
+            <div class="brand-icon">+</div>
+ 
+            <div>
+                <span class="brand-bosa">Bosa</span>
+                <span class="brand-care">Care</span>
+            </div>
+ 
         </div>
-        <div class="sched-item" data-time="09:45">
-          <div class="sched-time">09:45</div>
-          <div class="sched-info"><div class="sched-name">Kagiso Pheto</div><div class="sched-reason">ART review · HIV/AIDS</div></div>
-          <span class="pill pill-pending">Pending</span>
+ 
+ 
+        <div class="patient-profile">
+ 
+            <div class="patient-avatar">
+                ST
+            </div>
+ 
+            <div>
+                <strong>Shatho Tumelo</strong>
+                <span>Patient</span>
+            </div>
+ 
         </div>
-        <div class="sched-item" data-time="10:30">
-          <div class="sched-time">10:30</div>
-          <div class="sched-info"><div class="sched-name">Lorato Seleka</div><div class="sched-reason">Oncology follow-up</div></div>
-          <span class="pill pill-confirmed">Confirmed</span>
+ 
+ 
+        <nav class="navigation">
+ 
+            <p class="nav-heading">
+                MAIN MENU
+            </p>
+ 
+            <a href="index.html" class="nav-link active">
+                <span>⌂</span>
+                Dashboard
+            </a>
+ 
+            <a href="symptom-detector.html" class="nav-link">
+                <span>🤖</span>
+                Symptom Checker
+            </a>
+ 
+ 
+            <p class="nav-heading nav-space">
+                HEALTH SCREENING
+            </p>
+ 
+            <a href="cancer.html" class="nav-link">
+                <span>🎗️</span>
+                Cancer Screening
+            </a>
+ 
+            <a href="hiv.html" class="nav-link">
+                <span>🧬</span>
+                HIV / AIDS
+            </a>
+ 
+            <a href="hypertension.html" class="nav-link">
+                <span>❤️</span>
+                Hypertension
+            </a>
+ 
+            <a href="diabetes.html" class="nav-link">
+                <span>🩸</span>
+                Diabetes
+            </a>
+ 
+            <a href="anemia.html" class="nav-link">
+                <span>🩸</span>
+                Anemia
+            </a>
+ 
+ 
+            <p class="nav-heading nav-space">
+                ACCOUNT
+            </p>
+ 
+            <a href="profile.html" class="nav-link">
+                <span>👤</span>
+                My Profile
+            </a>
+ 
+            <a href="#" class="nav-link">
+                <span>📋</span>
+                Health Records
+            </a>
+            <a href="#" class="nav-link">
+                <span>📅</span>
+                Appointments
+            </a>
+ 
+        </nav>
+ 
+ 
+        <button class="emergency-button" id="emergencyButton">
+ 
+            <span>🚨</span>
+ 
+            <div>
+                <strong>Emergency Help</strong>
+                <small>Get urgent assistance</small>
+            </div>
+ 
+        </button>
+ 
+    </aside>
+ 
+ 
+ 
+    <main class="main-content">
+ 
+ 
+    
+ 
+        <div class="topbar">
+ 
+            <div>
+                <p class="breadcrumb">
+                    Patient Portal / Dashboard
+                </p>
+            </div>
+ 
+ 
+            <div class="topbar-right">
+ 
+                <button
+                    class="notification-button"
+                    id="notificationButton"
+                >
+                    🔔
+                    <span class="notification-dot"></span>
+                </button>
+ 
+ 
+                <div class="top-profile">
+ 
+                    <div class="top-avatar">
+                        ST
+                    </div>
+ 
+                    <div>
+                        <strong>Shatho Tumelo</strong>
+                        <span>Patient</span>
+                    </div>
+ 
+                </div>
+ 
+            </div>
+ 
         </div>
-        <div class="sched-item" data-time="11:15">
-          <div class="sched-time">11:15</div>
-          <div class="sched-info"><div class="sched-name">Boitumelo Kau</div><div class="sched-reason">Anaemia · iron review</div></div>
-          <span class="pill pill-inprogress">In room</span>
-        </div>
-        <div class="sched-item" data-time="13:00">
-          <div class="sched-time">13:00</div>
-          <div class="sched-info"><div class="sched-name">Neo Ramotswe</div><div class="sched-reason">Diabetes management</div></div>
-          <span class="pill pill-confirmed">Confirmed</span>
-        </div>
-        </div>
-      </section>
-
-      <!-- PATIENTS -->
-      <section class="card" id="patients">
-        <div class="card-head">
-          <h2 class="card-title">Patients</h2>
-        </div>
-        <div id="patientList" style="display:flex;flex-direction:column;gap:2px;"></div>
-        <p id="patientEmpty" style="display:none;font-size:13px;color:var(--lilac);padding:10px 4px;">No patients match your search.</p>
-      </section>
-
-    </div>
-
-    <!-- APPOINTMENT LOAD -->
-    <section class="card" id="load" style="margin-top:20px;">
-      <div class="card-head">
-        <h2 class="card-title">Appointment load this week</h2>
-        <div class="load-legend">
-          <span>Fewer</span>
-          <span class="legend-bar"></span>
-          <span>Busier</span>
-        </div>
-      </div>
-      <p class="load-summary" id="loadSummary"></p>
-      <div class="heatmap" id="heatmap"></div>
-    </section>
-
-  </main>
-</div>
-
-<!-- DRAWER -->
-<div class="scrim" id="scrim"></div>
-<aside class="drawer" id="drawer" aria-hidden="true">
-  <button class="drawer-close" id="drawerClose" aria-label="Close patient panel">
-    <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
-  </button>
-  <div class="drawer-head">
-    <div class="drawer-avatar" id="dAvatar">TM</div>
-    <div>
-      <p class="drawer-name" id="dName">Thato Molefe</p>
-      <p class="drawer-sub" id="dSub">42 · Male · Hypertension</p>
-    </div>
-  </div>
-
-  <p class="section-label">Vitals</p>
-  <div class="vitals-grid" id="dVitals"></div>
-
-  <p class="section-label">Medical history</p>
-  <ul class="history-list" id="dHistory"></ul>
-
-  <p class="section-label">Lab reports</p>
-  <div id="dLabs"></div>
-
-  <p class="section-label">Symptom analysis</p>
-  <div class="ai-card">
-    <div class="ai-top">
-      <span class="ai-badge">AI-assisted</span>
-      <span class="ai-conf" id="dConf">87% confidence</span>
-    </div>
-    <p class="ai-text" id="dAnalysis"></p>
-  </div>
-
-  <p class="section-label">Send prescription</p>
-  <div class="rx-form">
-    <div class="rx-row">
-      <input type="text" placeholder="Medication" id="rxMed">
-      <input type="text" placeholder="Dosage (e.g. 10mg)" id="rxDose">
-    </div>
-    <textarea placeholder="Instructions for patient…" id="rxNote"></textarea>
-    <button class="btn btn-primary" id="rxSend" style="align-self:flex-start;">
-      <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-      Send prescription
-    </button>
-    <span class="sent-note" id="rxSentNote"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Prescription sent</span>
-  </div>
-</aside>
-
-<!-- SCHEDULE MODAL -->
-<div class="modal-scrim" id="scheduleModal">
-  <div class="modal">
-    <h3>Schedule appointment</h3>
-    <div class="field">
-      <label for="apPatient">Patient</label>
-      <input type="text" id="apPatient" placeholder="Patient name">
-    </div>
-    <div class="field">
-      <label for="apDate">Date</label>
-      <input type="text" id="apDate" placeholder="e.g. 15 Aug or 2026-08-20" inputmode="numeric" autocomplete="off">
-      <p class="field-hint">Leave blank for today, or type a date</p>
-    </div>
-    <div class="field">
-      <label for="apTime">Time</label>
-      <input type="text" id="apTime" placeholder="e.g. 14:30" inputmode="numeric" autocomplete="off">
-      <p class="field-hint">24-hour format, HH:MM</p>
-    </div>
-    <div class="field">
-      <label for="apReason">Reason for visit</label>
-      <input type="text" id="apReason" placeholder="e.g. Follow-up consultation">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" id="apCancel">Cancel</button>
-      <button class="btn btn-primary" id="apConfirm">Confirm</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const patients = [
-  { initials:"TM", name:"Thato Molefe", age:42, sex:"Male", cond:"Hypertension", status:"watch",
-    vitals:[["138/86","BP"],["78","HR bpm"],["36.8°","Temp"],["97%","SpO₂"]],
-    history:["Diagnosed hypertension — 2021","Started Amlodipine 5mg — Mar 2024","Routine ECG normal — Jun 2026"],
-    labs:[["Lipid panel","Aug 12, 2026"],["Basic metabolic panel","Jul 29, 2026"]],
-    analysis:"Reported symptoms (mild headache, occasional dizziness) are consistent with borderline blood pressure control. No red-flag features noted. Suggest reviewing current dosage.",
-    conf:"87% confidence" },
-  { initials:"KP", name:"Kagiso Pheto", age:35, sex:"Male", cond:"HIV/AIDS · on ART", status:"watch",
-    vitals:[["118/74","BP"],["80","HR bpm"],["37.0°","Temp"],["98%","SpO₂"]],
-    history:["Linked to care — 2019","On Tenofovir/Lamivudine/Dolutegravir — since 2022","Last CD4 count 540 cells/mm³ — Feb 2026"],
-    labs:[["Viral load","Aug 9, 2026"],["CD4 count","Aug 9, 2026"]],
-    analysis:"Reported fatigue and a low-grade fever this week. Adherence self-reported as consistent. Recent viral load result pending — recommend reviewing before adjusting regimen.",
-    conf:"81% confidence" },
-  { initials:"LS", name:"Lorato Seleka", age:51, sex:"Female", cond:"Breast cancer · Stage II", status:"watch",
-    vitals:[["124/80","BP"],["88","HR bpm"],["37.3°","Temp"],["96%","SpO₂"]],
-    history:["Diagnosed — Nov 2025","Completed cycle 3 of chemotherapy — Jul 2026","Referred for radiotherapy planning"],
-    labs:[["Full blood count","Aug 10, 2026"],["Tumour marker panel","Aug 10, 2026"]],
-    analysis:"Reported nausea and fatigue consistent with recent chemotherapy cycle. No signs of infection noted. Recommend confirming blood counts before next cycle is scheduled.",
-    conf:"85% confidence" },
-  { initials:"BK", name:"Boitumelo Kau", age:27, sex:"Female", cond:"Anaemia · iron deficiency", status:"watch",
-    vitals:[["108/68","BP"],["94","HR bpm"],["36.7°","Temp"],["97%","SpO₂"]],
-    history:["Haemoglobin 8.9 g/dL — Jul 2026","Started ferrous sulfate — Jul 2026","Reports heavy menstrual bleeding"],
-    labs:[["Full blood count","Aug 5, 2026"],["Iron studies","Aug 5, 2026"]],
-    analysis:"Reported dizziness and shortness of breath on exertion align with ongoing anaemia. Suggest repeat haemoglobin to check response to iron therapy.",
-    conf:"83% confidence" },
-  { initials:"NR", name:"Neo Ramotswe", age:58, sex:"Male", cond:"Type 2 Diabetes", status:"watch",
-    vitals:[["132/84","BP"],["74","HR bpm"],["36.9°","Temp"],["96%","SpO₂"]],
-    history:["Diagnosed T2DM — 2018","HbA1c 7.8% — May 2026","On Metformin 1000mg BD"],
-    labs:[["HbA1c","May 22, 2026"],["Renal function panel","May 22, 2026"]],
-    analysis:"Reported fatigue and increased thirst suggest suboptimal glycaemic control. Correlates with last HbA1c trend upward. Consider therapy review.",
-    conf:"84% confidence" },
-];
-
-const listEl = document.getElementById('patientList');
-patients.forEach((p,i)=>{
-  const row = document.createElement('button');
-  row.className = 'patient-row';
-  row.dataset.index = i;
-  row.innerHTML = `
-    <div class="avatar">${p.initials}</div>
-    <div class="patient-meta">
-      <div class="patient-name">${p.name}</div>
-      <div class="patient-cond">${p.cond}</div>
-    </div>
-    <span class="dot dot-${p.status==='watch'?'watch':'stable'}" title="${p.status==='watch'?'Needs attention':'Stable'}"></span>
-  `;
-  row.addEventListener('click', ()=>openDrawer(i, row));
-  listEl.appendChild(row);
-});
-
-const drawer = document.getElementById('drawer');
-const scrim = document.getElementById('scrim');
-
-function openDrawer(i, rowEl){
-  document.querySelectorAll('.patient-row').forEach(r=>r.classList.remove('active'));
-  rowEl.classList.add('active');
-  const p = patients[i];
-  document.getElementById('dAvatar').textContent = p.initials;
-  document.getElementById('dName').textContent = p.name;
-  document.getElementById('dSub').textContent = `${p.age} · ${p.sex} · ${p.cond}`;
-  document.getElementById('dVitals').innerHTML = p.vitals.map(v=>`<div class="vital"><div class="vital-val">${v[0]}</div><div class="vital-lbl">${v[1]}</div></div>`).join('');
-  document.getElementById('dHistory').innerHTML = p.history.map(h=>{
-    const parts = h.split(' — ');
-    return `<li>${parts[0]}${parts[1]?`<span>${parts[1]}</span>`:''}</li>`;
-  }).join('');
-  document.getElementById('dLabs').innerHTML = p.labs.map(l=>`<div class="lab-item"><span class="lab-name">${l[0]}</span><span class="lab-date">${l[1]}</span></div>`).join('');
-  document.getElementById('dAnalysis').textContent = p.analysis;
-  document.getElementById('dConf').textContent = p.conf;
-  document.getElementById('rxSentNote').classList.remove('show');
-  document.getElementById('rxMed').value = '';
-  document.getElementById('rxDose').value = '';
-  document.getElementById('rxNote').value = '';
-
-  drawer.classList.add('open');
-  scrim.classList.add('open');
-  drawer.setAttribute('aria-hidden','false');
-}
-function closeDrawer(){
-  drawer.classList.remove('open');
-  scrim.classList.remove('open');
-  drawer.setAttribute('aria-hidden','true');
-}
-document.getElementById('drawerClose').addEventListener('click', closeDrawer);
-scrim.addEventListener('click', closeDrawer);
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); scheduleModal.classList.remove('open'); }});
-
-document.getElementById('rxSend').addEventListener('click', ()=>{
-  const med = document.getElementById('rxMed').value.trim();
-  if(!med) { document.getElementById('rxMed').focus(); return; }
-  document.getElementById('rxSentNote').classList.add('show');
-});
-
-// schedule modal
-const TODAY_DATE = '2026-08-15'; // matches the greeting date shown above
-const scheduleModal = document.getElementById('scheduleModal');
-const scheduleList = document.getElementById('scheduleList');
-const todayCountEl = document.querySelector('.stat-num'); // "Appointments today" is the first stat
-
-document.getElementById('openSchedule').addEventListener('click', ()=>{
-  scheduleModal.classList.add('open');
-  document.getElementById('apPatient').focus();
-});
-document.getElementById('apCancel').addEventListener('click', ()=>scheduleModal.classList.remove('open'));
-
-function parseTypedTime(raw){
-  const s = raw.trim();
-  // accepts "14:30", "930", "9:30", "9:30am", "9:30 pm", "0930"
-  const m = s.match(/^(\d{1,2})(?::?([0-5]\d))?\s*(am|pm|AM|PM)?$/);
-  if(!m) return null;
-  let h = parseInt(m[1],10);
-  const min = m[2] ? parseInt(m[2],10) : 0;
-  const ampm = m[3] ? m[3].toLowerCase() : null;
-  if(ampm==='pm' && h<12) h+=12;
-  if(ampm==='am' && h===12) h=0;
-  if(h>23 || min>59) return null;
-  return `${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}`;
-}
-
-const MONTHS = {jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
-
-function parseTypedDate(raw){
-  const s = raw.trim();
-  if(!s) return TODAY_DATE; // blank = today
-  if(/^today$/i.test(s)) return TODAY_DATE;
-  if(/^tomorrow$/i.test(s)) return '2026-08-16';
-
-  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/); // 2026-08-20
-  if(m) return isValidYMD(+m[1],+m[2],+m[3]) ? ymd(+m[1],+m[2],+m[3]) : null;
-
-  m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?$/); // 20/08 or 20/08/2026 (day/month)
-  if(m){
-    const day=+m[1], month=+m[2];
-    const year = m[3] ? (m[3].length===2 ? 2000+ +m[3] : +m[3]) : 2026;
-    return isValidYMD(year,month,day) ? ymd(year,month,day) : null;
-  }
-
-  m = s.match(/^(\d{1,2})\s+([a-zA-Z]{3,9})\s*,?\s*(\d{4})?$/); // "20 Aug" / "20 Aug 2026"
-  if(m){
-    const day=+m[1], month=MONTHS[m[2].slice(0,3).toLowerCase()], year = m[3] ? +m[3] : 2026;
-    return (month && isValidYMD(year,month,day)) ? ymd(year,month,day) : null;
-  }
-
-  m = s.match(/^([a-zA-Z]{3,9})\s+(\d{1,2})\s*,?\s*(\d{4})?$/); // "Aug 20" / "August 20, 2026"
-  if(m){
-    const month=MONTHS[m[1].slice(0,3).toLowerCase()], day=+m[2], year = m[3] ? +m[3] : 2026;
-    return (month && isValidYMD(year,month,day)) ? ymd(year,month,day) : null;
-  }
-
-  return null;
-}
-function isValidYMD(y,mo,d){ return mo>=1 && mo<=12 && d>=1 && d<=31 && y>=2020 && y<=2100; }
-function ymd(y,mo,d){ return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
-
-function formatNiceDate(dateStr){
-  const d = new Date(dateStr + 'T00:00:00');
-  if(isNaN(d)) return dateStr;
-  return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' });
-}
-
-let toastEl;
-function showToast(msg){
-  if(!toastEl){
-    toastEl = document.createElement('div');
-    toastEl.className = 'toast';
-    document.body.appendChild(toastEl);
-  }
-  toastEl.textContent = msg;
-  toastEl.classList.add('show');
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(()=>toastEl.classList.remove('show'), 3400);
-}
-
-document.getElementById('apConfirm').addEventListener('click', ()=>{
-  const nameEl = document.getElementById('apPatient');
-  const dateEl = document.getElementById('apDate');
-  const timeEl = document.getElementById('apTime');
-  const reasonEl = document.getElementById('apReason');
-
-  const name = nameEl.value.trim();
-  const time = parseTypedTime(timeEl.value || '');
-  const dateVal = parseTypedDate(dateEl.value || '');
-
-  timeEl.classList.toggle('field-error', !!timeEl.value && !time);
-  dateEl.classList.toggle('field-error', !!dateEl.value.trim() && !dateVal);
-
-  if(!name || !time || !dateVal){
-    (!name ? nameEl : (!dateVal ? dateEl : timeEl)).focus();
-    return;
-  }
-
-  const reason = reasonEl.value.trim() || 'General consultation';
-  const isToday = dateVal === TODAY_DATE;
-
-  if(isToday){
-    const item = document.createElement('div');
-    item.className = 'sched-item sched-item-new';
-    item.dataset.time = time;
-    item.innerHTML = `
-      <div class="sched-time">${time}</div>
-      <div class="sched-info"><div class="sched-name">${name}</div><div class="sched-reason">${reason}</div></div>
-      <span class="pill pill-pending">Pending</span>
-    `;
-    // insert in time order — only ever compares against today's items
-    const existing = Array.from(scheduleList.querySelectorAll('.sched-item'));
-    const next = existing.find(row => row.dataset.time > time);
-    if(next){ scheduleList.insertBefore(item, next); } else { scheduleList.appendChild(item); }
-    item.scrollIntoView({behavior:'smooth', block:'center'});
-
-    if(todayCountEl) todayCountEl.textContent = scheduleList.querySelectorAll('.sched-item').length;
-    showToast(`Added to today's schedule at ${time}`);
-  } else {
-    showToast(`Scheduled for ${formatNiceDate(dateVal)} at ${time} — it won't clutter today's list`);
-  }
-
-  scheduleModal.classList.remove('open');
-  nameEl.value='';
-  dateEl.value='';
-  dateEl.classList.remove('field-error');
-  timeEl.value='';
-  timeEl.classList.remove('field-error');
-  reasonEl.value='';
-});
-document.getElementById('apCancel').addEventListener('click', ()=>{
-  document.getElementById('apTime').classList.remove('field-error');
-  document.getElementById('apDate').classList.remove('field-error');
-});
-scheduleModal.addEventListener('click', e=>{ if(e.target===scheduleModal) scheduleModal.classList.remove('open'); });
-
-// sidebar nav -> scroll to section
-document.querySelectorAll('.navitem').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.navitem').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const target = btn.dataset.nav;
-    if(target==='schedule') document.getElementById('schedule').scrollIntoView({behavior:'smooth', block:'start'});
-    if(target==='patients') document.getElementById('patients').scrollIntoView({behavior:'smooth', block:'start'});
-    if(target==='labs') openDrawer(2, document.querySelectorAll('.patient-row')[2]);
-    if(target==='rx') openDrawer(0, document.querySelectorAll('.patient-row')[0]);
-    if(target==='home') window.scrollTo({top:0, behavior:'smooth'});
-  });
-});
-
-// live filter for patient search (top bar is the single working search)
-const topSearch = document.getElementById('topSearch');
-const patientEmpty = document.getElementById('patientEmpty');
-topSearch.addEventListener('input', (e)=>{
-  const q = e.target.value.trim().toLowerCase();
-  let visibleCount = 0;
-  document.querySelectorAll('.patient-row').forEach((row,i)=>{
-    const match = patients[i].name.toLowerCase().includes(q) || patients[i].cond.toLowerCase().includes(q);
-    row.style.display = match ? 'flex' : 'none';
-    if(match) visibleCount++;
-  });
-  patientEmpty.style.display = (q && visibleCount===0) ? 'block' : 'none';
-  if(q) document.getElementById('patients').scrollIntoView({behavior:'smooth', block:'start'});
-});
-
-// ---- Appointment load heatmap: peak vs quiet hours across the week ----
-(function(){
-  const hours = [8,9,10,11,12,13,14,15,16,17];
-  const days = ['Mon','Tue','Wed','Thu','Fri'];
-  // mock booking counts per hour for each day (clinic pattern: morning + post-lunch peaks, lunchtime dip)
-  const loadData = {
-    Mon:[2,5,6,4,2,3,5,4,2,1],
-    Tue:[3,6,7,5,2,4,6,5,3,1],
-    Wed:[1,3,4,3,1,2,3,2,1,0],
-    Thu:[3,6,7,6,3,5,6,4,3,2],
-    Fri:[2,4,5,4,2,3,4,3,2,1],
-  };
-
-  const allValues = days.flatMap(d => loadData[d]);
-  const maxVal = Math.max(...allValues);
-
-  function cellColor(v){
-    const t = maxVal ? v / maxVal : 0;
-    const c1 = [255,233,218]; // cream
-    const c2 = [219,130,127]; // coral
-    const r = Math.round(c1[0] + (c2[0]-c1[0]) * t);
-    const g = Math.round(c1[1] + (c2[1]-c1[1]) * t);
-    const b = Math.round(c1[2] + (c2[2]-c1[2]) * t);
-    return `rgb(${r},${g},${b})`;
-  }
-
-  const heatmap = document.getElementById('heatmap');
-  let html = '<div class="hm-corner"></div>';
-  days.forEach(d => html += `<div class="hm-daylabel">${d}</div>`);
-
-  hours.forEach((h, hi) => {
-    html += `<div class="hm-hourlabel">${String(h).padStart(2,'0')}:00</div>`;
-    days.forEach(d => {
-      const v = loadData[d][hi];
-      const isPeak = v === maxVal;
-      html += `<div class="hm-cell${isPeak ? ' hm-peak' : ''}" style="background:${cellColor(v)}" title="${d} ${String(h).padStart(2,'0')}:00 — ${v} appointment${v===1?'':'s'}"></div>`;
-    });
-  });
-  heatmap.innerHTML = html;
-
-  // work out peak / quiet hours (summed across the week) for the summary line
-  const hourTotals = hours.map((h, hi) => days.reduce((sum, d) => sum + loadData[d][hi], 0));
-  const maxTotal = Math.max(...hourTotals);
-  const minTotal = Math.min(...hourTotals);
-  const fmt = h => `${String(h).padStart(2,'0')}:00`;
-  const peakHours = hours.filter((h, hi) => hourTotals[hi] === maxTotal).map(fmt);
-  const quietHours = hours.filter((h, hi) => hourTotals[hi] === minTotal).map(fmt);
-
-  document.getElementById('loadSummary').textContent =
-    `Peak hours: ${peakHours.join(', ')} · Quietest: ${quietHours.join(', ')}`;
-})();
-</script>
-
-</body>
-</html>
+ 
+ 
+     
+ 
+        <section class="hero">
+ 
+            <div class="hero-content">
+ 
+                <p class="eyebrow">
+                    BOSA CARE • YOUR HEALTH, YOUR CARE
+                </p>
+ 
+                <h1>
+                    Good afternoon, Shatho Tumelo 👋
+                </h1>
+ 
+                <p class="hero-text">
+                    Welcome to Bosa Care. Explore your health
+                    screening tools and keep track of your
+                    wellbeing.
+                </p>
+ 
+ 
+                <div class="hero-buttons">
+ 
+                    <button
+                        class="primary-button"
+                        onclick="openSymptomChecker()"
+                    >
+                        🤖 Check my symptoms
+                    </button>
+ 
+                    <button
+                        class="secondary-button"
+                        onclick="scrollToScreenings()"
+                    >
+                        Explore screenings
+                    </button>
+ 
+                </div>
+ 
+            </div>
+ 
+ 
+            <div class="hero-graphic">
+ 
+                <div class="circle circle-one"></div>
+                <div class="circle circle-two"></div>
+ 
+                <div class="health-symbol">
+                    +
+                </div>
+ 
+                <div class="floating-stat stat-one">
+                    <span>❤️</span>
+                    <div>
+                        <strong>5</strong>
+                        <small>Health areas</small>
+                    </div>
+                </div>
+ 
+                <div class="floating-stat stat-two">
+                    <span>✓</span>
+                    <div>
+                        <strong>Care</strong>
+                        <small>Starts with awareness</small>
+                    </div>
+                </div>
+ 
+            </div>
+ 
+        </section>
+ 
+ 
+        <section class="overview-section">
+ 
+            <div class="section-title">
+ 
+                <div>
+                    <p class="eyebrow">
+                        HEALTH OVERVIEW
+                    </p>
+ 
+                    <h2>
+                        Your health at a glance
+                    </h2>
+                </div>
+ 
+                <span class="last-updated">
+                    Last updated today
+                </span>
+ 
+            </div>
+ 
+ 
+            <div class="overview-grid">
+ 
+ 
+                <div class="overview-card">
+ 
+                    <div class="overview-icon red">
+                        ❤️
+                    </div>
+ 
+                    <div>
+                        <span>
+                            Blood Pressure
+                        </span>
+ 
+                        <strong>
+                            118/76
+                        </strong>
+ 
+                        <small class="good">
+                            ● Within expected range
+                        </small>
+                    </div>
+ 
+                </div>
+ 
+ 
+                <div class="overview-card">
+ 
+                    <div class="overview-icon purple">
+                        🩸
+                    </div>
+ 
+                    <div>
+                        <span>
+                            Blood Glucose
+                        </span>
+ 
+                        <strong>
+                            5.6 mmol/L
+                        </strong>
+ 
+                        <small class="good">
+                            ● Reading recorded
+                        </small>
+                    </div>
+ 
+                </div>
+ 
+ 
+                <div class="overview-card">
+ 
+                    <div class="overview-icon orange">
+                        🩸
+                    </div>
+ 
+                    <div>
+                        <span>
+                            Anemia Check
+                        </span>
+ 
+                        <strong>
+                            Normal
+                        </strong>
+ 
+                        <small>
+                            ● No signs of anemia
+                        </small>
+                    </div>
+ 
+                </div>
+ 
+ 
+                <div class="overview-card">
+ 
+                    <div class="overview-icon green">
+                        ✓
+                    </div>
+ 
+                    <div>
+                        <span>
+                            Screenings
+                        </span>
+ 
+                        <strong>
+                            4/ 5
+                        </strong>
+ 
+                        <small>
+                            Completed this month
+                        </small>
+                    </div>
+ 
+                </div>
+ 
+            </div>
+ 
+        </section>
+ 
+ 
+        <!-- =========================
+             MAIN SCREENING FEATURES
+        ========================== -->
+ 
+        <section
+            class="screening-section"
+            id="screenings"
+        >
+ 
+            <div class="section-title">
+ 
+                <div>
+ 
+                    <p class="eyebrow">
+                        HEALTH SCREENING
+                    </p>
+ 
+                    <h2>
+                        Explore your health areas
+                    </h2>
+ 
+                    <p class="section-description">
+                        Use these tools to learn about risk
+                        factors, symptoms and healthy habits.
+                    </p>
+ 
+                </div>
+ 
+            </div>
+ 
+ 
+            <div class="screening-grid">
+ 
+ 
+                <!-- CANCER -->
+ 
+                <article
+                    class="screening-card cancer"
+                    onclick="openPage('cancer.html')"
+                >
+ 
+                    <div class="card-top">
+ 
+                        <div class="feature-icon">
+                            🎗️
+                        </div>
+ 
+                        <span class="feature-number">
+                            01
+                        </span>
+ 
+                    </div>
+ 
+                    <span class="feature-label">
+                        CANCER AWARENESS
+                    </span>
+ 
+                    <h3>
+                        Cancer Screening
+                    </h3>
+ 
+                    <p>
+                        Learn about common warning signs,
+                        risk factors and recommended
+                        screening conversations.
+                    </p>
+ 
+                    <button>
+                        Explore cancer screening
+                        <span>→</span>
+                    </button>
+ 
+                </article>
+ 
+ 
+                <!-- HIV -->
+ 
+                <article
+                    class="screening-card hiv"
+                    onclick="openPage('hiv.html')"
+                >
+ 
+                    <div class="card-top">
+ 
+                        <div class="feature-icon">
+                            🧬
+                        </div>
+ 
+                        <span class="feature-number">
+                            02
+                        </span>
+ 
+                    </div>
+ 
+                    <span c
+        
