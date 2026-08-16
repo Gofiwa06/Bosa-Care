@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bosa-Care · Connected Health</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html,
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #FFE9DA;
+            /* Powder Petal */
+            color: #5E604D;
+            /* Ebony */
+            overflow-x: hidden;
+        }
+
+        /* ---- Bosa-Care palette ---- */
+        :root {
+            --powder: #FFE9DA;
+            --coral: #DB827F;
+            --dust: #D5CCC5;
+            --lilac: #A19DA4;
+            --ebony: #5E604D;
+            --coral-light: rgba(219, 130, 127, 0.12);
+            --coral-soft: rgba(219, 130, 127, 0.20);
+        }
+
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 15% 85%, rgba(219, 130, 127, 0.18) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 15%, rgba(161, 157, 164, 0.10) 0%, transparent 45%),
+                linear-gradient(160deg, #f7e5d6 0%, #FFE9DA 50%, #f5ddd0 100%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(94, 96, 77, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(94, 96, 77, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+            pointer-events: none;
+        }
+
+        .pulse-lines {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .pl {
+            position: absolute;
+            width: 1px;
+            background: linear-gradient(180deg, transparent 0%, rgba(219, 130, 127, 0.20) 50%, transparent 100%);
+            animation: plScroll linear infinite;
+        }
+        .pl:nth-child(1) {
+            left: 10%;
+            height: 30vh;
+            animation-duration: 5s;
+            animation-delay: 0s;
+        }
+        .pl:nth-child(2) {
+            left: 30%;
+            height: 22vh;
+            animation-duration: 6.5s;
+            animation-delay: 1s;
+        }
+        .pl:nth-child(3) {
+            left: 55%;
+            height: 38vh;
+            animation-duration: 4.2s;
+            animation-delay: 2s;
+        }
+        .pl:nth-child(4) {
+            left: 75%;
+            height: 28vh;
+            animation-duration: 7s;
+            animation-delay: 0.5s;
+        }
+        .pl:nth-child(5) {
+            left: 90%;
+            height: 42vh;
+            animation-duration: 5.5s;
+            animation-delay: 1.8s;
+        }
+        @keyframes plScroll {
+            0% {
+                top: -45vh;
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                top: 110vh;
+                opacity: 0;
+            }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: orbFloat ease-in-out infinite;
+        }
+        .orb-1 {
+            width: 450px;
+            height: 450px;
+            background: rgba(219, 130, 127, 0.15);
+            bottom: -80px;
+            left: -80px;
+            animation-duration: 11s;
+        }
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: rgba(161, 157, 164, 0.08);
+            top: -50px;
+            right: -50px;
+            animation-duration: 14s;
+            animation-delay: 3s;
+        }
+        @keyframes orbFloat {
+            0%,
+            100% {
+                transform: translateY(0px) scale(1);
+            }
+            50% {
+                transform: translateY(-25px) scale(1.04);
+            }
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        /* ---- navbar ---- */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 3rem;
+            border-bottom: 1px solid rgba(94, 96, 77, 0.10);
+            animation: fadeDown 0.6s ease both;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 233, 218, 0.70);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+        .brand-mark {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #DB827F, #A19DA4);
+            border-radius: 8px;
+            border: 1px solid rgba(94, 96, 77, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #FFE9DA;
+        }
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #5E604D;
+        }
+        .brand-name span {
+            color: #DB827F;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 3.5rem 2rem 2.5rem;
+            animation: fadeUp 0.7s ease both;
+            animation-delay: 0.1s;
+        }
+        .page-header__eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(219, 130, 127, 0.10);
+            border: 1px solid rgba(219, 130, 127, 0.25);
+            border-radius: 100px;
+            padding: 0.35rem 0.9rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+            color: #DB827F;
+            margin-bottom: 1.25rem;
+        }
+        .page-header__eyebrow::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: #DB827F;
+            border-radius: 50%;
+            animation: blink 1.8s ease-in-out infinite;
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            color: #5E604D;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+        }
+        .page-header h1 em {
+            color: #DB827F;
+            font-style: italic;
+        }
+        .page-header p {
+            color: rgba(94, 96, 77, 0.55);
+            font-size: 0.95rem;
+            font-weight: 300;
+            max-width: 50ch;
+            margin: 0 auto;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ---- stats ---- */
+        .stats-bar {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            animation: fadeUp 0.7s ease both;
+            animation-delay: 0.18s;
+        }
+        .stat-chip {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(94, 96, 77, 0.08);
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+        }
+        .stat-chip .stat-num {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #DB827F;
+            font-family: 'Playfair Display', serif;
+        }
+        .stat-chip .stat-lbl {
+            font-size: 0.72rem;
+            color: rgba(94, 96, 77, 0.55);
+            font-weight: 500;
+        }
+
+        /* ---- search ---- */
+        .search-wrap {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem 1.5rem;
+            animation: fadeUp 0.7s ease both;
+            animation-delay: 0.15s;
+        }
+        .search-outer {
+            position: relative;
+        }
+        .search-icon {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(94, 96, 77, 0.30);
+            pointer-events: none;
+        }
+        .search-icon svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+        }
+        .search-box {
+            width: 100%;
+            padding: 0.85rem 1.25rem 0.85rem 2.75rem;
+            background: rgba(255, 255, 255, 0.50);
+            border: 1px solid rgba(94, 96, 77, 0.12);
+            border-radius: 12px;
+            color: #5E604D;
+            font-size: 0.9rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.2s;
+            outline: none;
+            backdrop-filter: blur(4px);
+        }
+        .search-box:focus {
+            border-color: #DB827F;
+            background: rgba(255, 255, 255, 0.75);
+        }
+        .search-box::placeholder {
+            color: rgba(94, 96, 77, 0.35);
+        }
+
+        /* ---- quick nav ---- */
+        .quick-nav {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem 2.5rem;
+            animation: fadeUp 0.7s ease both;
+            animation-delay: 0.2s;
+        }
+        .section-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(94, 96, 77, 0.40);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(94, 96, 77, 0.10);
+        }
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 0.6rem;
+        }
+        .quick-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1rem;
+            background: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(94, 96, 77, 0.08);
+            border-radius: 10px;
+            font-size: 0.83rem;
+            font-weight: 500;
+            color: rgba(94, 96, 77, 0.75);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            backdrop-filter: blur(4px);
+        }
+        .quick-pill:hover {
+            background: rgba(219, 130, 127, 0.08);
+            border-color: #DB827F;
+            color: #DB827F;
+        }
+
+        /* ---- filter ---- */
+        .filter-bar {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem 2.5rem;
+            animation: fadeUp 0.7s ease both;
+            animation-delay: 0.25s;
+        }
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-label {
+            font-size: 0.72rem;
+            color: rgba(94, 96, 77, 0.35);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-right: 0.3rem;
+        }
+        .filter-btn {
+            padding: 0.4rem 0.85rem;
+            border-radius: 100px;
+            border: 1px solid rgba(94, 96, 77, 0.10);
+            background: rgba(255, 255, 255, 0.30);
+            color: rgba(94, 96, 77, 0.55);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+            backdrop-filter: blur(4px);
+        }
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: rgba(219, 130, 127, 0.12);
+            border-color: #DB827F;
+            color: #DB827F;
+        }
+
+        /* ---- cards ---- */
+        .hub-body {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .illness-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(94, 96, 77, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.22s ease;
+            cursor: pointer;
+            animation: fadeUp 0.6s ease both;
+            box-shadow: 0 4px 12px rgba(94, 96, 77, 0.03);
+        }
+        .illness-card:hover {
+            border-color: #DB827F;
+            background: rgba(255, 255, 255, 0.80);
+            transform: translateY(-2px);
+        }
+        .illness-card.open {
+            border-color: #DB827F;
+            background: rgba(255, 255, 255, 0.85);
+            transform: none;
+        }
+
+        .illness-card__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 1.3rem 0.8rem;
+            gap: 0.5rem;
+        }
+        .illness-card__name-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            flex: 1;
+        }
+        .illness-card__icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: rgba(219, 130, 127, 0.12);
+            border: 1px solid rgba(219, 130, 127, 0.20);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .illness-card__name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #5E604D;
+            font-family: 'Playfair Display', serif;
+        }
+        .illness-tags {
+            display: flex;
+            gap: 0.35rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.18rem 0.5rem;
+            border-radius: 100px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .tag-contagious {
+            background: rgba(219, 130, 127, 0.15);
+            color: #b16562;
+            border: 1px solid rgba(219, 130, 127, 0.25);
+        }
+        .tag-noncontagious {
+            background: rgba(94, 96, 77, 0.08);
+            color: #5E604D;
+            border: 1px solid rgba(94, 96, 77, 0.12);
+        }
+        .tag-chronic {
+            background: rgba(161, 157, 164, 0.15);
+            color: #7a767b;
+            border: 1px solid rgba(161, 157, 164, 0.20);
+        }
+        .tag-acute {
+            background: rgba(219, 130, 127, 0.08);
+            color: #b16562;
+            border: 1px solid rgba(219, 130, 127, 0.15);
+        }
+        .tag-urgent {
+            background: rgba(219, 130, 127, 0.18);
+            color: #a55350;
+            border: 1px solid rgba(219, 130, 127, 0.3);
+        }
+
+        .severity-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .sev-low {
+            background: #8fae7a;
+        }
+        .sev-mod {
+            background: #DB827F;
+        }
+        .sev-high {
+            background: #b16562;
+        }
+        .sev-critical {
+            background: #a55350;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .illness-card__body {
+            padding: 0 1.3rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.45s ease, padding 0.2s ease;
+        }
+        .illness-card.open .illness-card__body {
+            max-height: 2000px;
+            padding: 0 1.3rem 1.3rem;
+        }
+
+        .card-summary {
+            background: rgba(219, 130, 127, 0.06);
+            border: 1px solid rgba(219, 130, 127, 0.12);
+            border-radius: 10px;
+            padding: 0.75rem 0.9rem;
+            margin-bottom: 1rem;
+        }
+        .card-summary p {
+            font-size: 0.83rem;
+            color: rgba(94, 96, 77, 0.75);
+            line-height: 1.6;
+        }
+
+        .card-section {
+            margin-bottom: 0.9rem;
+        }
+        .card-section:last-child {
+            margin-bottom: 0;
+        }
+        .card-section-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.10em;
+            color: #DB827F;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .card-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(219, 130, 127, 0.15);
+        }
+
+        .card-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .card-list li {
+            font-size: 0.81rem;
+            color: rgba(94, 96, 77, 0.65);
+            line-height: 1.5;
+            padding-left: 1rem;
+            position: relative;
+        }
+        .card-list li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: rgba(219, 130, 127, 0.5);
+            font-weight: 700;
+        }
+        .card-list li.red-flag {
+            color: #b16562;
+        }
+        .card-list li.red-flag::before {
+            content: '⚠';
+            font-size: 0.65rem;
+            top: 0.1rem;
+            color: #DB827F;
+        }
+
+        .duration-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(161, 157, 164, 0.12);
+            border: 1px solid rgba(161, 157, 164, 0.18);
+            border-radius: 100px;
+            padding: 0.2rem 0.65rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #7a767b;
+            margin-top: 0.4rem;
+        }
+
+        .card-disclaimer {
+            margin-top: 0.9rem;
+            padding: 0.6rem 0.8rem;
+            background: rgba(219, 130, 127, 0.06);
+            border: 1px solid rgba(219, 130, 127, 0.12);
+            border-radius: 8px;
+            font-size: 0.72rem;
+            color: rgba(94, 96, 77, 0.50);
+            line-height: 1.55;
+        }
+        .card-disclaimer strong {
+            color: #DB827F;
+        }
+
+        .card-divider {
+            height: 1px;
+            background: rgba(94, 96, 77, 0.06);
+            margin: 0.75rem 0;
+        }
+
+        .illness-card__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            border-top: 1px solid rgba(94, 96, 77, 0.05);
+            color: rgba(94, 96, 77, 0.30);
+            font-size: 0.7rem;
+            gap: 0.3rem;
+            transition: color 0.2s;
+        }
+        .illness-card:hover .illness-card__toggle {
+            color: rgba(219, 130, 127, 0.5);
+        }
+        .illness-card.open .illness-card__toggle {
+            color: #DB827F;
+            border-top-color: rgba(219, 130, 127, 0.10);
+        }
+        .toggle-arrow {
+            transition: transform 0.3s;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        .illness-card.open .toggle-arrow {
+            transform: rotate(180deg);
+        }
+        .toggle-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .illness-card.hidden {
+            display: none;
+        }
+        .no-results {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: rgba(94, 96, 77, 0.35);
+            font-size: 0.9rem;
+            display: none;
+        }
+        .no-results.show {
+            display: block;
+        }
+
+        .hub-footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.72rem;
+            color: rgba(94, 96, 77, 0.25);
+        }
+
+        @media (max-width: 640px) {
+            .navbar {
+                padding: 1rem 1.25rem;
+            }
+            .hub-body {
+                padding: 0 1rem 3rem;
+            }
+            .quick-nav,
+            .filter-bar,
+            .search-wrap,
+            .stats-bar {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .quick-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-canvas"></div>
+    <div class="bg-grid"></div>
+    <div class="pulse-lines">
+        <div class="pl"></div>
+        <div class="pl"></div>
+        <div class="pl"></div>
+        <div class="pl"></div>
+        <div class="pl"></div>
+    </div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="page">
+
+        <nav class="navbar">
+            <a href="#" class="brand">
+                <div class="brand-mark">⚕</div>
+                <span class="brand-name">Bosa<span>Care</span></span>
+            </a>
+        </nav>
+
+        <div class="page-header">
+            <div class="page-header__eyebrow">connected · coordinated · continuous</div>
+            <h1>Bosa-Care <em>Knowledge Hub</em></h1>
+            <p>Connects patients, doctors, pharmacies and healthcare services through an EMR and AI integrated system — enabling continuous monitoring, personalized treatment support, digital records and easier access to medication for better coordinated care.</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-chip"><span class="stat-num" id="totalCount">0</span><span class="stat-lbl">Conditions</span></div>
+            <div class="stat-chip"><span class="stat-num" id="visibleCount">0</span><span class="stat-lbl">Showing</span></div>
+            <div class="stat-chip"><span class="stat-num">2</span><span class="stat-lbl">Contagious</span></div>
+            <div class="stat-chip"><span class="stat-num">5</span><span class="stat-lbl">Chronic</span></div>
+        </div>
+
+        <div class="search-wrap">
+            <div class="search-outer">
+                <span class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                <input class="search-box" type="text" id="searchInput" placeholder="Search a condition, symptom, or keyword…" />
+            </div>
+        </div>
+
+        <div class="quick-nav">
+            <div class="section-label">Jump To</div>
+            <div class="quick-grid">
+                <a class="quick-pill" href="#" data-scroll="cancer">🎗️ Cancer</a>
+                <a class="quick-pill" href="#" data-scroll="diabetes">🩸 Diabetes</a>
+                <a class="quick-pill" href="#" data-scroll="hiv-aids">🔴 HIV / AIDS</a>
+                <a class="quick-pill" href="#" data-scroll="hypertension">❤️ Hypertension</a>
+                <a class="quick-pill" href="#" data-scroll="anemia">🫀 Anemia</a>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <div class="section-label">Filters</div>
+            <div class="filter-row">
+                <span class="filter-label">Type:</span>
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="contagious">🦠 Contagious</button>
+                <button class="filter-btn" data-filter="noncontagious">🛡️ Non-Contagious</button>
+                <button class="filter-btn" data-filter="chronic">⏳ Chronic</button>
+            </div>
+        </div>
+
+        <div class="no-results" id="noResults">No conditions match your search or filter.</div>
+
+        <div class="hub-body" id="hubBody">
+
+            <!-- CANCER -->
+            <div class="illness-card" id="card-cancer" data-name="cancer tumor oncology malignancy" data-tags="noncontagious chronic">
+                <div class="illness-card__header">
+                    <div class="illness-card__name-wrap">
+                        <div class="illness-card__icon">🎗️</div>
+                        <span class="illness-card__name">Cancer</span>
+                    </div>
+                    <div class="illness-tags">
+                        <span class="tag tag-noncontagious">Non-Contagious</span>
+                        <span class="tag tag-chronic">Chronic</span>
+                        <span class="severity-dot sev-high"></span>
+                    </div>
+                </div>
+                <div class="illness-card__body">
+                    <div class="card-summary"><p>Cancer is a broad group of diseases in which abnormal cells grow uncontrollably and can invade nearby tissue or spread (metastasise) to other parts of the body. There are over 100 distinct types, named for the organ or cell type where they start (e.g. breast, lung, colorectal, leukaemia). Outcomes vary enormously by type and stage at diagnosis — many cancers are highly treatable when caught early.</p></div>
+                    <div class="card-section">
+                        <div class="card-section-title">Common Symptoms</div>
+                        <ul class="card-list">
+                            <li>Unexplained weight loss and persistent fatigue</li>
+                            <li>A new lump, thickening, or swelling anywhere on the body</li>
+                            <li>Changes in a mole's size, shape, or colour</li>
+                            <li>Persistent cough, hoarseness, or difficulty swallowing</li>
+                            <li>Unusual bleeding or discharge (bowel, urine, vaginal)</li>
+                            <li>Changes in bowel or bladder habits lasting more than a few weeks</li>
+                            <li class="red-flag">Coughing up blood, sudden severe pain, or a rapidly growing lump — seek urgent medical review</li>
+                            <li class="red-flag">Symptoms of a blocked bowel or airway are a medical emergency</li>
+                        </ul>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="card-section">
+                        <div class="card-section-title">Causes &amp; Risk Factors</div>
+                        <ul class="card-list">
+                            <li>Accumulated mutations in genes controlling cell growth and division</li>
+                            <li>Tobacco use is the single largest preventable cause worldwide</li>
+                            <li>Chronic infections (HPV, hepatitis B/C, H. pylori) drive certain cancer types</li>
+                            <li>Excess UV exposure, obesity, alcohol, and poor diet raise risk</li>
+                            <li>Inherited gene mutations (e.g. BRCA1/2) increase risk for specific cancers</li>
+                            <li>Age is the strongest overall risk factor — most cancers occur after 50</li>
+                        </ul>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="card-section">
+                        <div class="card-section-title">Management &amp; Treatment</div>
+                        <ul class="card-list">
+                            <li>Surgery to remove localised tumours</li>
+                            <li>Chemotherapy: systemic drugs that target rapidly dividing cells</li>
+                            <li>Radiotherapy: targeted high-energy radiation to destroy cancer cells</li>
+                            <li>Immunotherapy and targeted therapy for specific molecular profiles</li>
+                            <li>Treatment plans are typically multidisciplinary and staged based on tumour type and spread</li>
+                            <li>Palliative and supportive care manage symptoms and quality of life at any stage</li>
+                        </ul>
+                        <div class="duration-badge">⏱ Treatment length varies widely — months to years, sometimes lifelong monitoring</div>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="card-section">
+                        <div class="card-section-title">Prevention &amp; Screening</div>
+                        <ul class="card-list">
+                            <li>Avoid tobacco in all forms; limit alcohol intake</li>
+                            <li>Maintain a healthy weight and stay physically active</li>
+                            <li>Use sun protection; avoid tanning beds</li>
+                            <li>Get vaccinated against HPV and hepatitis B where recommended</li>
+                            <li>Attend age-appropriate screening (mammograms, cervical smears, colonoscopy)</li>
+                        </ul>
+                    </div>
+                    <div class="card-disclaimer"><strong>⚕ Medical Disclaimer:</strong> This information is for educational purposes only and does not replace professional medical advice. Cancer diagnosis and treatment must be guided by an oncologist based on individual test results.</div>
+                </div>
+                <div class="illness-card__toggle"><span class="toggle-arrow">▼</span> <span class="toggle-label">Full Details</span></div>
+            </div>
+
+            <!-- DIABETES -->
+            <div class="illness-card" id="card-diabetes" data-name="diabetes type 1 type 2 blood sugar insulin glucose" data-tags="noncontagious chronic">
+                <div class="illness-card__header">
+                    <div class="illness-card__name-wrap">
+                        <div class="
