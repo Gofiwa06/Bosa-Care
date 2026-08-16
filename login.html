@@ -38,7 +38,6 @@
   body.dyslexia-mode h1, body.dyslexia-mode h2, body.dyslexia-mode .display{font-family:'OpenDyslexic','Comic Sans MS','Comic Sans',sans-serif;letter-spacing:0;}
   body.dyslexia-mode p{line-height:1.85;word-spacing:0.06em;}
 
-  /* ---- Side panel (branding + condition focus) ---- */
   .side{
     flex:1;min-height:100vh;display:none;position:relative;overflow:hidden;
     background:linear-gradient(150deg,var(--ink) 0%, var(--ink-deep) 100%);
@@ -61,7 +60,6 @@
   }
   .side-foot{position:relative;z-index:1;font-size:12.5px;color:rgba(255,233,218,0.55);}
 
-  /* ---- Form panel ---- */
   .panel{
     flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px;
   }
@@ -81,18 +79,7 @@
   h2.title{font-size:27px;}
   .subtext{margin-top:8px;font-size:14px;color:var(--ink-soft);}
 
-  .oauth-btn{
-    margin-top:26px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
-    padding:12px 18px;border-radius:100px;border:1.5px solid var(--line);background:#fff;
-    font-size:14px;font-weight:600;transition:border-color .18s ease, box-shadow .18s ease;
-  }
-  .oauth-btn:hover{border-color:var(--ink);box-shadow:var(--shadow);}
-  .oauth-btn svg{width:18px;height:18px;flex:none;}
-
-  .divider{display:flex;align-items:center;gap:12px;margin:24px 0;font-size:12px;color:var(--ink-soft);}
-  .divider::before, .divider::after{content:"";flex:1;height:1px;background:var(--line);}
-
-  form{display:flex;flex-direction:column;gap:16px;}
+  form{display:flex;flex-direction:column;gap:16px;margin-top:26px;}
   .field label{font-size:12.5px;font-weight:600;color:var(--ink-soft);}
   .field input{
     width:100%;margin-top:7px;padding:12px 14px;border-radius:11px;border:1.5px solid var(--line);
@@ -151,13 +138,6 @@
     <h2 class="title">Welcome back</h2>
     <p class="subtext">Log in to manage your appointments, records and payments.</p>
 
-    <button class="oauth-btn" id="googleBtn" onclick="loginWithGoogle()">
-      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.4 29.4 35.5 24 35.5c-6.9 0-12.5-5.6-12.5-12.5S17.1 10.5 24 10.5c3.2 0 6.1 1.2 8.3 3.2l6-6C34.6 4.2 29.6 2 24 2 11.9 2 2 11.9 2 24s9.9 22 22 22 22-9.9 22-22c0-1.5-.2-3-.4-4.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.2 0 6.1 1.2 8.3 3.2l6-6C34.6 6.2 29.6 4 24 4c-7.9 0-14.7 4.4-18.3 11z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.6l-6.5-5.5C29.5 34.5 26.9 35.5 24 35.5c-5.3 0-9.8-3.6-11.4-8.4l-6.6 5.1C9.4 39.6 16.1 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.7 2-2 3.7-3.7 5l6.5 5.5C41.6 35.5 44 30.2 44 24c0-1.5-.2-3-.4-3.5z"/></svg>
-      Continue with Google
-    </button>
-
-    <div class="divider">or log in with email</div>
-
     <form id="loginForm">
       <div class="field">
         <label>Email</label>
@@ -197,14 +177,6 @@
     const { data } = await supabaseClient.auth.getSession();
     if (data.session) window.location.href = 'dashboard.html';
   })();
-
-  async function loginWithGoogle(){
-    const { error } = await supabaseClient.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin + window.location.pathname.replace('login.html','dashboard.html') }
-    });
-    if (error) showMsg(error.message, 'error');
-  }
 
   document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
