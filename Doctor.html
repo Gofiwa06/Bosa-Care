@@ -113,6 +113,7 @@
   .search-wrap{
     position:relative;
     min-width:240px;
+    flex:1 1 240px;
   }
   .search-wrap input{
     width:100%;
@@ -211,6 +212,8 @@
     align-items:center;
     justify-content:space-between;
     margin-bottom:16px;
+    gap:10px;
+    flex-wrap:wrap;
   }
   .card-title{
     font-size:16px;
@@ -240,6 +243,8 @@
   .btn-primary:hover{background:var(--coral-dark);}
   .btn-ghost{background:var(--cream);color:var(--ebony);}
   .btn-ghost:hover{background:var(--grey);}
+  .btn-secondary{background:var(--cream);color:var(--ebony);border:1px solid var(--grey);border-radius:999px;padding:10px 18px;font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:7px;transition:background .12s ease,border-color .12s ease;}
+  .btn-secondary:hover{background:var(--grey);border-color:var(--coral);}
 
   /* schedule list */
   .sched-item{
@@ -322,6 +327,30 @@
   .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
   .dot-stable{background:#7ba05b;}
   .dot-watch{background:var(--coral);}
+
+  /* ---------- PROFILE ENTRY POINTS ---------- */
+  .profile-chip{
+    display:flex;align-items:center;gap:9px;
+    padding:6px 14px 6px 6px;
+    border-radius:999px;
+    border:1px solid var(--grey);
+    background:var(--white);
+    flex-shrink:0;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .profile-chip:hover{border-color:var(--coral);background:var(--cream);}
+  .profile-chip .avatar{width:32px;height:32px;font-size:12px;}
+  .profile-chip-text{display:flex;flex-direction:column;line-height:1.25;text-align:left;}
+  .profile-chip-name{font-size:12.5px;font-weight:600;color:var(--ebony);}
+  .profile-chip-role{font-size:10.5px;color:var(--lilac);}
+  .topbar-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    flex:1 1 auto;
+    justify-content:flex-end;
+  }
 
   /* ---------- DRAWER ---------- */
   .scrim{
@@ -455,7 +484,7 @@
   .field-hint{
     font-size:11px;color:var(--lilac);margin:5px 2px 0;
   }
-  .modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;}
+  .modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;flex-wrap:wrap;}
 
   /* appointment load heatmap */
   .load-legend{
@@ -473,10 +502,16 @@
     color:var(--ebony);
     margin:0 0 18px;
   }
+  .heatmap-scroll{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:4px;
+  }
   .heatmap{
     display:grid;
     grid-template-columns:52px repeat(5, 1fr);
     gap:4px;
+    min-width:420px;
   }
   .hm-corner{}
   .hm-daylabel{
@@ -495,11 +530,6 @@
   }
   .hm-cell.hm-peak{
     box-shadow:inset 0 0 0 2px var(--ebony);
-  }
-  @media (max-width:860px){
-    .heatmap{grid-template-columns:40px repeat(5,1fr);}
-    .hm-cell{height:20px;}
-    .hm-daylabel{font-size:10.5px;}
   }
 
   /* toast */
@@ -520,131 +550,168 @@
   /* mobile bottom nav */
   .mobile-nav{display:none;}
 
+  /* Voice Recorder Styles */
+  .voice-recorder-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid var(--grey);
+      margin-bottom: 1.5rem;
+  }
+  .card-header{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;flex-wrap:wrap;margin-bottom:.25rem;
+  }
+  .card-header h3{
+      font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--ebony);margin:0;
+  }
+  .badge{
+      font-size:10.5px;font-weight:600;color:#fff;background:var(--lilac);
+      padding:3px 10px;border-radius:999px;letter-spacing:.02em;flex-shrink:0;
+  }
+
+  .mode-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      flex-wrap:wrap;
+  }
+
+  .mode-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--grey);
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+  }
+
+  .mode-btn.active {
+      background: var(--coral);
+      color: white;
+      border-color: var(--coral);
+  }
+
+  .voice-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--grey);
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+      background: var(--cream);
+  }
+
+  .voice-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      color: var(--coral-dark);
+      font-weight: 500;
+  }
+
+  .pulse-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--coral);
+      animation: pulse 1.2s infinite;
+  }
+
+  @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .voice-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+  }
+
+  .voice-output {
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--grey);
+      padding-top: 1rem;
+  }
+
+  .output-section {
+      margin-bottom: 1rem;
+  }
+
+  .output-section label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--lilac);
+      display: block;
+      margin-bottom: 0.3rem;
+  }
+
+  .output-box {
+      background: var(--cream);
+      padding: 0.8rem;
+      border-radius: var(--radius-sm);
+      min-height: 60px;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+      line-height: 1.6;
+  }
+
+  .hidden {
+      display: none !important;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  /* Tablet / narrow desktop: tighten spacing, still keep side rail */
+  @media (max-width:1080px){
+    .main{padding:30px 26px 60px;}
+    .grid{grid-template-columns:1fr;}
+    .stats{grid-template-columns:repeat(3,1fr);}
+  }
+  @media (max-width:700px){
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .app{grid-template-columns:76px 1fr;}
+  }
+
   @media (max-width:860px){
     .app{grid-template-columns:1fr;}
     .sidebar{
       position:fixed;bottom:0;left:0;right:0;
       flex-direction:row;justify-content:space-around;
-      padding:8px 4px;z-index:30;
+      padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+      z-index:30;
       box-shadow:0 -4px 14px rgba(0,0,0,0.12);
     }
     .brand{display:none;}
     .navlist{flex-direction:row;justify-content:space-around;width:100%;}
-    .navitem{width:auto;height:auto;padding:4px 6px;font-size:9.5px;}
-    .main{padding:26px 18px 100px;}
-    .grid{grid-template-columns:1fr;}
-    .stats{grid-template-columns:1fr;}
-    .topbar{flex-direction:column;}
-    .search-wrap{width:100%;}
+    .navitem{width:auto;height:auto;padding:6px 4px;font-size:9.5px;flex:1 1 0;}
+    .main{padding:22px 16px 108px;}
+    .topbar{flex-direction:column;align-items:stretch;}
+    .topbar-actions{width:100%;justify-content:space-between;}
+    .search-wrap{width:100%;min-width:0;}
     .drawer{width:100%;}
     .vitals-grid{grid-template-columns:repeat(2,1fr);}
     .rx-row{grid-template-columns:1fr;}
+    .profile-chip-text{display:none;}
   }
-  /* Voice Recorder Styles */
-.voice-recorder-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    border: 1px solid var(--grey);
-    margin-bottom: 1.5rem;
-}
-
-.mode-toggle {
-    display: flex;
-    gap: 0.5rem;
-    margin: 1rem 0;
-}
-
-.mode-btn {
-    padding: 0.5rem 1.2rem;
-    border-radius: 999px;
-    border: 1px solid var(--grey);
-    background: transparent;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.2s;
-}
-
-.mode-btn.active {
-    background: var(--coral);
-    color: white;
-    border-color: var(--coral);
-}
-
-.voice-textarea {
-    width: 100%;
-    min-height: 100px;
-    padding: 0.8rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--grey);
-    font-family: inherit;
-    font-size: 0.95rem;
-    resize: vertical;
-    background: var(--cream);
-}
-
-.voice-status {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    color: var(--coral-dark);
-    font-weight: 500;
-}
-
-.pulse-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--coral);
-    animation: pulse 1.2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-}
-
-.voice-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin: 1rem 0;
-    flex-wrap: wrap;
-}
-
-.voice-output {
-    margin-top: 1.5rem;
-    border-top: 1px solid var(--grey);
-    padding-top: 1rem;
-}
-
-.output-section {
-    margin-bottom: 1rem;
-}
-
-.output-section label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--lilac);
-    display: block;
-    margin-bottom: 0.3rem;
-}
-
-.output-box {
-    background: var(--cream);
-    padding: 0.8rem;
-    border-radius: var(--radius-sm);
-    min-height: 60px;
-    white-space: pre-wrap;
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
-
-.hidden {
-    display: none !important;
-}
+  @media (max-width:480px){
+    .main{padding:18px 12px 108px;}
+    .greeting-sub{font-size:13.5px;}
+    .stats{grid-template-columns:1fr;}
+    .card{padding:16px;}
+    .navitem span, .navitem{font-size:9px;}
+    .navitem svg{width:17px;height:17px;}
+    .modal{padding:18px;border-radius:14px;}
+    .drawer{padding:20px 16px 40px;}
+    .voice-recorder-card{padding:1.1rem;}
+  }
 </style>
 </head>
 <body>
@@ -670,7 +737,9 @@
       <li><button class="navitem" data-nav="rx">
         <svg viewBox="0 0 24 24"><path d="M8.5 8.5l7 7"/><path d="M6.5 15.5l3-3-4-4-3 3a3 3 0 0 0 4 4z"/><path d="M14.5 6.5l4 4 3-3a3 3 0 0 0-4-4z"/></svg>
         Rx</button></li>
-      
+      <li><button class="navitem" data-nav="profile">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+        Profile</button></li>
     </ul>
   </nav>
 
@@ -709,13 +778,13 @@
     
     <!-- Action Buttons -->
     <div class="voice-actions">
-        <button class="btn-primary" onclick="generateSummary()">
+        <button class="btn btn-primary" onclick="generateSummary()">
             🧠 Generate Summary
         </button>
-        <button class="btn-secondary" onclick="downloadTranscript()">
+        <button class="btn btn-secondary" onclick="downloadTranscript()">
             ⬇ Transcript
         </button>
-        <button class="btn-secondary" onclick="downloadSummary()">
+        <button class="btn btn-secondary" onclick="downloadSummary()">
             ⬇ Summary
         </button>
     </div>
@@ -743,9 +812,18 @@
         <h1 class="greeting">Good morning, Dr. Amara</h1>
         <p class="greeting-sub">You have 6 appointments today and 2 lab reports awaiting review.</p>
       </div>
-      <div class="search-wrap">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input type="text" id="topSearch" placeholder="Search patients…" aria-label="Search patients">
+      <div class="topbar-actions">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="topSearch" placeholder="Search patients…" aria-label="Search patients">
+        </div>
+        <button class="profile-chip" id="profileChipBtn" onclick="goToProfile()" aria-label="View your profile and account settings">
+          <span class="avatar">DA</span>
+          <span class="profile-chip-text">
+            <span class="profile-chip-name">Dr. Amara</span>
+            <span class="profile-chip-role">View profile</span>
+          </span>
+        </button>
       </div>
     </div>
 
@@ -833,7 +911,7 @@
         </div>
       </div>
       <p class="load-summary" id="loadSummary"></p>
-      <div class="heatmap" id="heatmap"></div>
+      <div class="heatmap-scroll"><div class="heatmap" id="heatmap"></div></div>
     </section>
 
   </main>
@@ -1144,12 +1222,13 @@ document.getElementById('apCancel').addEventListener('click', ()=>{
 });
 scheduleModal.addEventListener('click', e=>{ if(e.target===scheduleModal) scheduleModal.classList.remove('open'); });
 
-// sidebar nav -> scroll to section
+// sidebar nav -> scroll to section (or navigate for profile)
 document.querySelectorAll('.navitem').forEach(btn=>{
   btn.addEventListener('click', ()=>{
+    const target = btn.dataset.nav;
+    if(target==='profile'){ goToProfile(); return; }
     document.querySelectorAll('.navitem').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    const target = btn.dataset.nav;
     if(target==='schedule') document.getElementById('schedule').scrollIntoView({behavior:'smooth', block:'start'});
     if(target==='patients') document.getElementById('patients').scrollIntoView({behavior:'smooth', block:'start'});
     if(target==='labs') openDrawer(2, document.querySelectorAll('.patient-row')[2]);
