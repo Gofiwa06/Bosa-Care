@@ -59,7 +59,7 @@
   .side-foot{position:relative;z-index:1;font-size:12.5px;color:rgba(255,233,218,0.55);}
 
   .panel{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px;}
-  .panel-inner{width:100%;max-width:400px;}
+  .panel-inner{width:100%;max-width:440px;}
   .top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;}
   .brand{display:flex;align-items:center;gap:9px;font-family:'Fraunces',serif;font-weight:600;font-size:19px;}
   .logo-mark{width:30px;height:30px;border-radius:9px;border:1.5px dashed var(--ink-soft);background:var(--sand-dim);flex:none;overflow:hidden;}
@@ -75,18 +75,19 @@
   h2.title{font-size:26px;}
   .subtext{margin-top:8px;font-size:14px;color:var(--ink-soft);}
 
-  .oauth-btn{
-    margin-top:22px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
-    padding:12px 18px;border-radius:100px;border:1.5px solid var(--line);background:#fff;
-    font-size:14px;font-weight:600;transition:border-color .18s ease, box-shadow .18s ease;
+  /* role switch */
+  .role-switch{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;
+    margin-top:24px;padding:5px;background:var(--sand-dim);border-radius:14px;border:1.5px solid var(--line);
   }
-  .oauth-btn:hover{border-color:var(--ink);box-shadow:var(--shadow);}
-  .oauth-btn svg{width:18px;height:18px;flex:none;}
+  .role-btn{
+    padding:11px 10px;border-radius:10px;font-size:13.5px;font-weight:600;
+    color:var(--ink-soft);transition:all .18s ease;display:flex;align-items:center;justify-content:center;gap:7px;
+  }
+  .role-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;}
+  .role-btn.active{background:var(--ink);color:var(--sand);box-shadow:0 6px 16px -8px rgba(69,71,53,0.5);}
 
-  .divider{display:flex;align-items:center;gap:12px;margin:22px 0;font-size:12px;color:var(--ink-soft);}
-  .divider::before, .divider::after{content:"";flex:1;height:1px;background:var(--line);}
-
-  form{display:flex;flex-direction:column;gap:14px;}
+  form{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
   .field label{font-size:12.5px;font-weight:600;color:var(--ink-soft);}
   .field input, .field select{
     width:100%;margin-top:7px;padding:12px 14px;border-radius:11px;border:1.5px solid var(--line);
@@ -98,6 +99,16 @@
   }
   .field input:focus, .field select:focus{outline:2px solid var(--coral);outline-offset:1px;border-color:transparent;}
   .field .hint{margin-top:6px;font-size:11.5px;color:var(--ink-soft);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+  .section-tag{
+    display:flex;align-items:center;gap:8px;margin-top:6px;
+    font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--coral-deep);
+  }
+  .section-tag::after{content:"";flex:1;height:1px;background:var(--line);}
+
+  .doctor-fields{display:none;flex-direction:column;gap:14px;}
+  .doctor-fields.show{display:flex;}
 
   .btn-primary{
     margin-top:4px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -116,6 +127,7 @@
   .msg.info{display:block;background:var(--sand-dim);color:var(--ink);}
 
   @media (min-width:920px){ .side{display:flex;} }
+  @media (max-width:520px){ .field-row{grid-template-columns:1fr;} }
   @media (prefers-reduced-motion: reduce){ *{transition-duration:.001ms !important;} }
 </style>
 </head>
@@ -125,8 +137,8 @@
   <div class="side-top"><span class="side-logo-mark"></span>Bosa-Care</div>
   <div class="side-mid">
     <span class="eyebrow">Made for ongoing care</span>
-    <h1>One account. Every part of managing your condition.</h1>
-    <p>Tell us what you're managing and Bosa-Care tailors your appointments, records and reminders around it.</p>
+    <h1>One account. Every part of managing your condition — or your patients.</h1>
+    <p>Patients get tailored appointments, records and reminders. Doctors get a verified practice profile, patient list and prescribing tools.</p>
     <ul class="side-list">
       <li><span class="dot"></span>HIV care &amp; treatment tracking</li>
       <li><span class="dot"></span>Hypertension monitoring</li>
@@ -148,14 +160,18 @@
     </div>
 
     <h2 class="title">Create your account</h2>
-    <p class="subtext">Set up your Bosa-Care profile in a couple of minutes.</p>
+    <p class="subtext">Tell us who you are and we'll set the right profile up for you.</p>
 
-    <button class="oauth-btn" id="googleBtn" onclick="signupWithGoogle()">
-      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.4 29.4 35.5 24 35.5c-6.9 0-12.5-5.6-12.5-12.5S17.1 10.5 24 10.5c3.2 0 6.1 1.2 8.3 3.2l6-6C34.6 4.2 29.6 2 24 2 11.9 2 2 11.9 2 24s9.9 22 22 22 22-9.9 22-22c0-1.5-.2-3-.4-4.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.2 0 6.1 1.2 8.3 3.2l6-6C34.6 6.2 29.6 4 24 4c-7.9 0-14.7 4.4-18.3 11z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.6l-6.5-5.5C29.5 34.5 26.9 35.5 24 35.5c-5.3 0-9.8-3.6-11.4-8.4l-6.6 5.1C9.4 39.6 16.1 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.7 2-2 3.7-3.7 5l6.5 5.5C41.6 35.5 44 30.2 44 24c0-1.5-.2-3-.4-3.5z"/></svg>
-      Sign up with Google
-    </button>
-
-    <div class="divider">or sign up with email</div>
+    <div class="role-switch" role="tablist">
+      <button type="button" class="role-btn active" id="roleBtnPatient" onclick="setRole('patient')">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        I'm a Patient
+      </button>
+      <button type="button" class="role-btn" id="roleBtnDoctor" onclick="setRole('doctor')">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        I'm a Doctor
+      </button>
+    </div>
 
     <form id="signupForm">
       <div class="field">
@@ -170,9 +186,11 @@
         <label>Password</label>
         <input type="password" id="suPassword" required minlength="6" placeholder="At least 6 characters">
       </div>
-      <div class="field">
+
+      <!-- PATIENT-ONLY -->
+      <div class="field" id="patientFields">
         <label>What are you managing?</label>
-        <select id="suCondition" required>
+        <select id="suCondition">
           <option value="" disabled selected>Select one</option>
           <option value="HIV">HIV</option>
           <option value="Hypertension">Hypertension</option>
@@ -184,6 +202,70 @@
         </select>
         <p class="hint">This helps Bosa-Care tailor your reminders and facility matches. Kept private, visible only to you.</p>
       </div>
+
+      <!-- DOCTOR-ONLY -->
+      <div class="doctor-fields" id="doctorFields">
+        <div class="section-tag">Medical license</div>
+
+        <div class="field">
+          <label>Specialization</label>
+          <select id="drSpecialization">
+            <option value="" disabled selected>Select one</option>
+            <option>General Practitioner</option>
+            <option>Internal Medicine</option>
+            <option>Paediatrics</option>
+            <option>Obstetrics &amp; Gynaecology</option>
+            <option>Surgery</option>
+            <option>Orthopaedics</option>
+            <option>Cardiology</option>
+            <option>Dermatology</option>
+            <option>Psychiatry</option>
+            <option>Radiology</option>
+            <option>Emergency Medicine</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>License number</label>
+            <input type="text" id="drLicenseNumber" placeholder="e.g. BW-MED-0012345">
+          </div>
+          <div class="field">
+            <label>Issuing body</label>
+            <select id="drLicenseIssuer">
+              <option value="" disabled selected>Select one</option>
+              <option>Botswana Health Professions Council</option>
+              <option>HPCSA (South Africa)</option>
+              <option>GMC (UK)</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>License expiry date</label>
+            <input type="date" id="drLicenseExpiry">
+          </div>
+          <div class="field">
+            <label>Years of experience</label>
+            <input type="number" id="drYearsExp" min="0" max="60" placeholder="e.g. 10">
+          </div>
+        </div>
+
+        <div class="section-tag">Practice</div>
+        <div class="field">
+          <label>Hospital / Clinic name</label>
+          <input type="text" id="drHospitalName" placeholder="e.g. Princess Marina Hospital">
+        </div>
+        <div class="field">
+          <label>Practice city</label>
+          <input type="text" id="drPracticeCity" placeholder="e.g. Gaborone">
+        </div>
+        <p class="hint">Your license details are reviewed before your account is marked verified. You can still browse the dashboard while pending.</p>
+      </div>
+
       <button class="btn-primary" type="submit" id="signupSubmit">Create account</button>
     </form>
 
@@ -208,18 +290,26 @@
     box.className = 'msg ' + type;
   }
 
+  let currentRole = 'patient';
+  function setRole(role){
+    currentRole = role;
+    document.getElementById('roleBtnPatient').classList.toggle('active', role === 'patient');
+    document.getElementById('roleBtnDoctor').classList.toggle('active', role === 'doctor');
+    document.getElementById('patientFields').style.display = role === 'patient' ? 'block' : 'none';
+    document.getElementById('doctorFields').classList.toggle('show', role === 'doctor');
+
+    // toggle "required" so hidden fields don't block submit
+    document.getElementById('suCondition').required = (role === 'patient');
+    document.getElementById('drSpecialization').required = (role === 'doctor');
+    document.getElementById('drLicenseNumber').required = (role === 'doctor');
+    document.getElementById('drLicenseIssuer').required = (role === 'doctor');
+    document.getElementById('drLicenseExpiry').required = (role === 'doctor');
+  }
+
   (async () => {
     const { data } = await supabaseClient.auth.getSession();
     if (data.session) window.location.href = 'dashboard.html';
   })();
-
-  async function signupWithGoogle(){
-    const { error } = await supabaseClient.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin + window.location.pathname.replace('signup.html','dashboard.html') }
-    });
-    if (error) showMsg(error.message, 'error');
-  }
 
   document.getElementById('signupForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -229,13 +319,26 @@
     const full_name = document.getElementById('suName').value.trim();
     const email = document.getElementById('suEmail').value.trim();
     const password = document.getElementById('suPassword').value;
-    const condition = document.getElementById('suCondition').value;
 
-    // full_name and condition are passed as user metadata — the trigger in
-    // supabase-setup.sql reads them and creates the matching profiles row.
+    // Metadata read by the handle_new_user() trigger in supabase-setup.sql,
+    // which creates the matching profiles + patient_profiles/doctor_profiles row.
+    const metadata = { full_name, role: currentRole };
+
+    if (currentRole === 'patient') {
+      metadata.condition = document.getElementById('suCondition').value;
+    } else {
+      metadata.specialization  = document.getElementById('drSpecialization').value;
+      metadata.license_number  = document.getElementById('drLicenseNumber').value.trim();
+      metadata.license_issuer  = document.getElementById('drLicenseIssuer').value;
+      metadata.license_expiry  = document.getElementById('drLicenseExpiry').value;
+      metadata.years_exp       = document.getElementById('drYearsExp').value;
+      metadata.hospital_name   = document.getElementById('drHospitalName').value.trim();
+      metadata.practice_city   = document.getElementById('drPracticeCity').value.trim();
+    }
+
     const { data, error } = await supabaseClient.auth.signUp({
       email, password,
-      options: { data: { full_name, condition } }
+      options: { data: metadata }
     });
 
     if (error) {
@@ -247,13 +350,16 @@
     if (data.session) {
       // Email confirmation is off in Supabase settings — user is logged in immediately
       showMsg('Account created — redirecting…', 'info');
-      window.location.href = 'dashboard.html';
+      window.location.href = currentRole === 'doctor' ? 'doctor-dashboard.html' : 'dashboard.html';
     } else {
       // Email confirmation is on — Supabase sent a confirmation link
       showMsg('Account created! Check your email to confirm before logging in.', 'info');
       btn.disabled = false; btn.textContent = 'Create account';
     }
   });
+
+  // init
+  setRole('patient');
 </script>
 
 </body>
