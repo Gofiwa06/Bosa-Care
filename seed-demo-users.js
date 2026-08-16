@@ -10,8 +10,8 @@
 // ============================================================
 const { createClient } = require('@supabase/supabase-js');
 
-const SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co";
-const SERVICE_ROLE_KEY = "YOUR-SERVICE-ROLE-KEY"; // keep secret, server-side only
+const SUPABASE_URL = "https://qrxepwvuhhygddgggxkh.supabase.co";
+const SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyeGVwd3Z1aGh5Z2RkZ2dneGtoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NjgzMTA0NCwiZXhwIjoyMTAyNDA3MDQ0fQ.pjrekkI47Nt8O1bF43aTTdzaq_3UcJW6X9ke8rXglG4"; // keep secret, server-side only
 
 const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false }
