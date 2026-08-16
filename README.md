@@ -43,9 +43,12 @@ Use of springboot framwork with spring security, robust encryption, API'S and se
 In terns of Ai we plan on using Kore.ai or AWS Bedrock/ microsoft Azure open ai until we develop our own model for the platform
 
 # 3 ways Bosa-Care can make money
-1. Healthcare facilities pay a monthly SaaS fee
+1. Healthcare facilities pay a monthly SaaS fee.
+   
 2.Every healthcare payment processed through Bosa-Care generates a small platform/service fee.
-3. Partnerships with pharmacies
+
+3. Partnerships with pharmacies.
+   
 In summery, Our primary model is B2B2C. Patients get access to the core platform, while healthcare facilities pay a SaaS fee for management tools. We also generate a small transaction fee from healthcare payments processed through Airscoll, with additional revenue from pharmacy integrations.
 
 
