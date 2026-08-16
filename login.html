@@ -158,6 +158,7 @@
 </div>
 
 <script src="supabase-config.js"></script>
+<script src="mfa.js"></script>
 <script>
   function toggleDyslexiaMode(){
     const btn = document.getElementById('a11yToggle');
@@ -191,10 +192,18 @@
     if (error) {
       showMsg(error.message, 'error');
       btn.disabled = false; btn.textContent = 'Log in';
-    } else {
+      return;
+    }
+
+    mfaCheckAndChallengeAfterLogin((mfaError) => {
+      if (mfaError) {
+        showMsg(mfaError.message, 'error');
+        btn.disabled = false; btn.textContent = 'Log in';
+        return;
+      }
       showMsg('Logged in — redirecting…', 'info');
       window.location.href = 'dashboard.html';
-    }
+    });
   });
 
   async function resetPassword(e){
