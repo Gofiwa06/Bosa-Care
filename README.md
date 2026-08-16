@@ -24,7 +24,7 @@ Our platform is built with a user-centric approach, packed with features to serv
 
 ♿ Virtual Inclusivity Feature: Designed to be accessible to all, with specific accommodations for color-blind and dyslexic users, ensuring a better user experience for everyone.
 
-🔒 Data Encryption and Security: Robust security protocols to protect sensitive patient data, compliant with the Botswana Data Protection Act & Cybersecurity Act.
+🔒 Data Encryption and Security: Robust security protocols to protect sensitive patient data, compliant with the Botswana Data Protection Act & Cybersecurity Act. We have a consent for for Ai liability since ai is not always correct and also a form for data protection for the patient  they have to fill before they sign up for the platform
 
 📊 Doctor & Patient Dashboards:
 
