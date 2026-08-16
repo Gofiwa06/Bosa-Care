@@ -136,3 +136,8 @@ Save the file.
 If you have a logo or a screenshot, you can replace the placeholder text in the image URLs.
 
 This README is now expanded, professional, and ready to serve as the central documentation for your BOSA CARE project.
+
+# how to run
+demo login details 
+dr.tumelo@bosacare.com password is Demo1234!
+kagiso.pheto@bosacare.com password is Demo1234!
