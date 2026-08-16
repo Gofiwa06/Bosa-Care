@@ -1,9 +1,10 @@
-BOSA CARE is a comprehensive, AI-integrated healthcare platform designed to bridge the gap between patients and healthcare providers in Botswana. By creating a unified ecosystem that connects patients, doctors, pharmacies, and other healthcare services, we aim to make continuous care, personalized treatment, and medication access more accessible and efficient.
+# BOSA CARE 
+comprehensive, AI-integrated healthcare platform designed to bridge the gap between patients and healthcare providers in Botswana. By creating a unified ecosystem that connects patients, doctors, pharmacies, and other healthcare services, we aim to make continuous care, personalized treatment, and medication access more accessible and efficient.
 
-🚨 The Problem
+# 🚨 The Problem
 Approximately 40% of Botswana's adult population is affected by chronic conditions such as cancer, diabetes, HIV/AIDS, anemia, and hypertension. These patients require continuous and coordinated care. However, the current landscape of disconnected health services makes managing these conditions difficult, leading to a rise in adult mortality and a strained healthcare system.
 
-💡 The Solution: BOSA CARE
+# The Solution: BOSA CARE
 BOSA CARE is the answer to this critical challenge. We provide a unified platform that connects all stakeholders in a patient's health journey. Through a secure Electronic Medical Record (EMR) and an AI-integrated system, we enable:
 
 Continuous Monitoring: Track patient health data over time.
@@ -16,7 +17,7 @@ Easier Medication Access: Simplify finding and receiving medications.
 
 The ultimate goal is to ensure better coordinated care for all Batswana.
 
-✨ BOSA CARE Features
+# ✨ BOSA CARE Features
 Our platform is built with a user-centric approach, packed with features to serve both patients and providers.
 
 🤖 BOSA-AI (Interactive Voice Assistant): A voice-driven assistant to help users navigate the platform, ask health-related questions, and manage their care hands-free.
