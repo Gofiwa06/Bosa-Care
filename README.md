@@ -139,5 +139,5 @@ This README is now expanded, professional, and ready to serve as the central doc
 
 # how to run
 demo login details 
-dr.tumelo@bosacare.com password is Demo1234!
-kagiso.pheto@bosacare.com password is Demo1234!
+dr.tumelo@bosacare.bw password is Demo1234!
+kagiso.pheto@bosacare.bw password is Demo1234!
