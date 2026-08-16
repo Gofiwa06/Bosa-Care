@@ -173,11 +173,11 @@
     box.className = 'msg ' + type;
   }
 
-  // If already logged in, skip straight to dashboard
-  (async () => {
-    const { data } = await supabaseClient.auth.getSession();
-    if (data.session) window.location.href = 'dashboard.html';
-  })();
+  // Demo accounts — routes straight to the right dashboard, no backend needed
+  const DEMO_ACCOUNTS = {
+    'dr.tumelo@bosacare.bw':    { password: 'Demo1234!', redirect: 'doctor.html' },
+    'kagiso.pheto@bosacare.bw': { password: 'Demo1234!', redirect: 'patient.html' }
+  };
 
   document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -187,6 +187,15 @@
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
 
+    // Check demo accounts first
+    const demo = DEMO_ACCOUNTS[email];
+    if (demo && demo.password === password) {
+      showMsg('Logged in — redirecting…', 'info');
+      window.location.href = demo.redirect;
+      return;
+    }
+
+    // Fall back to real Supabase auth for anything else
     const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
     if (error) {
