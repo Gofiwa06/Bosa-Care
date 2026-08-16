@@ -419,6 +419,115 @@
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
   }
+  /* ---------- Quote Slide Styling ---------- */
+.quote-slide {
+    background: linear-gradient(145deg, var(--sand-dim) 0%, var(--sand) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative background pattern for quote slides */
+.quote-slide::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(219, 130, 127, 0.15), transparent 70%);
+    pointer-events: none;
+}
+
+.quote-slide::after {
+    content: "";
+    position: absolute;
+    bottom: -40%;
+    left: -20%;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(161, 157, 164, 0.12), transparent 70%);
+    pointer-events: none;
+}
+
+.slide-quote-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.quote-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: inline-block;
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+.slide-quote-content blockquote {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(20px, 2.8vw, 30px);
+    line-height: 1.4;
+    color: var(--ink-deep);
+    margin: 0;
+    padding: 0;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    quotes: none;
+}
+
+.quote-tagline {
+    font-size: 14px;
+    color: var(--coral-deep);
+    font-weight: 500;
+    margin-top: 16px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Responsive quote slides */
+@media (max-width: 920px) {
+    .slide-quote-content blockquote {
+        font-size: clamp(18px, 2.5vw, 24px);
+    }
+    
+    .quote-icon {
+        font-size: 38px;
+    }
+}
+
+@media (max-width: 560px) {
+    .quote-slide {
+        padding: 24px 16px;
+    }
+    
+    .slide-quote-content blockquote {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+    
+    .quote-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+    
+    .quote-tagline {
+        font-size: 11px;
+        margin-top: 10px;
+    }
+}
 </style>
 </head>
 <body>
@@ -464,54 +573,111 @@
          Drop matching image files into an /images folder (same names as the src
          attributes below) and each slide will use your real photo automatically.
          Until then, each slide shows a soft placeholder with the facility name. -->
-    <div class="hero-carousel">
-      <div class="carousel-viewport">
+   <!-- Carousel: Health Quotes & Promotional Messages -->
+<div class="hero-carousel">
+    <div class="carousel-viewport">
         <div class="carousel-track" id="carouselTrack">
 
-          <div class="carousel-slide">
-            <img src="images.jpg" alt="Princess Marina Hospital, Gaborone" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="slide-fallback"><span class="slide-icon">.</span></div>
-            
-          </div>
+            <!-- Slide 1 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">💚</div>
+                    <blockquote>"Your health is your greatest wealth. Take care of it today."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
 
-          <div class="carousel-slide">
-            <img src="images2.jpg" alt="Nyangabgwe Referral Hospital, Francistown" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="slide-fallback"><span class="slide-icon">.</span></div>
-           
-          </div>
+            <!-- Slide 2 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">🫀</div>
+                    <blockquote>"Small steps every day lead to a healthier tomorrow."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
 
-          <div class="carousel-slide">
-            <img src="Images3.jpg" alt="Scottish Livingstone Hospital, Molepolole" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="slide-fallback"><span class="slide-icon">.</span></div>
-            
-          </div>
+            <!-- Slide 3 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">🌿</div>
+                    <blockquote>"Healthcare should be simple, accessible, and stress-free."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
 
-          <div class="carousel-slide">
-            <img src="images4.jpg" alt="Bokamoso Private Hospital, Gaborone" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="slide-fallback"><span class="slide-icon">.</span></div>
-           
-          </div>
+            <!-- Slide 4 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">💪</div>
+                    <blockquote>"Stay proactive, not reactive. Your health journey starts here."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
 
-          <div class="carousel-slide">
-            <img src="images5.jpg" alt="Letsholathebe II Memorial Hospital, Maun" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="slide-fallback"><span class="slide-icon">.</span></div>
-           
-          </div>
+            <!-- Slide 5 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">🏥</div>
+                    <blockquote>"Connecting you to the care you deserve, every step of the way."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
 
-          <div class="carousel-slide">
-            <img src="images6.jpg" alt="Community clinic, Gaborone" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="slide-fallback"><span class="slide-icon">.</span></div>
-           
-          </div>
+            <!-- Slide 6 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">🧠</div>
+                    <blockquote>"Mental health matters. We're here to support your whole well-being."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
+
+            <!-- Slide 7 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">❤️</div>
+                    <blockquote>"Better care starts with better connection. Join the Bosa-Care family."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
+
+            <!-- Slide 8 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">⭐</div>
+                    <blockquote>"Empowering Batswana to take control of their health."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
+
+            <!-- Slide 9 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">🤝</div>
+                    <blockquote>"One platform. One journey. Better health for all."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
+
+            <!-- Slide 10 -->
+            <div class="carousel-slide quote-slide">
+                <div class="slide-quote-content">
+                    <div class="quote-icon">🌍</div>
+                    <blockquote>"Healthcare, without the hassle. Powered by Bosa-Care."</blockquote>
+                    <p class="quote-tagline">— Bosa-Care</p>
+                </div>
+            </div>
 
         </div>
+
+        <!-- Navigation Arrows -->
         <button class="car-arrow left" onclick="moveCarousel(-1)" aria-label="Previous slide">‹</button>
         <button class="car-arrow right" onclick="moveCarousel(1)" aria-label="Next slide">›</button>
-      </div>
-      <div class="carousel-dots" id="carouselDots"></div>
     </div>
-  </div>
-</section>
+
+    <!-- Dots Indicator -->
+    <div class="carousel-dots" id="carouselDots"></div>
+</div>
 
 <section class="problem">
   <div class="wrap">
@@ -639,32 +805,53 @@
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
 
-  // Hospitals & clinics carousel
-  const slides = document.querySelectorAll('.carousel-slide');
-  const track = document.getElementById('carouselTrack');
-  const dotsWrap = document.getElementById('carouselDots');
-  let current = 0;
+  // Carousel functionality
+const slides = document.querySelectorAll('.carousel-slide');
+const track = document.getElementById('carouselTrack');
+const dotsWrap = document.getElementById('carouselDots');
+let current = 0;
+let autoplayInterval;
 
-  slides.forEach((_, i) => {
+// Build dots
+slides.forEach((_, i) => {
     const dot = document.createElement('span');
-    if(i === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => { current = i; updateCarousel(); });
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => { 
+        current = i; 
+        updateCarousel(); 
+        resetAutoplay();
+    });
     dotsWrap.appendChild(dot);
-  });
+});
 
-  function updateCarousel(){
+function updateCarousel() {
     track.style.transform = `translateX(-${current * 100}%)`;
     [...dotsWrap.children].forEach((d, i) => d.classList.toggle('active', i === current));
-  }
-  function moveCarousel(dir){
+}
+
+function moveCarousel(dir) {
     current = (current + dir + slides.length) % slides.length;
     updateCarousel();
-  }
+    resetAutoplay();
+}
 
-  let autoplay = setInterval(() => moveCarousel(1), 4500);
-  const carouselEl = document.querySelector('.hero-carousel');
-  carouselEl.addEventListener('mouseenter', () => clearInterval(autoplay));
-  carouselEl.addEventListener('mouseleave', () => { autoplay = setInterval(() => moveCarousel(1), 4500); });
+function startAutoplay() {
+    autoplayInterval = setInterval(() => moveCarousel(1), 4500);
+}
+
+function resetAutoplay() {
+    clearInterval(autoplayInterval);
+    startAutoplay();
+}
+
+// Initialize autoplay
+startAutoplay();
+
+// Pause on hover
+const carouselEl = document.querySelector('.hero-carousel');
+carouselEl.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
+carouselEl.addEventListener('mouseleave', startAutoplay);
+  
 </script>
 
 </body>
