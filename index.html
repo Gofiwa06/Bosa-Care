@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -181,7 +181,25 @@
   .trust-line .dots span:nth-child(2){background:var(--lilac);}
   .trust-line .dots span:nth-child(3){background:var(--ink);}
 
-  /* ---------- Hero carousel (hospitals & clinics across Botswana) ---------- */
+  /* ============================================================
+     Hero carousel — simple autoplaying image slider, one photo
+     full-width per slide with prev/next arrows (no captions, no
+     dots) — same behaviour as Bootstrap's data-bs-ride="carousel"
+     example, just built with plain CSS/JS so it doesn't need the
+     Bootstrap library.
+
+     HOW TO ADD YOUR REAL PHOTOS
+     Put these 6 files in the SAME FOLDER as this HTML file
+     (not in a subfolder), using these exact names — this matches
+     the files you already have:
+       images.jpg, images2.jpg, Images3.jpg,
+       images4.jpg, images5.jpg, images6.jpg
+     File names are case-sensitive on most servers, so "Images3.jpg"
+     needs a capital I to match. Until a file exists, that slide
+     shows a soft gradient placeholder instead of a broken icon.
+     To add a 7th, 8th... photo, copy one .carousel-slide block and
+     point its <img src="..."> at the new file.
+     ============================================================ */
   .hero-carousel{position:relative;z-index:1;}
   .carousel-viewport{
     border-radius:26px;overflow:hidden;box-shadow:var(--shadow);
@@ -192,28 +210,19 @@
   .carousel-slide{min-width:100%;height:100%;position:relative;}
   .carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;}
   .slide-fallback{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
     background:linear-gradient(150deg,var(--dust),var(--lilac));
   }
-  .slide-icon{font-size:46px;opacity:.5;}
-  .slide-caption{
-    position:absolute;left:0;right:0;bottom:0;padding:24px 26px;
-    background:linear-gradient(0deg, rgba(51,53,31,0.85), transparent 75%);
-    color:var(--sand);
-  }
-  .slide-loc{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.85;}
-  .slide-name{display:block;font-family:'Fraunces',serif;font-size:19px;margin-top:4px;}
+  .slide-icon{font-size:46px;opacity:.6;}
   .car-arrow{
     position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;
     background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;
     box-shadow:0 10px 20px -10px rgba(69,71,53,.5);color:var(--ink);z-index:2;
+    border:none;
   }
   .car-arrow:hover{background:var(--coral);color:#fff;}
-  .car-arrow.left{left:-16px;}
-  .car-arrow.right{right:-16px;}
-  .carousel-dots{display:flex;gap:6px;justify-content:center;margin-top:16px;}
-  .carousel-dots span{width:7px;height:7px;border-radius:50%;background:var(--dust);cursor:pointer;transition:background .2s,width .2s;display:inline-block;}
-  .carousel-dots span.active{background:var(--coral);width:20px;border-radius:4px;}
+  .car-arrow.left{left:14px;}
+  .car-arrow.right{right:14px;}
 
   /* ---------- Problem section ---------- */
   .problem{padding:100px 0 40px;}
@@ -412,122 +421,13 @@
     nav{padding:16px 20px;}
     .problem-grid{grid-template-columns:1fr;}
     .car-arrow{width:32px;height:32px;font-size:15px;}
-    .car-arrow.left{left:6px;}
-    .car-arrow.right{right:6px;}
+    .car-arrow.left{left:8px;}
+    .car-arrow.right{right:8px;}
   }
 
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
   }
-  /* ---------- Quote Slide Styling ---------- */
-.quote-slide {
-    background: linear-gradient(145deg, var(--sand-dim) 0%, var(--sand) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 30px;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Decorative background pattern for quote slides */
-.quote-slide::before {
-    content: "";
-    position: absolute;
-    top: -50%;
-    right: -30%;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(219, 130, 127, 0.15), transparent 70%);
-    pointer-events: none;
-}
-
-.quote-slide::after {
-    content: "";
-    position: absolute;
-    bottom: -40%;
-    left: -20%;
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(161, 157, 164, 0.12), transparent 70%);
-    pointer-events: none;
-}
-
-.slide-quote-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    max-width: 500px;
-    padding: 20px;
-}
-
-.quote-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-    display: inline-block;
-    animation: floatIcon 3s ease-in-out infinite;
-}
-
-@keyframes floatIcon {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-}
-
-.slide-quote-content blockquote {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(20px, 2.8vw, 30px);
-    line-height: 1.4;
-    color: var(--ink-deep);
-    margin: 0;
-    padding: 0;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    quotes: none;
-}
-
-.quote-tagline {
-    font-size: 14px;
-    color: var(--coral-deep);
-    font-weight: 500;
-    margin-top: 16px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    font-family: 'Space Grotesk', sans-serif;
-}
-
-/* Responsive quote slides */
-@media (max-width: 920px) {
-    .slide-quote-content blockquote {
-        font-size: clamp(18px, 2.5vw, 24px);
-    }
-    
-    .quote-icon {
-        font-size: 38px;
-    }
-}
-
-@media (max-width: 560px) {
-    .quote-slide {
-        padding: 24px 16px;
-    }
-    
-    .slide-quote-content blockquote {
-        font-size: 16px;
-        line-height: 1.5;
-    }
-    
-    .quote-icon {
-        font-size: 32px;
-        margin-bottom: 10px;
-    }
-    
-    .quote-tagline {
-        font-size: 11px;
-        margin-top: 10px;
-    }
-}
 </style>
 </head>
 <body>
@@ -569,115 +469,51 @@
       </div>
     </div>
 
-    <!-- Carousel: hospitals & clinics across Botswana.
-         Drop matching image files into an /images folder (same names as the src
-         attributes below) and each slide will use your real photo automatically.
-         Until then, each slide shows a soft placeholder with the facility name. -->
-   <!-- Carousel: Health Quotes & Promotional Messages -->
-<div class="hero-carousel">
-    <div class="carousel-viewport">
+    <!-- Hero carousel — simple autoplaying image slider. See the big
+         comment block in <style> above for how to drop in your own
+         photos. Just images + prev/next arrows, same as Bootstrap's
+         data-bs-ride="carousel" example. -->
+    <div class="hero-carousel">
+      <div class="carousel-viewport">
         <div class="carousel-track" id="carouselTrack">
 
-            <!-- Slide 1 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">💚</div>
-                    <blockquote>"Your health is your greatest wealth. Take care of it today."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
+          <div class="carousel-slide">
+            <img src="images.jpg" alt="Bosa-Care partner facility" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">🏥</span></div>
+          </div>
 
-            <!-- Slide 2 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">🫀</div>
-                    <blockquote>"Small steps every day lead to a healthier tomorrow."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
+          <div class="carousel-slide">
+            <img src="images2.jpg" alt="Bosa-Care partner facility" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">🏥</span></div>
+          </div>
 
-            <!-- Slide 3 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">🌿</div>
-                    <blockquote>"Healthcare should be simple, accessible, and stress-free."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
+          <div class="carousel-slide">
+            <img src="Images3.jpg" alt="Bosa-Care partner facility" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">🏥</span></div>
+          </div>
 
-            <!-- Slide 4 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">💪</div>
-                    <blockquote>"Stay proactive, not reactive. Your health journey starts here."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
+          <div class="carousel-slide">
+            <img src="images4.jpg" alt="Bosa-Care partner facility" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">🏥</span></div>
+          </div>
 
-            <!-- Slide 5 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">🏥</div>
-                    <blockquote>"Connecting you to the care you deserve, every step of the way."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
+          <div class="carousel-slide">
+            <img src="images5.jpg" alt="Bosa-Care partner facility" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">🏥</span></div>
+          </div>
 
-            <!-- Slide 6 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">🧠</div>
-                    <blockquote>"Mental health matters. We're here to support your whole well-being."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
-
-            <!-- Slide 7 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">❤️</div>
-                    <blockquote>"Better care starts with better connection. Join the Bosa-Care family."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
-
-            <!-- Slide 8 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">⭐</div>
-                    <blockquote>"Empowering Batswana to take control of their health."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
-
-            <!-- Slide 9 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">🤝</div>
-                    <blockquote>"One platform. One journey. Better health for all."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
-
-            <!-- Slide 10 -->
-            <div class="carousel-slide quote-slide">
-                <div class="slide-quote-content">
-                    <div class="quote-icon">🌍</div>
-                    <blockquote>"Healthcare, without the hassle. Powered by Bosa-Care."</blockquote>
-                    <p class="quote-tagline">— Bosa-Care</p>
-                </div>
-            </div>
+          <div class="carousel-slide">
+            <img src="images6.jpg" alt="Bosa-Care partner facility" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="slide-fallback"><span class="slide-icon">🏥</span></div>
+          </div>
 
         </div>
-
-        <!-- Navigation Arrows -->
         <button class="car-arrow left" onclick="moveCarousel(-1)" aria-label="Previous slide">‹</button>
         <button class="car-arrow right" onclick="moveCarousel(1)" aria-label="Next slide">›</button>
+      </div>
     </div>
-
-    <!-- Dots Indicator -->
-    <div class="carousel-dots" id="carouselDots"></div>
-</div>
+  </div>
+</section>
 
 <section class="problem">
   <div class="wrap">
@@ -805,53 +641,40 @@
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
 
-  // Carousel functionality
-const slides = document.querySelectorAll('.carousel-slide');
-const track = document.getElementById('carouselTrack');
-const dotsWrap = document.getElementById('carouselDots');
-let current = 0;
-let autoplayInterval;
+  /* ============================================================
+     Hero carousel — simple autoplaying image slider (images only,
+     prev/next arrows, no dots/captions) — same behaviour as
+     Bootstrap's data-bs-ride="carousel" example.
+     ============================================================ */
+  const slides = document.querySelectorAll('.carousel-slide');
+  const track = document.getElementById('carouselTrack');
+  let current = 0;
+  let autoplayInterval;
 
-// Build dots
-slides.forEach((_, i) => {
-    const dot = document.createElement('span');
-    if (i === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => { 
-        current = i; 
-        updateCarousel(); 
-        resetAutoplay();
-    });
-    dotsWrap.appendChild(dot);
-});
-
-function updateCarousel() {
+  function updateCarousel(){
     track.style.transform = `translateX(-${current * 100}%)`;
-    [...dotsWrap.children].forEach((d, i) => d.classList.toggle('active', i === current));
-}
+  }
 
-function moveCarousel(dir) {
+  function moveCarousel(dir){
     current = (current + dir + slides.length) % slides.length;
     updateCarousel();
     resetAutoplay();
-}
+  }
 
-function startAutoplay() {
+  function startAutoplay(){
     autoplayInterval = setInterval(() => moveCarousel(1), 4500);
-}
+  }
 
-function resetAutoplay() {
+  function resetAutoplay(){
     clearInterval(autoplayInterval);
     startAutoplay();
-}
+  }
 
-// Initialize autoplay
-startAutoplay();
+  startAutoplay();
 
-// Pause on hover
-const carouselEl = document.querySelector('.hero-carousel');
-carouselEl.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
-carouselEl.addEventListener('mouseleave', startAutoplay);
-  
+  const carouselEl = document.querySelector('.hero-carousel');
+  carouselEl.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
+  carouselEl.addEventListener('mouseleave', startAutoplay);
 </script>
 
 </body>
