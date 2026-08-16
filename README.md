@@ -45,7 +45,7 @@ In terns of Ai we plan on using Kore.ai or AWS Bedrock/ microsoft Azure open ai 
 # 3 ways Bosa-Care can make money
 1. Healthcare facilities pay a monthly SaaS fee.
    
-2.Every healthcare payment processed through Bosa-Care generates a small platform/service fee.
+ 2.Every healthcare payment processed through Bosa-Care generates a small platform/service fee.
 
 3. Partnerships with pharmacies.
    
