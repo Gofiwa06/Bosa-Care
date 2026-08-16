@@ -807,7 +807,7 @@
             <div class="toggle-sub">Use Google Authenticator or Authy for extra security.</div>
           </div>
           <label class="toggle-switch">
-            <input type="checkbox" id="toggle2FA" onchange="doctorSavePref('2fa', this.checked)"/>
+            <input type="checkbox" id="toggle2FA" onclick="handle2FAToggle(this)"/>
             <div class="toggle-track"></div><div class="toggle-thumb"></div>
           </label>
         </div>
@@ -1201,6 +1201,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     // Load saved profile data if exists
     doctorLoadProfile();
+    mfaSyncToggleFromServer();
 
     // Check license expiry on load
     const expiryEl = document.getElementById('pLicenseExpiry');
@@ -1350,6 +1351,7 @@
   // Initialise documents on load
   document.addEventListener('DOMContentLoaded', renderDocuments);
 </script>
+<script src="mfa.js"></script>
 <script src="profile.js"></script>
 </body>
 </html>
